@@ -1,0 +1,150 @@
+import os
+import sys
+import cv2
+import pandas as pd
+import matplotlib.pyplot as plt
+import pickle
+from deepface import DeepFace
+from tqdm import tqdm
+from scipy.spatial.distance import cosine
+import mediapipe as mp  # NEW: For test detection/cropping
+from IPython.display import display
+
+
+embeddings_file = "./embs_facenet512.pkl"  
+db_images_path = r"path"  # 
+input_folder = r'/path/to/test1'  # input
+output_folder = "./test_faces"  # view faces
+os.makedirs(output_folder, exist_ok=True)
+
+model_name = "Facenet512"
+
+#mediapipe
+mp_face_detect = mp.solutions.face_detection
+faceDetect = mp_face_detect.FaceDetection(model_selection=1, min_detection_confidence=0.6)
+
+
+# 1. loadpkl
+def load_database_embeddings(embeddings_file):
+    if os.path.exists(embeddings_file):
+        print(f"[INFO] Loading MediaPipe embeddings: {embeddings_file}")
+        with open(embeddings_file, 'rb') as f:
+            return pickle.load(f)
+    print(f"[ERROR] embedding missing: {embeddings_file}")
+    return None
+
+
+# detect
+def extract_test_faces(input_folder, output_folder):
+    image_extensions = ('.jpg', '.jpeg', '.png')
+    test_files = [os.path.join(input_folder, f) for f in os.listdir(input_folder)
+                  if f.lower().endswith(image_extensions)]
+
+    input_crops = {}  # {crop_name: crop_path}, e.g. "img1_face_1": "./test_faces/img1_face_1.jpg"
+
+    for image_path in tqdm(test_files, desc="Cropping tests"):
+        image_name = os.path.basename(image_path)
+        frame = cv2.imread(image_path)
+        if frame is None:
+            print(f"Cannot load {image_path}")
+            continue
+
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = faceDetect.process(rgb_frame)
+
+        if not results.detections:
+            print(f" No faces in {image_name}")
+            continue
+
+        print(f" Found {len(results.detections)} faces in {image_name}")
+
+        # Loop over ALL detected faces
+        for i, detection in enumerate(results.detections):
+            bbox = detection.location_data.relative_bounding_box
+            h, w = frame.shape[:2]
+            x, y, bbox_w, bbox_h = [
+                int(getattr(bbox, attr) * dim) for attr, dim in
+                [('xmin', w), ('ymin', h), ('width', w), ('height', h)]
+            ]
+            x1, y1 = max(0, x - bbox_w//4), max(0, y - bbox_h//4)
+            x2, y2 = min(w, x + bbox_w + bbox_w//4), min(h, y + bbox_h + bbox_h//4)
+
+            face_crop = frame[y1:y2, x1:x2]
+            crop_name = f"{image_name}_face_{i+1}"  
+            crop_path = f"{output_folder}/{crop_name}.jpg"
+            cv2.imwrite(crop_path, face_crop)
+            input_crops[crop_name] = crop_path   
+
+    return input_crops
+
+
+def perform_matching(input_crops, database_embs, db_images_path, threshold=0.35):
+    all_matches_data = []
+    for test_name, crop_path in tqdm(input_crops.items(), desc="Matching"):
+        print(f"\nProcessing: {test_name}")
+
+        # Extract embedding EXACTLY like first script
+        try:
+            face = cv2.imread(crop_path, cv2.IMREAD_GRAYSCALE)
+            face_rgb = cv2.cvtColor(face, cv2.COLOR_GRAY2RGB)
+            emb_resp = DeepFace.represent(
+                face_rgb,
+                model_name=model_name,
+                enforce_detection=False,
+                detector_backend="skip"
+            )
+            target_emb = emb_resp[0]["embedding"]
+        except Exception as e:
+            print(f"Embed fail {test_name}: {e}")
+            continue
+
+        current_matches = []
+        for db_name, db_emb in database_embs.items():
+            sim = 1 - cosine(target_emb, db_emb)
+            if sim > (1 - threshold):
+                current_matches.append({
+                    "Test Image": test_name,
+                    "Matched With": db_name,
+                    "Similarity": f"{sim:.2%}"
+                })
+
+        current_matches.sort(key=lambda x: float(x['Similarity'][:-1]), reverse=True)
+        all_matches_data.extend(current_matches[:5]) 
+
+        #  match
+        if current_matches:
+            top = current_matches[0]
+            fig, ax = plt.subplots(1, 2, figsize=(10, 4))
+            img1 = cv2.cvtColor(cv2.imread(crop_path), cv2.COLOR_BGR2RGB)
+            ax[0].imshow(img1);
+            ax[0].set_title(f"Test: {test_name}");
+            ax[0].axis('off')
+
+            match_filename = top['Matched With']
+
+            if not match_filename.lower().endswith('.jpg'):
+                match_filename += '.jpg'
+           
+            db_img_path = os.path.join(db_images_path, match_filename)
+
+            if os.path.exists(db_img_path):
+                img2 = cv2.cvtColor(cv2.imread(db_img_path), cv2.COLOR_BGR2RGB)
+                ax[1].imshow(img2)
+                ax[1].set_title(f"Match: {top['Matched With']}\n{top['Similarity']}", color='green')
+                ax[1].axis('off')
+            else:
+                ax[1].set_title("DBimage not found", color='red')
+                ax[1].axis('off')
+
+            plt.tight_layout()
+            plt.show()
+
+    return pd.DataFrame(all_matches_data)
+
+
+db_embs = load_database_embeddings(embeddings_file)
+if db_embs:
+    input_crops = extract_test_faces(input_folder, output_folder)
+    results = perform_matching(input_crops, db_embs, db_images_path)
+    print("\nSUMMARY:")
+    display(results)

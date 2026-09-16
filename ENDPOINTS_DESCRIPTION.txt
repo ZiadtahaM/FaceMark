@@ -1,0 +1,41 @@
+# FACEMARK SYSTEM - API ENDPOINTS DESCRIPTION
+
+## 1. Authentication (api/v1/auth)
+- POST /register: Register a new user (admin, staff, student).
+- POST /login: Authenticate user and receive JWT.
+- GET /profile: Get current logged-in user's profile with full relational data.
+- POST /refresh: Refresh the current JWT token.
+- GET /admin-only: RBAC test endpoint for Admin users.
+
+## 2. Student Analytics (api/v1/student)
+- GET /charts: Get hierarchical attendance data for diagram rendering (Course -> Session).
+- GET /alerts: Get student-specific attendance alerts (warnings if attendance < 75%).
+
+## 3. Alerts Management (api/v1/alerts)
+- GET /: List all alerts for the current user.
+- DELETE /: Clear all user alerts.
+- DELETE /:id: Delete a specific alert by ID.
+- GET /settings: Retrieve alert configuration (Low attendance warnings, etc.).
+- PUT /settings: Update alert configuration.
+
+## 4. User Management (api/v1/users)
+- GET /: List all users (Admin only). Filterable by 'role'.
+- GET /:id: Get full details of a specific user (Admin only).
+- POST /: Create a new user (Admin only).
+- PUT /:id: Update user details (Admin only).
+- DELETE /:id: Soft-delete a user (Admin only).
+
+## 5. Course Management (api/v1/courses)
+- GET /: List all active courses.
+- POST /: Create a new course (Admin only).
+- GET /:id: Get course details including section mapping array.
+- PUT /:id: Update course details (Admin only).
+- DELETE /:id: Soft-delete a course (Admin only).
+- POST /:id/students: Enroll a student in a course (Admin/Staff only).
+- GET /:id/students: List all students enrolled in a course (Admin/Staff only).
+
+## 6. Attendance Tracking (api/v1/attendance)
+- GET /: List/filter attendance records (Course, Section, Date).
+- POST /: Save attendance (Supports Single or BULK save).
+  - Includes: studentId, status, room, sessionType, sectionNumber.
+- GET /statistics: Get summary of attendance (Present, Absent, Late, Excused) with role-based filtering.

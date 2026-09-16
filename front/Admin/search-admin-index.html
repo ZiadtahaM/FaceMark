@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMark - Search System</title>
+    <link rel="stylesheet" href="search-admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="dark-mode">
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="resizer"></div> <div class="brand">
+                <img src="../../../images/face.jpeg" alt="FaceMark Logo" class="brand-logo">
+                <div class="brand-text">
+                    <h2>Face<span>Mark</span></h2>
+                    <p>Intelligent Attendance</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <p class="welcome-text">Welcome,</p>
+                <h3>أية الله</h3>
+                <p class="user-role">Admin Portal</p>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard-index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="courses-admin-index.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="manual-attend-admin-index.html"><i class="fas fa-user-check"></i> Manual Attendance</a></li>
+                    <li><a href="reports-admin-index.html"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li class="active"><a href="#"><i class="fas fa-search"></i> Search</a></li>
+                    <li><a href="alerts-admin-index.html"><i class="fas fa-bell"></i> Alerts</a></li>
+                    <li><a href="manage-account-admin-index.html"><i class="fas fa-users-cog"></i> Manage Accounts</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../../index.html" id="signOutBtn" class="sign-out-link" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> 
+                <span>Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="search-section-card">
+                    <h2 class="section-title">Search System</h2>
+                    <div class="search-bar-container">
+                        <input type="text" placeholder="Search by student name, ID, course..." class="search-input">
+                        <button class="btn-search">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Search Type</label>
+                            <select>
+                                <option>Students</option>
+                                <option>Instructors</option>
+                                <option>Courses</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Filter By</label>
+                            <select>
+                                <option>All</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Sort By</label>
+                            <select>
+                                <option>Name (A-Z)</option>
+                                <option>Name (Z-A)</option>
+                                <option>Recent</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-section-card">
+                    <h3 class="section-subtitle">Search Results</h3>
+                    <div class="empty-results">
+                        <p>Enter a search query to view results</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="search-admin-script.js"></script>
+</body>
+</html>

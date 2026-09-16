@@ -1,0 +1,579 @@
+/* ------------------------------------------- */
+/* 1. المتغيرات والتنسيقات الأساسية */
+/* ------------------------------------------- */
+
+:root {
+    /* الوضع الداكن */
+    --dark-bg-color: #0d111c;
+    --dark-text-color: #f0f6fc;
+    --dark-secondary-color: #7284a1;
+    /* ألوان البطاقات الشفافة الزجاجية (الإحصائيات) */
+    --card-bg-accuracy: rgba(36, 40, 68, 0.7); 
+    --card-bg-recognition: rgba(26, 40, 48, 0.7); 
+    --card-bg-users: rgba(30, 35, 55, 0.7); 
+    --dark-highlight-color-1: #5c62ec; 
+    --dark-highlight-color-2: #24b893; 
+    --dark-accent-purple: #9048f0; 
+    --dark-shadow-color: rgba(0, 0, 0, 0.5);
+
+    /* قيم عامة */
+    --primary-btn-bg: #4c68ff;
+    --primary-btn-hover: #3a57e3;
+    
+    /* ألوان الأيقونات لبطاقات المميزات */
+    --feature-icon-blue: #4c68ff;
+    --feature-icon-yellow: #ffc400;
+    --feature-icon-purple: #9048f0;
+    --feature-icon-green: #24b893;
+    --feature-icon-cyan: #00e0b3;
+    --feature-icon-orange: #ff784c;
+    
+    /* ألوان التدرج الجديد (كحلي في موف) */
+    --global-bg-start: #101524; 
+    --global-bg-end: #3a1f6a; 
+}
+
+/* ------------------------------------------- */
+/* ** تعريف الحركة (Floating Animation) ** */
+/* ------------------------------------------- */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+/* ------------------------------------------- */
+/* التنسيقات الأساسية */
+/* ------------------------------------------- */
+
+.dark-mode {
+    background: linear-gradient(180deg, var(--global-bg-start) 0%, var(--global-bg-start) 70%, var(--global-bg-end) 100%); 
+    color: var(--dark-text-color);
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh; 
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; 
+}
+
+body {
+    padding-top: 80px; 
+}
+
+/* ------------------------------------------- */
+/* 2. شريط التنقل الثابت (Header) */
+/* ------------------------------------------- */
+
+#navbar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    height: 80px;
+    backdrop-filter: blur(10px); 
+    border-bottom: 1px solid #1a2034;
+}
+
+.dark-mode #navbar {
+    background-color: rgba(13, 17, 28, 0.8); 
+    border-bottom-color: #1a2034;
+}
+
+/* *** الشعار (Logo) *** */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* تعديل صورة اللوجو لتكون ثابتة ومرسومة (مدمجة) */
+/* تعديل صورة اللوجو لإزالة المربع الداكن تماماً */
+.logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    /* 1. السطر ده هيخلي أي حاجة غامقة في الصورة تختفي تماماً */
+    mix-blend-mode: screen; 
+    /* 2. الفلتر ده هيعلي التباين عشان يمسح أطراف المربع اللي لسه باينة */
+    filter: contrast(150%) brightness(120%);
+    /* 3. لضمان عدم وجود أي حدود وهمية */
+    display: block;
+    background: transparent;
+}
+
+.logo-main-title {
+    line-height: 1.1;
+    margin-bottom: 5px; 
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo-mark {
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(90deg, #4c68ff, #9048f0); 
+}
+
+.sub-logo {
+    display: block; 
+    font-size: 14px; 
+    font-weight: normal;
+    color: var(--dark-secondary-color);
+    line-height: 1.1; 
+}
+
+.design-guide {
+    color: var(--dark-secondary-color);
+    text-decoration: none;
+    font-size: 14px;
+    margin-right: 20px; 
+    transition: color 0.3s;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--dark-secondary-color);
+    font-size: 18px;
+    margin-right: 15px; 
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.sign-in-btn {
+    background-color: var(--primary-btn-bg);
+    color: white;
+    border: none; 
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-left: 15px; 
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.sign-in-btn:hover {
+    background-color: var(--primary-btn-hover); 
+    box-shadow: none; 
+}
+
+/* ------------------------------------------- */
+/* 3. قسم العنوان الرئيسي (Hero Section) */
+/* ------------------------------------------- */
+
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 5% 100px;
+    flex-direction: row; 
+}
+
+.content-left { 
+    max-width: 50%;
+}
+
+.badge-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #1a2034;
+    color: var(--dark-highlight-color-1);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    border: 1px solid #28304a;
+}
+
+h1 {
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.highlight-word {
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(90deg, #4c68ff, #9048f0); 
+    display: block; 
+}
+
+.hero-section p {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 90%;
+    color: var(--dark-secondary-color);
+    margin-bottom: 30px;
+}
+
+.highlight-stat {
+    font-weight: bold;
+    color: var(--dark-highlight-color-2);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.primary-btn, .secondary-btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.primary-btn {
+    background-color: var(--primary-btn-bg);
+    color: white;
+    border: none;
+}
+
+.primary-btn:hover {
+    background-color: var(--primary-btn-hover); 
+    box-shadow: none; 
+}
+
+.secondary-btn {
+    color: var(--dark-secondary-color);
+    text-decoration: none;
+    font-size: 15px;
+    border: none;
+    background: none;
+}
+
+.compliance-badges {
+    display: flex;
+    justify-content: flex-start;
+    gap: 25px;
+    margin-top: 40px; 
+}
+
+.compliance-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark-secondary-color);
+}
+
+.certified-icon {
+    color: #24b893; 
+    margin-right: 8px;
+}
+
+.compliant-icon {
+    color: #4c68ff; 
+    margin-right: 8px;
+}
+
+/* ------------------------------------------- */
+/* 4. قسم الإحصائيات (Stats Cards) */
+/* ------------------------------------------- */
+
+.content-right { 
+    position: relative;
+    padding-top: 40px;
+    max-width: 50%;
+    width: 100%;
+}
+
+.stats-container {
+    max-width: 550px;
+    backdrop-filter: blur(10px);
+    border-radius: 15px; 
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    padding: 20px; 
+    box-shadow: none; 
+}
+
+.realtime-badge {
+    position: absolute;
+    top: -15px; 
+    left: 0; 
+    right: auto;
+    background-image: linear-gradient(90deg, #4c68ff, #9048f0); 
+    color: white; 
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    border: none;
+}
+
+.realtime-badge i {
+    font-size: 14px;
+    margin-right: 6px; 
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    direction: ltr; 
+}
+
+.stat-card {
+    border-radius: 10px; 
+    padding: 25px;
+    position: relative;
+    min-height: 180px;
+}
+
+.stat-card:hover {
+    transform: none;
+    box-shadow: none; 
+}
+
+.accuracy-card {
+    background-image: linear-gradient(135deg, var(--card-bg-accuracy) 0%, rgba(4, 14, 54, 0.7) 100%);
+}
+.recognition-card {
+    background-image: linear-gradient(135deg, var(--card-bg-recognition) 0%, rgba(29, 73, 56, 0.7) 100%);
+}
+.users-card {
+    grid-column: span 2;
+    background-image: linear-gradient(135deg, var(--card-bg-users) 0%, rgba(42, 24, 90, 0.7) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-card .card-icon i {
+    font-size: 28px;
+}
+.accuracy-card .card-icon i { color: #ffc400; } 
+.recognition-card .card-icon i { color: #24b893; } 
+.users-card .card-icon i { color: var(--dark-text-color); }
+
+.stat-value, .stat-label {
+    text-align: left;
+}
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--dark-text-color);
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--dark-secondary-color);
+}
+
+.live-tag {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    background-color: #2a344a;
+    color: #55b8ff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.secure-tag {
+    position: absolute;
+    bottom: -10px; 
+    right: 90px;
+    background-color: var(--dark-accent-purple);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.secure-tag i {
+    margin-right: 8px; 
+}
+
+/* ------------------------------------------- */
+/* 5. قسم المميزات (Why Choose FaceMark?) */
+/* ------------------------------------------- */
+
+.features-section {
+    padding: 100px 5%; 
+    background: transparent; 
+    text-align: center;
+    color: var(--dark-text-color);
+}
+
+.section-header h2 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    font-size: 18px;
+    color: var(--dark-secondary-color);
+    margin-bottom: 50px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto; 
+    text-align: left;
+}
+
+.feature-card {
+    background-color: rgba(255, 255, 255, 0.05); 
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s; 
+}
+
+.feature-card:hover {
+    transform: none; 
+    background-color: rgba(255, 255, 255, 0.08); 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
+    border-color: rgba(76, 104, 255, 0.5); 
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: white; 
+}
+
+.feature-icon i {
+    font-size: 20px;
+    color: inherit; 
+}
+
+.icon-blue { background-color: var(--feature-icon-blue); } 
+.icon-yellow { background-color: var(--feature-icon-yellow); }
+.icon-purple { background-color: var(--feature-icon-purple); }
+.icon-green { background-color: var(--feature-icon-green); }
+.icon-cyan { background-color: var(--feature-icon-cyan); }
+.icon-orange { background-color: var(--feature-icon-orange); }
+
+.feature-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark-text-color);
+}
+
+.feature-card p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--dark-secondary-color);
+}
+
+/* ------------------------------------------- */
+/* 6. قسم الحث على اتخاذ إجراء (CTA Section) */
+/* ------------------------------------------- */
+
+.cta-section {
+    padding: 80px 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    margin: 50px 5% 50px; 
+    text-align: center;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-content {
+    background: linear-gradient(135deg, rgba(29, 37, 63, 0.5) 0%, rgba(58, 31, 106, 0.5) 100%);
+    border-radius: 20px; 
+    padding: 60px 40px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.cta-content h2 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark-text-color);
+}
+
+.cta-content p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 35px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    background-image: linear-gradient(90deg, #4c68ff, #9048f0); 
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s, opacity 0.3s;
+    box-shadow: 0 4px 15px rgba(76, 104, 255, 0.5);
+}
+
+.cta-button:hover {
+    box-shadow: 0 6px 20px rgba(76, 104, 255, 0.8);
+    opacity: 0.95;
+}
+
+.cta-button i {
+    margin-left: 10px;
+}
+
+/* ------------------------------------------- */
+/* 7. التذييل (Footer) */
+/* ------------------------------------------- */
+
+.main-footer {
+    padding: 30px 5%;
+    text-align: center; 
+    border-top: none; 
+    background-color: transparent; 
+    margin-top: 0;
+}
+
+.main-footer p {
+    font-size: 14px;
+    color: var(--dark-secondary-color);
+    margin: 0; 
+    display: inline-block; 
+}

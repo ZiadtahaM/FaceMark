@@ -1,0 +1,1635 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully created"
+          },
+          "409": {
+            "description": "Username already exists"
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        },
+        "summary": "Login and get JWT token",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get current user profile",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Refresh JWT token",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/admin-only": {
+      "get": {
+        "operationId": "AuthController_adminOnly",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Test endpoint for Admin role only",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "admin",
+                "staff",
+                "student"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAccount"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "List all users (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Create new user (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get user details by ID (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update user by ID (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "hard",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete user by ID (Admin only). Use ?hard=true for permanent delete.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/users/username/{username}": {
+      "get": {
+        "operationId": "UsersController_findOneByUsername",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get user details by Username (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_updateByUsername",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccount"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update user by Username (Admin only)",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_removeByUsername",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hard",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete user by username (Admin only). Use ?hard=true for permanent delete.",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/alerts": {
+      "get": {
+        "operationId": "AlertController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get all user alerts",
+        "tags": [
+          "Alerts"
+        ]
+      },
+      "delete": {
+        "operationId": "AlertController_clearAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Clear all alerts",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/{id}": {
+      "delete": {
+        "operationId": "AlertController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete specific alert",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/check-low-attendance/{courseId}": {
+      "post": {
+        "operationId": "AlertController_checkLowAttendance",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "threshold",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Trigger low attendance check for a course",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/report/{courseId}": {
+      "get": {
+        "operationId": "AlertController_getReport",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "threshold",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get low attendance report for a course",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/batch": {
+      "post": {
+        "operationId": "AlertController_sendBatch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchAlertDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Send alerts to multiple users",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/send/{userId}": {
+      "post": {
+        "operationId": "AlertController_sendToUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Send a targeted alert to a specific student",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/alerts/settings": {
+      "get": {
+        "operationId": "AlertController_getSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get alert settings",
+        "tags": [
+          "Alerts"
+        ]
+      },
+      "put": {
+        "operationId": "AlertController_updateSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update alert settings",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/v1/courses": {
+      "get": {
+        "operationId": "CoursesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "List all active courses",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "post": {
+        "operationId": "CoursesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Course created"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Create course (Admin only)",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v1/courses/{id}": {
+      "get": {
+        "operationId": "CoursesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get course details by ID",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "put": {
+        "operationId": "CoursesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update course details by ID (Admin only)",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "delete": {
+        "operationId": "CoursesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "hard",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete course by ID (Admin only). Use ?hard=true for permanent delete.",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v1/courses/code/{code}": {
+      "get": {
+        "operationId": "CoursesController_findOneByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get course details by Code",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "put": {
+        "operationId": "CoursesController_updateByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update course details by Code (Admin only)",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "delete": {
+        "operationId": "CoursesController_removeByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hard",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete course by Code (Admin only). Use ?hard=true for permanent delete.",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v1/courses/{id}/students": {
+      "post": {
+        "operationId": "CoursesController_enrollStudent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Enroll student in course (Admin/Staff only)",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "get": {
+        "operationId": "CoursesController_getEnrolledStudents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "List students in course (Admin/Staff only)",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v1/attendance": {
+      "get": {
+        "operationId": "AttendanceController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "section",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "List attendance records with pagination and filters",
+        "tags": [
+          "Attendance"
+        ]
+      },
+      "post": {
+        "operationId": "AttendanceController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Can accept either a single CreateAttendanceDto or a BulkAttendanceDto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Create/Bulk-save attendance record",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/my": {
+      "get": {
+        "operationId": "AttendanceController_getMyAttendance",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get my attendance (Student only)",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/course/{courseId}": {
+      "get": {
+        "operationId": "AttendanceController_getByCourse",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "section",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get attendance by course",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/student/{studentId}": {
+      "get": {
+        "operationId": "AttendanceController_getStudentAttendanceById",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get attendance for specific student",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/track/{studentId}": {
+      "get": {
+        "operationId": "AttendanceController_trackStudent",
+        "parameters": [
+          {
+            "name": "studentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get intelligent tracking and risk analysis for a student",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/{recordId}": {
+      "put": {
+        "operationId": "AttendanceController_update",
+        "parameters": [
+          {
+            "name": "recordId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAttendanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update attendance record",
+        "tags": [
+          "Attendance"
+        ]
+      },
+      "delete": {
+        "operationId": "AttendanceController_delete",
+        "parameters": [
+          {
+            "name": "recordId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Delete attendance record (Admin only)",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/attendance/statistics": {
+      "get": {
+        "operationId": "AttendanceController_statistics",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get attendance statistics",
+        "tags": [
+          "Attendance"
+        ]
+      }
+    },
+    "/api/v1/student/charts": {
+      "get": {
+        "operationId": "StudentController_getCharts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get student attendance diagram and charts",
+        "tags": [
+          "Student"
+        ]
+      }
+    },
+    "/api/v1/student/alerts": {
+      "get": {
+        "operationId": "StudentController_getAlerts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get student attendance alerts",
+        "tags": [
+          "Student"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "FaceMark API",
+    "description": "Student Attendance Management System with AI Facial Recognition",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "JWT-auth": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "JWT",
+        "description": "Enter JWT token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "ziad_taha",
+            "description": "The desired username"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "Secure password (min 6 chars)"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "staff",
+              "student"
+            ],
+            "default": "student",
+            "description": "Role for the user"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "role"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "ziad_taha",
+            "description": "The username of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "The password of the user (min 6 chars)"
+          },
+          "role": {
+            "type": "string",
+            "example": "student",
+            "enum": [
+              "admin",
+              "staff",
+              "student"
+            ],
+            "description": "The role of the user logging in"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "role"
+        ]
+      },
+      "UserAccount": {
+        "type": "object",
+        "properties": {
+          "userAccountId": {
+            "type": "number",
+            "example": 1,
+            "description": "The unique identifier of the user"
+          },
+          "username": {
+            "type": "string",
+            "example": "ziad_taha",
+            "description": "The unique username of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "hashed_password",
+            "description": "The hashed password (hidden in responses usually)"
+          },
+          "userType": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "staff",
+              "student"
+            ],
+            "default": "student",
+            "description": "The role of the user"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "example": false,
+            "description": "Soft deletion flag"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "userAccountId",
+          "username",
+          "password",
+          "userType",
+          "isDeleted",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateCourseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Mathematics",
+            "description": "The name of the course"
+          },
+          "code": {
+            "type": "string",
+            "example": "MATH101",
+            "description": "Unique course code"
+          },
+          "description": {
+            "type": "string",
+            "example": "Introductory calculus and algebra",
+            "description": "Course description"
+          },
+          "sections": {
+            "type": "number",
+            "example": 4,
+            "description": "Number of sections",
+            "default": 1
+          },
+          "credits": {
+            "type": "number",
+            "example": 3,
+            "description": "Credit hours for the course",
+            "default": 3
+          },
+          "schedule": {
+            "type": "string",
+            "example": "Mon/Wed 10:00-12:00",
+            "description": "Course schedule"
+          },
+          "room": {
+            "type": "string",
+            "example": "Room 302",
+            "description": "Course room"
+          },
+          "instructorId": {
+            "type": "number",
+            "example": 2,
+            "description": "User ID of the instructor (Staff)"
+          },
+          "adminId": {
+            "type": "number",
+            "example": 1,
+            "description": "User ID of the admin manager"
+          }
+        },
+        "required": [
+          "name",
+          "code",
+          "sections",
+          "credits",
+          "instructorId"
+        ]
+      },
+      "UpdateCourseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Mathematics",
+            "description": "The name of the course"
+          },
+          "code": {
+            "type": "string",
+            "example": "MATH101",
+            "description": "Unique course code"
+          },
+          "description": {
+            "type": "string",
+            "example": "Introductory calculus and algebra",
+            "description": "Course description"
+          },
+          "sections": {
+            "type": "number",
+            "example": 4,
+            "description": "Number of sections",
+            "default": 1
+          },
+          "credits": {
+            "type": "number",
+            "example": 3,
+            "description": "Credit hours for the course",
+            "default": 3
+          },
+          "schedule": {
+            "type": "string",
+            "example": "Mon/Wed 10:00-12:00",
+            "description": "Course schedule"
+          },
+          "room": {
+            "type": "string",
+            "example": "Room 302",
+            "description": "Course room"
+          },
+          "instructorId": {
+            "type": "number",
+            "example": 2,
+            "description": "User ID of the instructor (Staff)"
+          },
+          "adminId": {
+            "type": "number",
+            "example": 1,
+            "description": "User ID of the admin manager"
+          }
+        }
+      },
+      "UpdateAttendanceDto": {
+        "type": "object",
+        "properties": {
+          "attendanceStatusId": {
+            "type": "number",
+            "example": 1,
+            "description": "1=Present, 2=Absent, 3=Late, 4=Excused"
+          },
+          "recordDate": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "sectionNumber": {
+            "type": "number",
+            "example": 1
+          },
+          "sessionType": {
+            "type": "string",
+            "example": "LECTURE",
+            "enum": [
+              "LECTURE",
+              "SECTION"
+            ]
+          },
+          "room": {
+            "type": "string",
+            "example": "R3"
+          },
+          "faceConfidence": {
+            "type": "number",
+            "example": 0.95
+          },
+          "checkInTime": {
+            "type": "string",
+            "example": "09:30:00"
+          }
+        }
+      },
+      "BatchAlertDto": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2, 3],
+            "description": "List of user account IDs"
+          },
+          "message": {
+            "type": "string",
+            "example": "Important update for all students",
+            "description": "The alert message content"
+          },
+          "title": {
+            "type": "string",
+            "example": "System Notification",
+            "description": "Alert title"
+          },
+          "type": {
+            "type": "string",
+            "example": "info",
+            "enum": ["info", "warning", "error", "success"]
+          }
+        },
+        "required": ["userIds", "message"]
+      }
+    }
+  }
+}]
+      }
+    }
+  }
+}

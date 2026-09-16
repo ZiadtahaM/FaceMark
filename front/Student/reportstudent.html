@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FaceMark | Report a Problem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+ /* ===== GLOBAL LAYOUT ===== */
+body {
+  margin: 0;
+  display: flex;
+  background-color: #0f0c29;
+  color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  background-color: #15132b;
+  min-height: 100vh;
+  padding: 20px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.user-box {
+  background-color: #1a1a3a;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+}
+
+.user-box small {
+  color: #b0b0b0;
+  font-size: 13px;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.sidebar .nav-link {
+  color: #b0b0b0;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: 0.3s;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background: #3060ff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(48,96,255,0.2);
+}
+
+/* ===== CONTENT ===== */
+.content {
+  flex: 1;
+  padding: 40px;
+}
+
+.card-dark {
+  background: #1a1a3a;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 25px;
+  margin-bottom: 24px;
+}
+
+/* ===== FORM ===== */
+.form-control,
+.form-select,
+textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: #ffffff;
+}
+
+.form-control::placeholder,
+textarea::placeholder {
+  color: #b0b0b0;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255,255,255,0.08);
+  color: #ffffff;
+  box-shadow: none;
+  border-color: #3060ff;
+}
+
+.form-select option {
+  background-color: #1a1a3a;
+  color: #ffffff;
+}
+
+/* ===== BUTTON ===== */
+.btn-primary {
+  background: #3060ff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+}
+
+.btn-primary:hover {
+  background: #254edb;
+}
+
+/* ===== REPORT ITEMS ===== */
+.report-item {
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+/* Pending */
+.report-warning {
+  background: rgba(230,125,34,0.18);
+  border-left: 5px solid #e67e22;
+}
+
+/* Resolved */
+.report-success {
+  background: rgba(46,204,112,0.18);
+  border-left: 5px solid #2ecc71;
+}
+
+.status-badge {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+/* Badge colors */
+.pending {
+  background: #e67e22;
+  color: #fff;
+}
+
+.resolved {
+  background: #2ecc71;
+  color: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Student Portal</p>
+
+  <div class="user-box">
+    <small>Welcome,</small>
+     <div class="user-name" id="username">Loading...</div>
+    <small>Student Portal</small>
+  </div>
+
+  <ul class="nav flex-column">
+    <li class="nav-item"><a class="nav-link" href="studentdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="viewcourse.html"><i class="fa-solid fa-book me-2"></i> View Courses</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentcharts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+    <li class="nav-item"><a class="nav-link" href="alertstudent.html"><i class="bi bi-bell"></i> Alerts</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentexport.html"><i class="bi bi-download"></i> Export</a></li>
+    <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-exclamation-triangle"></i> Report a Problem</a></li>
+  </ul>
+
+  <hr class="text-secondary">
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- REPORT FORM -->
+  <div class="card-dark">
+    <h3 class="mb-3">Report a Problem</h3>
+    <p class="text-muted" style="color:#ffffff !important;">
+      If you encounter any issues with attendance records, face recognition, or system functionality, please report them here.
+    </p>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Problem Category</label>
+        <select class="form-select">
+          <option selected>Select a category</option>
+          <option>Attendance Record Issue</option>
+          <option>Face Recognition Error</option>
+          <option>System Performance</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Priority</label>
+        <select class="form-select">
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Problem Title</label>
+        <input type="text" class="form-control" placeholder="Brief description of the problem">
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Detailed Description</label>
+        <textarea rows="4" class="form-control"
+          placeholder="Please provide as much detail as possible about the issue..."></textarea>
+      </div>
+
+      <div class="col-12">
+        <button class="btn btn-primary mt-2">
+          <i class="bi bi-send"></i> Submit Problem Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT REPORTS -->
+  <div class="card-dark">
+  <h4 class="mb-3">Recent Reports</h4>
+
+  <div id="reportsContainer">
+    <div class="report-item report-warning">
+      <span class="status-badge pending">Pending</span>
+      <h6>Face Recognition Not Working</h6>
+      <p class="mb-1">Category: Face Recognition Error</p>
+      <small class="text-muted" style="color:#ffffff !important;">Submitted: Nov 25, 2024</small>
+    </div>
+
+    <div class="report-item report-success">
+      <span class="status-badge resolved">Resolved</span>
+      <h6>Incorrect Attendance Record</h6>
+      <p class="mb-1">Category: Attendance Record Issue</p>
+      <small class="text-muted" style="color:#ffffff !important;">Submitted: Nov 23, 2024</small>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders(includeJson = true) {
+  const headers = {
+    'Authorization': `Bearer ${getToken()}`
+  };
+  if (includeJson) {
+    headers['Content-Type'] = 'application/json';
+  }
+  return headers;
+}
+
+function redirectToLogin() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+  window.location.href = "../Sign in/index.html";
+}
+
+async function loadProfile() {
+  const token = getToken();
+
+  if (!token) {
+    showAlert("You are not logged in", "error");
+    redirectToLogin();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      method: 'GET',
+      headers: authHeaders()
+    });
+
+    const data = await response.json();
+    console.log("Profile response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unauthorized");
+    }
+
+    const username =
+      data.username ||
+      data.user?.username ||
+      data.data?.username ||
+      localStorage.getItem('loggedUser') ||
+      "Student";
+
+    const role =
+      data.role ||
+      data.user?.role ||
+      data.userType ||
+      data.user?.userType ||
+      data.data?.role ||
+      data.data?.userType ||
+      localStorage.getItem('userRole') ||
+      "student";
+
+    document.getElementById("username").textContent = username;
+
+    if (String(role).toLowerCase() !== 'student') {
+      showAlert("This page is for students only", "error");
+      redirectToLogin();
+    }
+  } catch (error) {
+    console.error("Profile error:", error);
+    showAlert("Session expired or unauthorized. Please login again.", "error");
+    redirectToLogin();
+  }
+}
+
+function formatDate(dateValue) {
+  const date = new Date(dateValue);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric"
+  });
+}
+
+function getReportStatusClass(status) {
+  const normalized = String(status || '').toLowerCase();
+  return normalized === 'resolved' ? 'report-success' : 'report-warning';
+}
+
+function getBadgeClass(status) {
+  const normalized = String(status || '').toLowerCase();
+  return normalized === 'resolved' ? 'resolved' : 'pending';
+}
+
+function getStatusText(status) {
+  const normalized = String(status || '').toLowerCase();
+  return normalized === 'resolved' ? 'Resolved' : 'Pending';
+}
+
+function renderReports(reports) {
+  const container = document.getElementById('reportsContainer');
+  container.innerHTML = '';
+
+  if (!reports || reports.length === 0) {
+    container.innerHTML = `
+      <div class="report-item report-warning">
+        <span class="status-badge pending">Pending</span>
+        <h6>No Reports Yet</h6>
+        <p class="mb-1">You have not submitted any reports yet.</p>
+        <small class="text-muted" style="color:#ffffff !important;">Submitted: --</small>
+      </div>
+    `;
+    return;
+  }
+
+  reports.forEach(report => {
+    const status = report.status || 'pending';
+    const title = report.title || 'Problem Report';
+    const category = report.category || 'Other';
+    const submittedAt = report.createdAt || report.submittedAt || new Date().toISOString();
+
+    const item = document.createElement('div');
+    item.className = `report-item ${getReportStatusClass(status)}`;
+    item.innerHTML = `
+      <span class="status-badge ${getBadgeClass(status)}">${getStatusText(status)}</span>
+      <h6>${title}</h6>
+      <p class="mb-1">Category: ${category}</p>
+      <small class="text-muted" style="color:#ffffff !important;">Submitted: ${formatDate(submittedAt)}</small>
+    `;
+
+    container.appendChild(item);
+  });
+}
+
+async function loadReports() {
+  try {
+    // غيّر route ده لو endpoint الحقيقي مختلف
+    const response = await fetch(`${API_BASE_URL}/student/reports`, {
+      method: 'GET',
+      headers: authHeaders()
+    });
+
+    const data = await response.json();
+    console.log("Reports response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to load reports");
+    }
+
+    const reports =
+      data.reports ||
+      data.data ||
+      data.items ||
+      [];
+
+    renderReports(reports);
+
+  } catch (error) {
+    console.error("Reports API error:", error);
+
+    const fallback = JSON.parse(localStorage.getItem('student_reports_fallback') || '[]');
+    if (fallback.length > 0) {
+      renderReports(fallback);
+    }
+  }
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+async function submitReport() {
+  const category = document.querySelectorAll(".form-select")[0].value;
+  const priority = document.querySelectorAll(".form-select")[1].value;
+  const title = document.querySelector("input[type='text']").value.trim();
+  const description = document.querySelector("textarea").value.trim();
+
+  if (!title || !description || category === "Select a category") {
+    showAlert("Please fill all required fields!", "error");
+    return;
+  }
+
+  const payload = {
+    category,
+    priority,
+    title,
+    description
+  };
+
+  try {
+    // غيّر route ده لو endpoint الحقيقي مختلف
+    const response = await fetch(`${API_BASE_URL}/student/reports`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    console.log("Submit report response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to submit report");
+    }
+
+    showAlert("Problem report submitted successfully", "success");
+
+    document.querySelector("input[type='text']").value = "";
+    document.querySelector("textarea").value = "";
+    document.querySelectorAll(".form-select")[0].selectedIndex = 0;
+    document.querySelectorAll(".form-select")[1].selectedIndex = 1;
+
+    loadReports();
+
+  } catch (error) {
+    console.error("Submit report API error:", error);
+
+    const fallbackReports = JSON.parse(localStorage.getItem('student_reports_fallback') || '[]');
+
+    fallbackReports.unshift({
+      title,
+      category,
+      priority,
+      description,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    });
+
+    localStorage.setItem('student_reports_fallback', JSON.stringify(fallbackReports));
+
+    showAlert("Report saved locally because reports API is not available yet.", "error");
+
+    document.querySelector("input[type='text']").value = "";
+    document.querySelector("textarea").value = "";
+    document.querySelectorAll(".form-select")[0].selectedIndex = 0;
+    document.querySelectorAll(".form-select")[1].selectedIndex = 1;
+
+    renderReports(fallbackReports);
+  }
+}
+
+document.querySelector(".btn-primary").addEventListener("click", function () {
+  submitReport();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+ Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+});
+
+loadProfile();
+loadReports();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+/* =========================================================
+   1. GLOBAL VARIABLES & ROOT SETTINGS
+   ========================================================= */
+:root {
+    --bg-main:       #0f0f1e;
+    --card-bg:       #1a1a2e;
+    --sidebar-bg:    #14142b;
+    --text-main:     #ffffff;
+    --text-dim:      #a0a0b0;
+    --accent:        #3060ff;
+    --accent-purple: #9b59b6;
+    --border-color:  rgba(255, 255, 255, 0.05);
+    --transition-fast: 0.3s ease;
+}
+
+/* =========================================================
+   2. BASE STYLES
+   ========================================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden; 
+}
+
+/* =========================================================
+   3. LAYOUT STRUCTURE
+   ========================================================= */
+.dashboard-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Sidebar - الموحد مع باقي الصفحات */
+.sidebar {
+    width: 260px;
+    min-width: 200px;
+    max-width: 500px;
+    background-color: var(--sidebar-bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 20px;
+    border-right: 1px solid var(--border-color);
+    position: relative; 
+    flex: none !important; 
+    overflow-x: hidden;
+}
+
+/* Resizer Handle */
+.resizer {
+    width: 6px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: col-resize;
+    z-index: 1000;
+    transition: 0.3s;
+}
+.resizer:hover { background: var(--accent); }
+
+/* Sidebar Navigation Spacing (حل مشكلة الالتصاق) */
+.sidebar-nav ul { list-style: none; }
+.sidebar-nav li { margin-bottom: 10px; }
+.sidebar-nav a {
+    text-decoration: none;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    transition: var(--transition-fast);
+}
+.sidebar-nav li.active a, .sidebar-nav a:hover {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+/* =========================================================
+   4. MAIN CONTENT AREA (Courses Table)
+   ========================================================= */
+.main-content {
+    flex: 1; 
+    padding: 40px;
+    min-width: 0; 
+    height: 100vh;
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+}
+
+.courses-table-container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.section-title { font-size: 1.6rem; font-weight: 600; }
+
+/* Table Styling */
+table { width: 100%; border-collapse: collapse; }
+
+th {
+    text-align: left;
+    padding: 15px;
+    color: var(--text-dim);
+    border-bottom: 2px solid var(--border-color);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 20px 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+
+/* =========================================================
+   5. BUTTONS & ACTIONS
+   ========================================================= */
+.action-btns { display: flex; gap: 10px; }
+
+.btn-edit {
+    background: rgba(48, 96, 255, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 7px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+.btn-edit:hover { background: var(--accent); color: white; }
+
+.btn-delete {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.btn-delete:hover { background: #e74c3c; color: white; }
+
+.add-course-btn {
+    background: var(--accent);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(48, 96, 255, 0.3);
+    transition: var(--transition-fast);
+}
+.add-course-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+/* =========================================================
+   6. MODAL SYSTEM (Add/Edit Course)
+   ========================================================= */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 24px;
+    width: 550px;
+    max-width: 95%;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideIn {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.form-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.form-group label { font-size: 0.9rem; color: var(--text-dim); }
+
+.form-group input, 
+.form-group select {
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    outline: none;
+    font-size: 1rem;
+}
+
+.form-group select option {
+    background-color: #11111d; 
+    color: #ffffff;
+    padding: 10px;
+}

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FaceMark | My Courses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    body {
+      margin: 0;
+      background-color: #0f0c29;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex; 
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    /* ========== SIDEBAR  ========== */
+    .sidebar {
+      width: 240px;
+      background-color: #15132b;
+      min-height: 100vh;
+      padding: 20px;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .user-box {
+      background: #1a1a3a;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 18px 0 24px;
+    }
+
+    .user-box small { 
+      color: #b0b0b0; 
+      font-size: 13px; 
+    }
+
+    .user-name { 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: #ffffff; 
+    }
+
+    .sidebar .nav-link {
+      color: #b0b0b0;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background: #3060ff;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(48,96,255,0.2);
+    }
+
+    /* ========== CONTENT ========== */
+    .content {
+      flex: 1;              
+      padding: 30px;
+    }
+
+    .page-card {
+      background: #1a1a3a;
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ========== COURSE CARD ========== */
+    .course-card {
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 22px;
+      height: 100%;
+      transition: transform .2s ease, box-shadow .2s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    }
+
+    .credits-badge {
+      background: #3060ff;
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .progress {
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+    }
+
+    .progress-bar {
+      border-radius: 10px;
+    }
+
+    .text-soft {
+      color: #b0b0b0;
+      font-size: 14px;
+    }
+
+    h4, h5 {
+      color: #ffffff;
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+   <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Student Portal</p>
+
+  <div class="user-box">
+    <small>Welcome,</small>
+     <div class="user-name" id="username">Loading...</div>
+    <small>Student Portal</small>
+  </div>
+
+  <ul class="nav flex-column">
+    <li class="nav-item"><a class="nav-link" href="studentdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link active" href="#"><i class="fa-solid fa-book me-2"></i> View Courses</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentcharts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+    <li class="nav-item"><a class="nav-link" href="alertstudent.html"><i class="bi bi-bell"></i> Alerts</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentexport.html"><i class="bi bi-download"></i> Export</a></li>
+    <li class="nav-item"><a class="nav-link" href="reportstudent.html"><i class="fa-solid fa-triangle-exclamation me-2"></i> Report a Problem</a></li>
+  </ul>
+
+  <hr class="text-secondary">
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div class="page-card">
+    <h4 class="mb-4">My Courses</h4>
+
+   <div class="row g-4" id="coursesContainer">
+      <!-- كل الكورسات زي ما هي بالظبط -->
+      
+    <div class="row g-4" id="coursesContainer"></div>
+
+    </div>
+  </div>
+
+</div>
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+/* ================= HELPERS ================= */
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
+}
+
+function redirectToLogin() {
+  localStorage.clear();
+  window.location.href = "../Sign in/index.html";
+}
+
+function logout() {
+  document.getElementById("logoutBtn")
+?.addEventListener("click", function () {
+
+    localStorage.clear();
+
+    Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+
+});
+}
+
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
+/* ================= PROFILE ================= */
+
+async function loadProfile() {
+  const token = getToken();
+
+  if (!token) {
+    showAlert("You are not logged in", "error");
+    redirectToLogin();
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error();
+
+    const username =
+      data.username ||
+      data.user?.username ||
+      data.data?.username ||
+      "Student";
+
+    const role =
+      data.role ||
+      data.user?.role ||
+      data.userType ||
+      data.data?.role ||
+      "student";
+
+    document.getElementById("username").textContent = username;
+
+    if (role.toLowerCase() !== "student") {
+      showAlert("Access denied", "error");
+      redirectToLogin();
+    }
+
+  } catch (err) {
+    redirectToLogin();
+  }
+}
+
+/* ================= UI STATES ================= */
+
+function showLoading() {
+  const container = document.getElementById('coursesContainer');
+  container.innerHTML = `
+    <div class="col-12 text-center">
+      <p>Loading courses...</p>
+    </div>
+  `;
+}
+
+function showError() {
+  const container = document.getElementById('coursesContainer');
+  container.innerHTML = `
+    <div class="col-12">
+      <div class="course-card">
+        <h5>Error loading courses</h5>
+        <p class="text-soft">Server problem or unauthorized</p>
+      </div>
+    </div>
+  `;
+}
+
+function showEmpty() {
+  const container = document.getElementById('coursesContainer');
+  container.innerHTML = `
+    <div class="col-12">
+      <div class="course-card">
+        <h5>No Courses Found</h5>
+        <p class="text-soft">You are not enrolled in any courses</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ================= HELPERS ================= */
+
+function getProgressColor(value) {
+  if (value >= 90) return "bg-success";
+  if (value >= 80) return "bg-primary";
+  if (value >= 75) return "bg-warning";
+  return "bg-danger";
+}
+
+function formatSchedule(course) {
+  return (
+    course.schedule ||
+    `${course.days || ''} ${course.startTime || ''} - ${course.endTime || ''}` ||
+    "Not specified"
+  );
+}
+
+/* ================= RENDER ================= */
+
+function renderCourses(courses) {
+  const container = document.getElementById('coursesContainer');
+
+  if (!courses || courses.length === 0) {
+    showEmpty();
+    return;
+  }
+
+  container.innerHTML = courses.map(course => {
+    const id = course.id || '';
+    const name = course.name || course.courseName || 'Course';
+    const credits = course.credits || course.creditHours || 0;
+   const instructor =
+  course.instructor?.username ||
+  course.instructor?.name ||
+  'Unknown Instructor';
+
+    const attendance = Number(
+      course.attendance || course.attendancePercentage || 0
+    );
+
+    const schedule = formatSchedule(course);
+
+    return `
+      <div class="col-md-6">
+        <div class="course-card" data-id="${id}">
+          <div class="d-flex justify-content-between mb-2">
+            <h5>${name}</h5>
+            <span class="credits-badge">${credits} Credits</span>
+          </div>
+
+          <p class="text-soft">${instructor}</p>
+
+          <div class="d-flex justify-content-between text-soft">
+            <span>Schedule:</span>
+            <span>${schedule}</span>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span class="text-soft">Attendance:</span>
+            <span>${attendance}%</span>
+          </div>
+
+          <div class="progress">
+            <div class="progress-bar ${getProgressColor(attendance)}"
+                 style="width:${attendance}%">
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ================= API ================= */
+
+/* ================= API ================= */
+
+async function loadCourses() {
+  showLoading();
+
+  try {
+    /* استخدم student/charts لأنه جاهز فيه attendanceRate لكل كورس */
+    const res = await fetch(`${API_BASE_URL}/student/charts`, {
+      headers: authHeaders()
+    });
+
+    const response = await res.json();
+
+    if (!res.ok) throw new Error("Failed to load student charts");
+
+    const data = response.data || {};
+
+    /* courses فيها attendanceRate مباشرة */
+    const chartCourses = data.courses || [];
+
+    /* structure فيها تفاصيل schedule / rooms */
+    const structure = data.structure || [];
+
+    /* دمج الداتا */
+    const formattedCourses = chartCourses.map(course => {
+
+      /* دور على نفس الكورس في structure */
+      const structureCourse = structure.find(
+        s => s.label === course.courseName
+      );
+
+      /* دمج كل الـ rooms */
+      let rooms = [];
+      let scheduleDetails = [];
+
+      if (structureCourse?.children) {
+        structureCourse.children.forEach(child => {
+
+          if (child.room) {
+            scheduleDetails.push(`${child.label}: ${child.room}`);
+          }
+
+          if (child.stats?.rooms?.length) {
+            rooms.push(...child.stats.rooms);
+          }
+
+        });
+      }
+
+      return {
+        name: course.courseName || "Course",
+        credits: course.credits || 0,
+
+        /* الحضور الحقيقي */
+        attendance: Number(course.attendanceRate || 0),
+
+        /* مؤقتًا لحد الباك يضيف schedule واضح */
+        schedule:
+          scheduleDetails.length > 0
+            ? scheduleDetails.join(" | ")
+            : "Schedule Not Available",
+
+        instructor: "Staff",
+        rooms: [...new Set(rooms)]
+      };
+    });
+
+    renderCourses(formattedCourses);
+
+  } catch (err) {
+    console.error("Courses error:", err);
+    showError();
+  }
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+/* ================= INIT ================= */
+
+loadProfile();
+loadCourses();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

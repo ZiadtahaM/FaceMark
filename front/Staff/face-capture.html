@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FACEMARK | Face Capture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<!-- <link rel="stylesheet" href="css/styless.css"> -->
+  <!-- Custom Style -->
+<style>
+  
+    body {
+       background: #0f0c29;
+  color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+    }
+/* Sidebar */
+    .sidebar {
+      background: #15132b;
+  min-height: 100vh;
+  padding: 20px;
+    }
+
+    .brand {
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .user-box {
+      background: #1a1a3a;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+    }
+
+    .user-box small {
+      color: #b0b0b0;
+      font-size: 13px;
+    }
+
+    .user-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 4px 0;
+    }
+
+    .sidebar .nav-link {
+        color: #b0b0b0;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+       background: #3060ff;
+  color: #ffffff;
+    }
+    .card-ui {
+    background: #1a1a3a;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+    
+
+    .camera-box {
+  border: 2px dashed rgba(255,255,255,0.15);
+        position: relative;
+    width: 100%;
+    max-width: 700px; 
+    min-height: 450px;
+    padding: 16px;     
+    margin: auto;    
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+       color: #b0b0b0;
+       background: rgba(255,255,255,0.03);
+    }
+#video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  display: none;
+}
+
+/* Placeholder */
+#cameraPlaceholder {
+  color: #aaa;
+  text-align: center;
+}
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 18px;
+    }
+
+    .accuracy {
+      color: #2ecc71;
+  font-weight: bold;
+    }
+
+    .detected {
+      color: #3060ff;
+  font-weight: bold;
+    }
+
+    .time {
+    color: #9b59b6;
+  font-weight: bold;
+    }
+
+    .recent-item {
+     background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+      
+    }
+</style> 
+</head>
+
+<body>
+
+<div class="d-flex">
+
+   <!-- Sidebar -->
+    <div class="col-md-2 sidebar">
+      <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Staff Portal</p>
+<!-- Welcome Box -->
+      <div class="user-box">
+        <small>Welcome,</small>
+       <div class="user-name" id="username">Loading...</div>
+        <small>Staff Portal</small>
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="staffdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="manualattendance.html"><i class="bi bi-person-check"></i> Manual Attendance</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-camera"></i> Face Capture</a></li>
+        <li class="nav-item"><a class="nav-link" href="charts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="export.html"><i class="bi bi-download"></i> Export</a></li>
+        <li class="nav-item"><a class="nav-link" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a></li>
+      </ul>
+      <hr class="text-secondary">
+
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+    </div>
+  <!-- Main Content -->
+  <main class="flex-grow-1 p-4">
+
+    <!-- Header -->
+    <div class="card-ui mb-4">
+      <h4 class="mb-3">Face Capture & Recognition</h4>
+
+      <div class="row g-3">
+        
+<div class="col-md-4">
+  <label class="form-label">Course</label>
+  <select id="courseSelect" class="form-select bg-dark text-light border-0">
+    <option value="">Select Course</option>
+  </select>
+</div>
+
+<div class="col-md-4">
+  <label class="form-label">Section / Group</label>
+  <select id="sectionSelect" class="form-select bg-dark text-light border-0">
+    <option value="">Select Option</option>
+  </select>
+</div>
+
+<div class="col-md-4">
+  <label class="form-label">Session Type</label>
+  <select id="sessionTypeSelect" class="form-select bg-dark text-light border-0">
+    <option value="">Select Session Type</option>
+    <option value="section">Section</option>
+    <option value="lecture">Lecture</option>
+  </select>
+</div>
+
+      </div>
+    </div>
+
+    <!-- Camera -->
+    <div class="card-ui mb-4">
+      <div class="camera-box text-center">
+
+  <video id="video" autoplay playsinline style="display:none;"></video>
+
+  <div id="cameraPlaceholder">
+    <i class="bi bi-camera fs-1 mb-2"></i>
+    <h6>Camera Ready</h6>
+    <small class="text-secondary mb-3 d-block">
+      Click "Start Capture" to begin face recognition
+    </small>
+  </div>
+<div class="mt-3">
+  <select id="cameraSelect" class="form-select bg-dark text-light border-0">
+    <option value="">Select Camera</option>
+  </select>
+</div>
+  <button id="startBtn" class="btn btn-primary px-4 mt-3">
+  Start Capture
+</button>
+
+<button id="stopBtn" class="btn btn-danger px-4 mt-3" style="display:none;">
+  Stop Camera
+</button>
+
+<button id="shotBtn" class="btn btn-success px-4 mt-3" style="display:none;">
+  Take Shot
+</button>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <small>Recognition Rate</small>
+          <div class="accuracy fs-4">98.5%</div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stat-card">
+          <small>Students Detected</small>
+          <div class="detected fs-4">45 / 48</div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stat-card">
+          <small>Processing Time</small>
+          <div class="time fs-4">1.8s</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Captures -->
+    <div class="card-ui">
+      <h5 class="mb-3">Recent Captures</h5>
+
+      <div class="recent-item d-flex justify-content-between">
+        <div>
+          <strong>Mathematics</strong>
+          <div class="text-secondary small">10 mins ago</div>
+        </div>
+        <div class="text-end">
+          <div>48 / 50 detected</div>
+          <div class="accuracy">96% accuracy</div>
+        </div>
+      </div>
+
+      <div class="recent-item d-flex justify-content-between">
+        <div>
+          <strong>Physics</strong>
+          <div class="text-secondary small">2 hours ago</div>
+        </div>
+        <div class="text-end">
+          <div>42 / 45 detected</div>
+          <div class="accuracy">93% accuracy</div>
+        </div>
+      </div>
+
+      <div class="recent-item d-flex justify-content-between">
+        <div>
+          <strong>Chemistry</strong>
+          <div class="text-secondary small">1 day ago</div>
+        </div>
+        <div class="text-end">
+          <div>50 / 52 detected</div>
+          <div class="accuracy">96% accuracy</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+const video = document.getElementById("video");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const placeholder = document.getElementById("cameraPlaceholder");
+const cameraSelect = document.getElementById("cameraSelect");
+const shotBtn = document.getElementById("shotBtn");
+const canvas = document.getElementById("canvas");
+const logoutBtn = document.getElementById("logoutBtn");
+const usernameEl = document.getElementById("username");
+
+const courseSelect = document.getElementById("courseSelect");
+const sectionSelect = document.getElementById("sectionSelect");
+const sessionTypeSelect = document.getElementById("sessionTypeSelect");
+
+let staffCourses = [];
+
+let stream = null;
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders(includeJson = true) {
+  const headers = {
+    'Authorization': `Bearer ${getToken()}`
+  };
+  if (includeJson) headers['Content-Type'] = 'application/json';
+  return headers;
+}
+
+function redirectToLogin() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+  window.location.href = "../Sign in/index.html";
+}
+
+async function loadProfile() {
+  const token = getToken();
+
+  if (!token) {
+    showAlert("You are not logged in", "error");
+    redirectToLogin();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      method: 'GET',
+      headers: authHeaders()
+    });
+
+    const data = await response.json();
+    console.log("Profile response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unauthorized");
+    }
+
+    const username =
+      data.username ||
+      data.user?.username ||
+      data.data?.username ||
+      localStorage.getItem('loggedUser') ||
+      "Staff User";
+
+    const role =
+      data.role ||
+      data.user?.role ||
+      data.userType ||
+      data.user?.userType ||
+      data.data?.role ||
+      data.data?.userType ||
+      localStorage.getItem('userRole') ||
+      "staff";
+
+    usernameEl.textContent = username;
+
+    if (String(role).toLowerCase() !== 'staff') {
+      showAlert("This page is for staff only", "error");
+      redirectToLogin();
+    }
+  } catch (error) {
+    console.error("Profile error:", error);
+    showAlert("Session expired or unauthorized. Please login again.", "error");
+    redirectToLogin();
+  }
+}
+//load courses
+/* ================= Load Staff Courses ================= */
+async function loadCourses() {
+
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/courses`, {
+      headers: authHeaders()
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to load courses");
+    }
+
+    staffCourses = result.data || [];
+
+    courseSelect.innerHTML =
+      `<option value="">Select Course</option>`;
+
+    staffCourses.forEach(course => {
+
+      const option = document.createElement("option");
+
+      option.value = course.courseId;
+
+      option.textContent =
+        `${course.name} (${course.code})`;
+
+      courseSelect.appendChild(option);
+
+    });
+
+  } catch (error) {
+
+    console.error("Courses load error:", error);
+
+    showAlert("Failed to load courses", "error");
+
+  }
+}
+
+/* ================= Course Change ================= */
+function loadSectionOrLectureOptions() {
+
+  const selectedCourseId = Number(courseSelect.value);
+
+  const sessionType = sessionTypeSelect.value;
+
+  const course = staffCourses.find(
+    c => Number(c.courseId) === selectedCourseId
+  );
+
+  sectionSelect.innerHTML =
+    `<option value="">Select Option</option>`;
+
+  if (!course || !sessionType) return;
+
+  /* ================= SECTION ================= */
+
+  if (sessionType === "section") {
+
+    const sectionsCount = Number(course.sections) || 0;
+
+    for (let i = 1; i <= sectionsCount; i++) {
+
+      const option = document.createElement("option");
+
+      option.value = i;
+
+      option.textContent = `Section ${i}`;
+
+      sectionSelect.appendChild(option);
+    }
+  }
+
+  /* ================= LECTURE ================= */
+
+  if (sessionType === "lecture") {
+
+    const groups = ["A", "B", "C", "D"];
+
+    groups.forEach(group => {
+
+      const option = document.createElement("option");
+
+      option.value = group;
+
+      option.textContent = `Group ${group}`;
+
+      sectionSelect.appendChild(option);
+    });
+  }
+}
+
+/* لما يختار كورس */
+courseSelect.addEventListener("change", loadSectionOrLectureOptions);
+
+/* لما يختار Session Type */
+sessionTypeSelect.addEventListener("change", loadSectionOrLectureOptions);
+
+logoutBtn.addEventListener('click', function () {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+ Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+});
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+async function loadCameras() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameras = devices.filter(device => device.kind === "videoinput");
+
+    cameraSelect.innerHTML = "";
+
+    if (cameras.length === 0) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.text = "No camera found";
+      cameraSelect.appendChild(option);
+      return;
+    }
+
+    cameras.forEach((camera, index) => {
+      const option = document.createElement("option");
+      option.value = camera.deviceId;
+      option.text = camera.label || `Camera ${index + 1}`;
+      cameraSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error loading cameras:", error);
+  }
+}
+
+async function initCameraPermissions() {
+  try {
+    const tempStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    tempStream.getTracks().forEach(track => track.stop());
+    await loadCameras();
+  } catch (error) {
+    console.error("Camera permission error:", error);
+  }
+}
+
+startBtn.addEventListener("click", async function () {
+  try {
+    const selectedCamera = cameraSelect.value;
+
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: selectedCamera ? { deviceId: { exact: selectedCamera } } : true
+    });
+
+    video.srcObject = stream;
+    video.style.display = "block";
+    placeholder.style.display = "none";
+    startBtn.style.display = "none";
+    stopBtn.style.display = "inline-block";
+    shotBtn.style.display = "inline-block";
+  } catch (error) {
+    showAlert("Camera access denied or not available.", "error");
+    console.error(error);
+  }
+});
+
+stopBtn.addEventListener("click", function () {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
+
+  video.style.display = "none";
+  placeholder.style.display = "block";
+  startBtn.style.display = "inline-block";
+  stopBtn.style.display = "none";
+  shotBtn.style.display = "none";
+});
+
+async function uploadCapturedImage(blob) {
+
+  const token = getToken();
+
+  if (!token) {
+    showAlert("You are not logged in", "error");
+    redirectToLogin();
+    return;
+  }
+
+  // validation
+  if (
+    !courseSelect.value ||
+    !sectionSelect.value ||
+    !sessionTypeSelect.value
+  ) {
+    showAlert(
+      "Please select course, section/group and session type",
+      "error"
+    );
+    return;
+  }
+
+  try {
+
+    // convert image -> base64
+    const base64Image = await blobToBase64(blob);
+
+    // payload
+    const payload = {
+
+      imageBase64: base64Image,
+
+      // IMPORTANT
+      sectionId:
+        sessionTypeSelect.value === "section"
+          ? `SEC_${sectionSelect.value}`
+          : `GRP_${sectionSelect.value}`,
+
+      // unique session id
+      sessionId: `SES_${Date.now()}`,
+
+      courseId: Number(courseSelect.value),
+
+      // MUST BE UPPERCASE
+      sessionType:
+        sessionTypeSelect.value === "lecture"
+          ? "LECTURE"
+          : "SECTION",
+
+      room: "Room 301",
+
+      confidenceThreshold: 0.7,
+
+      processingTimeMs: 150
+    };
+
+    console.log("Sending payload:", payload);
+
+    const response = await fetch(
+      `${API_BASE_URL}/vision/recognize`,
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const data = await response.json();
+    console.log("Recognition response:", data);
+
+    if (!response.ok || data.status === 'ERROR') {
+      const errorMsg = data.message || data.error || "Recognition failed";
+      throw new Error(Array.isArray(errorMsg) ? errorMsg.join(', ') : (typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg));
+    }
+
+    // SUCCESS
+    Swal.fire({
+      icon: "success",
+      title: "Attendance Marked",
+      text: data.message || "Face recognized successfully",
+      background: "#1a1a3a",
+      color: "#fff",
+      confirmButtonColor: "#3060ff"
+    });
+
+  } catch (error) {
+
+    console.error("Recognition error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Recognition Failed",
+      text: error.message,
+      background: "#1a1a3a",
+      color: "#fff",
+      confirmButtonColor: "#3060ff"
+    });
+  }
+}
+function blobToBase64(blob) {
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(blob);
+  });
+}
+//initialize page
+shotBtn.addEventListener("click", async function () {
+  if (!video.videoWidth || !video.videoHeight) {
+    showAlert("Camera is not ready yet", "error");
+    return;
+    if (!courseSelect.value) {
+  showAlert("Please select course", "error");
+  return;
+}
+
+if (!sessionTypeSelect.value) {
+  showAlert("Please select session type", "error");
+  return;
+}
+
+if (!sectionSelect.value) {
+  showAlert("Please select section/group", "error");
+  return;
+}
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(async function(blob) {
+    if (!blob) {
+      showAlert("Failed to capture image", "error");
+      return;
+    }
+
+    await uploadCapturedImage(blob);
+  }, "image/png");
+});
+
+(async function initPage() {
+
+  await loadProfile();
+
+  await loadCourses();
+
+  await initCameraPermissions();
+
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

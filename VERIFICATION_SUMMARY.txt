@@ -1,0 +1,12 @@
+VERIFICATION SUMMARY - ATTENDANCE & ALERTS FIXES
+
+1.  [ALERTS] DTO DEFINITION: Created BatchAlertDto with proper Class-Validator decorators to ensure Swagger UI renders input fields correctly.
+2.  [ALERTS] BATCH LOGIC: Updated AlertService.sendBatchAlerts with defensive programming to handle null/invalid userIds, preventing 500 errors.
+3.  [ALERTS] SWAGGER INTEGRATION: Explicitly linked BatchAlertDto to AlertController using @ApiBody for accurate OpenAPI generation.
+4.  [ATTENDANCE] DATE NORMALIZATION: Refactored normalizeDate in AttendanceService to correctly parse date strings without creating 'Invalid Date' objects when ISO strings are provided.
+5.  [ATTENDANCE] TZ-SAFE QUERIES: Updated AttendanceRepository to use direct YYYY-MM-DD string comparison for DATE columns, bypassing local/UTC timezone offset issues that caused empty results.
+6.  [ATTENDANCE] FILTER FLEXIBILITY: Modified AttendanceService.findAll and getCourseAttendance to treat 'date' as optional. System no longer defaults to today's date if date is omitted.
+7.  [ATTENDANCE] PAGINATION CONSISTENCY: Aligned staff/admin search logic to use the same filtered pagination method, ensuring consistent data structures.
+8.  [SWAGGER] DOCS UPDATE: Updated MASTER_SWAGGER_OPENAPI.json with BatchAlertDto components and updated attendance query parameters.
+9.  [POSTMAN] COLLECTION UPDATE: Added raw JSON bodies for Alert requests and expanded query parameters for Attendance List requests.
+10. [STABILITY] ERROR HANDLING: Added date string validation in repository layers to ensure the system defaults gracefully instead of crashing on bad input.

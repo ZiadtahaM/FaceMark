@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMark - Manage Courses</title>
+    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="courses-admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../../Responsive/responsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="dark-mode">
+    <div class="dashboard-container">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <aside class="sidebar" id="resizableSidebar">
+            <div class="brand">
+                <img src="../../../images/face.jpeg" alt="FaceMark Logo" class="brand-logo">
+                <div class="brand-text">
+                    <h2>Face<span>Mark</span></h2>
+                    <p>Intelligent Attendance</p>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <p class="welcome-text">Welcome,</p>
+                <h3 id="adminName">Loading...</h3> 
+                <p class="user-role">Admin Portal</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard-index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li class="active"><a href="courses-admin-index.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="manual-attend-admin-index.html"><i class="fas fa-user-check"></i> Manual Attendance</a></li>
+                    <li><a href="reports-admin-index.html"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li><a href="search-admin-index.html"><i class="fas fa-search"></i> Search</a></li>
+                    <li><a href="alerts-admin-index.html"><i class="fas fa-bell"></i> Alerts</a></li>
+                    <li><a href="manage-account-admin-index.html"><i class="fas fa-users-cog"></i> Manage Accounts</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="javascript:void(0)" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Sign Out</span>
+                </a>
+            </div>
+            <div class="resizer" id="sidebarResizer"></div>
+        </aside>
+
+        <main class="main-content" id="mainContent">
+            <div class="courses-table-container">
+                <div class="table-header">
+                    <h2>Manage Courses</h2>
+                    <a href="javascript:void(0)" class="add-course-btn" onclick="openModal()">
+                        <i class="fas fa-plus"></i> Add New Course
+                    </a>
+                </div>
+                
+                <table id="coursesTable">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Name</th>
+                            <th>Instructor</th>
+                            <th>Students</th>
+                            <th>Sections</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coursesTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Course</h3>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="addCourseForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Course Name</label>
+                        <input type="text" id="courseName" placeholder="e.g., Advanced Mathematics" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Code</label>
+                        <input type="text" id="courseCode" placeholder="e.g., MATH201" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <select id="instructor" required>
+                            <option value="">Select Instructor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Sections</label>
+                        <input type="number" id="sections" placeholder="e.g., 4" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit" id="submitBtn">Save Course</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="courses-admin-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alerts & Notifications</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+ <style>
+
+body {
+  margin: 0;
+  background: #0f0c29;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #15132b;
+  min-height: 100vh;
+  padding: 20px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.user-box {
+  background: #1a1a3a;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+}
+
+.user-box small { 
+  color: #b0b0b0; 
+  font-size: 13px; 
+}
+
+.user-name { 
+  font-size: 16px; 
+  font-weight: 600; 
+  color: #ffffff; 
+}
+
+.sidebar .nav-link {
+  color: #b0b0b0;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background: #3060ff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(48,96,255,0.2);
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* CARD */
+.card-glass {
+  background: #1a1a3a;
+  border-radius: 16px;
+  padding: 22px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 20px;
+}
+
+/* HEADER */
+.alerts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-btn {
+  background: rgba(231,76,60,0.15);
+  color: #e74c3c;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  background: rgba(231,76,60,0.25);
+}
+
+/* ALERTS */
+.alerts-wrapper {
+  margin-top: 20px;
+}
+
+.alert-item {
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+/* ALERT TYPES */
+
+.alert-warning-custom {
+  background: rgba(230,125,34,0.15);
+  border-left: 5px solid #e67e22;
+}
+
+.alert-info-custom {
+  background: rgba(48,96,255,0.15);
+  border-left: 5px solid #3060ff;
+}
+
+.alert-success-custom {
+  background: rgba(46,204,113,0.15);
+  border-left: 5px solid #2ecc71;
+}
+
+.alert-purple-custom {
+  background: rgba(156,89,182,0.15);
+  border-left: 5px solid #9b59b6;
+}
+
+.alert-time {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 6px;
+  color: #b0b0b0;
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.close-btn:hover {
+  opacity: 1;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+   <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Student Portal</p>
+
+  <div class="user-box">
+    <small>Welcome,</small>
+    <div class="user-name" id="username">Loading...</div>
+    <small>Student Portal</small>
+  </div>
+
+  <ul class="nav flex-column">
+    <li class="nav-item"><a class="nav-link" href="studentdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="viewcourse.html"><i class="fa-solid fa-book me-2"></i> View Courses</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentcharts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+    <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-bell"></i> Alerts</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentexport.html"><i class="bi bi-download"></i> Export</a></li>
+    <li class="nav-item"><a class="nav-link" href="reportstudent.html"><i class="bi bi-exclamation-triangle"></i> Report a Problem</a></li>
+  </ul>
+
+  <hr class="text-secondary">
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div class="card-glass">
+    <div class="alerts-header">
+      <h3 class="mb-0">Alerts & Notifications</h3>
+     <button class="clear-btn" id="clearAllBtn">Clear All</button>
+    </div>
+
+    <div class="alerts-wrapper" id="alertsContainer">
+
+      <div class="alert-item alert-warning-custom">
+        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+        <strong>Attendance Warning</strong>
+        <p class="mb-1">
+       Your attendance in Chemistry is 88%. Maintain above 75% to avoid academic issues.
+        </p>
+        <div class="alert-time text-warning">1 hour ago</div>
+        <span class="close-btn" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+      </div>
+
+      <div class="alert-item alert-info-custom">
+        <i class="bi bi-clock-fill me-2 text-info"></i>
+        <strong>Upcoming Class</strong>
+        <p class="mb-1">
+         Physics class starts in 30 minutes. Room: Lab 204
+        </p>
+        <div class="alert-time text-info">30 minutes ago</div>
+        <span class="close-btn" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+      </div>
+
+      <div class="alert-item alert-success-custom">
+        <i class="bi bi-check-circle-fill me-2 text-success"></i>
+        <strong>Perfect Attendance</strong>
+        <p class="mb-1">
+         Congratulations! You have perfect attendance in Mathematics this month.
+        </p>
+        <div class="alert-time text-success " >2 days ago</div>
+        <span class="close-btn" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+      </div>
+
+      <div class="alert-item alert-purple-custom">
+        <i class="bi bi-calendar-event-fill me-2"></i>
+        <strong>Schedule Change</strong>
+        <p class="mb-1">
+        Computer Science class has been rescheduled to Friday 2:00 PM
+        </p>
+        <div class="alert-time">3 days ago</div>
+        <span class="close-btn" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+/* ================= AUTH ================= */
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
+}
+
+function redirectToLogin() {
+  localStorage.clear();
+  window.location.href = "../Sign in/index.html";
+}
+
+/* ================= PROFILE ================= */
+
+async function loadProfile() {
+  if (!getToken()) return redirectToLogin();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error();
+
+    const username =
+      data.username ||
+      data.user?.username ||
+      data.data?.username ||
+      "Student";
+
+    const role =
+      data.role ||
+      data.user?.role ||
+      data.userType ||
+      data.data?.role ||
+      "student";
+
+    document.getElementById("username").textContent = username;
+
+    if (role.toLowerCase() !== "student") {
+      showAlert("Access denied", "error");
+      redirectToLogin();
+    }
+
+  } catch {
+    redirectToLogin();
+  }
+}
+
+/* ================= UI STATES ================= */
+
+function showLoading() {
+  document.getElementById("alertsContainer").innerHTML = `
+    <div class="text-center p-3">Loading notifications...</div>
+  `;
+}
+
+function showError() {
+  document.getElementById("alertsContainer").innerHTML = `
+    <div class="alert-item alert-info-custom">
+      <strong>Error loading alerts</strong>
+      <p class="mb-1">Server issue or unauthorized</p>
+    </div>
+  `;
+}
+
+function showEmpty() {
+  document.getElementById("alertsContainer").innerHTML = `
+    <div class="alert-item alert-info-custom">
+      <strong>No Notifications</strong>
+      <p class="mb-1">You have no alerts</p>
+    </div>
+  `;
+}
+//=======format time helper========
+function formatTime(dateString){
+
+const d = new Date(dateString);
+if(isNaN(d)) return "just now";
+
+const diffMinutes = Math.floor((Date.now() - d.getTime()) / 60000);
+
+if(diffMinutes < 1)
+  return "just now";
+
+if(diffMinutes === 1)
+  return "1 minute ago";
+
+if(diffMinutes < 60)
+  return `${diffMinutes} minutes ago`;
+
+const diffHours = Math.floor(diffMinutes / 60);
+
+if(diffHours === 1)
+  return "1 hour ago";
+
+if(diffHours < 24)
+  return `${diffHours} hours ago`;
+
+const diffDays = Math.floor(diffHours / 24);
+
+if(diffDays === 1)
+  return "1 day ago";
+
+return `${diffDays} days ago`;
+}
+/* ================= HELPERS ================= */
+
+function getAlertClass(type) {
+  const t = (type || '').toLowerCase();
+
+  if (t.includes('warning') || t.includes('attendance')) return 'alert-warning-custom';
+  if (t.includes('info') || t.includes('upcoming')) return 'alert-info-custom';
+  if (t.includes('success') || t.includes('perfect')) return 'alert-success-custom';
+  return 'alert-purple-custom';
+}
+
+function getAlertIcon(type) {
+  const t = (type || '').toLowerCase();
+
+  if (t.includes('warning')) return 'bi-exclamation-triangle-fill text-warning';
+  if (t.includes('info')) return 'bi-clock-fill text-info';
+  if (t.includes('success')) return 'bi-check-circle-fill text-success';
+  return 'bi-bell-fill';
+}
+
+/* ================= RENDER ================= */
+
+function renderAlerts(alerts) {
+  const container = document.getElementById("alertsContainer");
+
+  if (!alerts || alerts.length === 0) {
+    showEmpty();
+    return;
+  }
+
+  container.innerHTML = alerts.map(alert => {
+    const id = alert.id || '';
+    const type = alert.type || 'info';
+    const title = alert.title || 'Notification';
+    const message = alert.message || alert.description || '';
+    const time = alert.time || alert.createdAt || 'Recently';
+
+    return `
+      <div class="alert-item ${getAlertClass(type)}" data-id="${id}">
+        <i class="bi ${getAlertIcon(type)} me-2"></i>
+        <strong>${title}</strong>
+        <p class="mb-1">${message}</p>
+        <div class="alert-time">${time}</div>
+        <span class="close-btn dismiss-alert">
+          <i class="bi bi-x-lg"></i>
+        </span>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ================= API ================= */
+
+async function loadAlerts() {
+  showLoading();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/student/alerts`, {
+      headers: authHeaders()
+    });
+
+    const response = await res.json();
+
+    if (!res.ok) throw new Error();
+
+    const alerts = response.data || [];
+
+    if (!alerts.length) {
+      showEmpty();
+      return;
+    }
+
+    const container = document.getElementById("alertsContainer");
+
+    container.innerHTML = alerts.map(alert => {
+
+      let type = (alert.type || "info").toLowerCase();
+
+      let alertClass = "alert-info-custom";
+      let icon = "bi-clock-fill text-info";
+
+      if (type.includes("danger") || type.includes("warning")) {
+        alertClass = "alert-warning-custom";
+        icon = "bi-exclamation-triangle-fill text-warning";
+      }
+
+      if (type.includes("success")) {
+        alertClass = "alert-success-custom";
+        icon = "bi-check-circle-fill text-success";
+      }
+
+      return `
+        <div class="alert-item ${alertClass}" data-id="${alert.id}">
+            <i class="bi ${icon} me-2"></i>
+
+            <strong>${alert.courseName || "Course"}</strong>
+
+            <p class="mb-1">
+              ${alert.message}
+            </p>
+
+            <div class="alert-time">just now</div>
+
+            <span class="close-btn dismiss-alert">
+               <i class="bi bi-x-lg"></i>
+            </span>
+        </div>
+      `;
+    }).join("");
+
+  } catch (err) {
+    console.error(err);
+    showError();
+  }
+}
+/* ================= ACTIONS ================= */
+
+async function clearAll() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/alerts`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+
+    if (!res.ok) throw new Error("Failed to clear");
+
+    showEmpty();
+
+  } catch (err) {
+    console.error(err);
+    showAlert("Failed to clear alerts", "error");
+  }
+}
+
+async function dismissAlert(id, element) {
+  try {
+    if (id) {
+      const res = await fetch(`${API_BASE_URL}/alerts/${id}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+
+      if (!res.ok) throw new Error("Delete failed");
+    }
+
+    element.remove();
+
+  } catch (err) {
+    console.error(err);
+    showAlert("Failed to delete alert", "error");
+  }
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+//alert low attendance
+async function checkLowAttendance() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/student/charts`, {
+      headers: authHeaders()
+    });
+
+    const response = await res.json();
+    const avg = parseFloat(response.data.metrics.avg || 0);
+
+    if (avg < 75) {
+
+      const container = document.getElementById("alertsContainer");
+
+      const alertHTML = `
+        <div class="alert-item alert-warning-custom">
+          <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+          <strong>Low Attendance</strong>
+          <p class="mb-1">
+            Your attendance is ${avg}%. You must keep it above 75%.
+          </p>
+          <div class="alert-time">just now</div>
+          <span class="close-btn dismiss-alert">
+            <i class="bi bi-x-lg"></i>
+          </span>
+        </div>
+      `;
+
+      container.insertAdjacentHTML("afterbegin", alertHTML);
+    }
+
+  } catch (err) {
+    console.log("Attendance check failed", err);
+  }
+}
+/* ================= EVENTS ================= */
+
+document.getElementById("clearAllBtn").addEventListener("click", clearAll);
+
+document.addEventListener("click", function (e) {
+  const btn = e.target.closest(".dismiss-alert");
+  if (!btn) return;
+
+  const item = btn.closest(".alert-item");
+  const id = item.dataset.id;
+
+  dismissAlert(id, item);
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+ Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+});
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", ()=>{
+   loadProfile();
+   loadAlerts();
+   checkLowAttendance();
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

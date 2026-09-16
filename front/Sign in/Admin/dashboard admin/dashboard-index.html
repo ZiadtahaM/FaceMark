@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMark - Dashboard</title>
+    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../../Responsive/responsive.css">
+</head>
+<body>
+<button class="mobile-menu-btn" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+    <div class="dashboard-container">
+        <aside class="sidebar" id="resizableSidebar">
+            <div class="brand">
+                <img src="../../../images/face.jpeg" alt="FaceMark Logo" class="brand-logo">
+                <div class="brand-text">
+                    <h2>Face<span>Mark</span></h2>
+                    <p>Intelligent Attendance</p>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <p class="welcome-text">Welcome,</p>
+                <h3 id="userNameDisplay">Admin User</h3>
+                <p class="user-role">Admin Portal</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="dashboard-index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="courses-admin-index.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="manual-attend-admin-index.html"><i class="fas fa-user-check"></i> Manual Attendance</a></li>
+                    <li><a href="reports-admin-index.html"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li><a href="search-admin-index.html"><i class="fas fa-search"></i> Search</a></li>
+                    <li><a href="alerts-admin-index.html"><i class="fas fa-bell"></i> Alerts</a></li>
+                    <li><a href="manage-account-admin-index.html"><i class="fas fa-users-cog"></i> Manage Accounts</a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../../index.html" id="signOutBtn" class="sign-out-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> 
+                    <span>Sign Out</span>
+                </a>
+            </div>
+
+            <div class="resizer" id="sidebarResizer"></div>
+        </aside>
+
+        <main class="main-content">
+            <section class="stats-row">
+                <div class="stat-card blue">
+                    <p>Total Students</p>
+                    <h2 id="totalStudentsCount">2,450</h2>
+                    <span class="Active-accounts">Active accounts</span>
+                </div>
+                <div class="stat-card green">
+                    <p>Total Staff</p>
+                    <h2 id="totalStaffCount">124</h2>
+                    <span class="Teaching-faculty">Teaching faculty</span>
+                </div>
+                <div class="stat-card purple">
+                    <p>Active Courses</p>
+                    <h2 >48</h2>
+                    <span class="This-semester">This semester</span>
+                </div>
+                <div class="stat-card orange">
+                    <p>System Accuracy</p>
+                    <h2>80%</h2>
+                    <span class="Recognition-rate">Recognition rate</span>
+                </div>
+            </section>
+
+            <section class="middle-section">
+                <div class="status-panel">
+                    <h2>System Status</h2>
+                    <div class="status-item bg-green">
+                        <span>Face Recognition Service</span>
+                        <span class="badge online">Online</span>
+                    </div>
+                    <div class="status-item bg-green">
+                        <span>Database Connection</span>
+                        <span class="badge active">Active</span>
+                    </div>
+                    <div class="status-item bg-blue">
+                        <span>Camera Network</span>
+                        <span class="badge network">42/45 Active</span>
+                    </div>
+                    <div class="status-item bg-green">
+                        <span>API Services</span>
+                        <span class="badge running">Running</span>
+                    </div>
+                </div>
+
+                <div class="activity-panel">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="dot-small blue"></span>
+                            <div class="info">
+                                <p>New course added: Advanced ML</p>
+                                <small>15 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="dot-small green"></span>
+                            <div class="info">
+                                <p>250 students marked present</p>
+                                <small>1 hour ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="dot-small yellow"></span>
+                            <div class="info">
+                                <p>System maintenance scheduled</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="dot-small purple"></span>
+                            <div class="info">
+                                <p>New staff account created</p>
+                                <small>3 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <div class="chart-card">
+                    <h3>Average Attendance by Department</h3>
+                    <div class="chart-container">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="dashboard-script.js"></script>
+
+</body>
+</html>

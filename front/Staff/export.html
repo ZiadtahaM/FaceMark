@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Export | FACEMARK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- <link rel="stylesheet" href="css/styleexport.css"> -->
+   <style>
+    body {
+        background: linear-gradient(135deg, #020617, #1e1b4b);
+    color: #e5e7eb;
+    min-height: 100vh;
+    font-family: system-ui;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: linear-gradient(180deg, #0c0f2d, #11164a);
+  min-height: 100vh;
+  padding: 20px;
+    }
+
+    .brand {
+     font-weight: 600;
+  letter-spacing: 1px;
+    }
+
+    .user-box {
+     background: linear-gradient(135deg, #1f2547, #2a2f5a);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+    }
+
+    .user-box small {
+      color: #aab0ff;
+  font-size: 13px;
+    }
+
+    .user-name {
+      font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+  margin: 4px 0;
+    }
+
+    .sidebar .nav-link {
+       color: #bfc4ff;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+     background: #2b5cff;
+  color: #fff;
+    }
+
+    /* Panels */
+    .panel {
+      background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Inputs */
+    .form-control,
+    .form-select {
+      background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  border-radius: 10px;
+    }
+   .manual-card {
+     background: rgba(255,255,255,0.05);
+  border-radius: 22px;
+  padding: 26px 28px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .manual-card h4 {
+      margin-bottom: 22px;
+  font-weight: 600;
+  color: #ffffff;
+    }
+
+    .manual-card .form-label {
+      color: #c7d2fe;
+  font-size: 13px;
+  margin-bottom: 6px;
+  display: block;
+    }
+
+    .manual-input {
+     width: 100%;
+  height: 46px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #ffffff;
+  font-size: 14px;
+    }
+
+    .manual-input:focus {
+     outline: none;
+  border-color: #2b5cff;
+  background: rgba(255,255,255,0.08);
+    }
+
+    /* Custom arrow for select */
+    select.manual-input {
+      background-image:
+    linear-gradient(45deg, transparent 50%, #c7d2fe 50%),
+    linear-gradient(135deg, #c7d2fe 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 19px,
+    calc(100% - 13px) 19px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+    }
+/* Fix dropdown options color */
+select.manual-input option {
+   background-color: #1f2547;
+  color: #ffffff;
+}
+
+/* Option hover (بعض المتصفحات) */
+select.manual-input option:hover {
+  background-color: #2a2f5a;
+}
+
+    /* Date icon */
+    .manual-input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+    .form-control::placeholder {
+      color: #9ca3af;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      box-shadow: none;
+      outline: 2px solid #2b5cff;
+       background: rgba(255,255,255,0.08);
+  color: #fff;
+    }
+
+    /* Buttons */
+    .export-btn {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      border: none;
+      border-radius: 12px;
+      padding: 10px 24px;
+      color: #fff;
+    }
+
+    /* Quick cards */
+    .quick-card {
+       background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 18px;
+  transition: 0.2s;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .quick-card:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .quick-card small {
+       color: #cbd5f5;
+    }
+@media (max-width: 768px) {
+
+  .panel {
+    padding: 18px;
+  }
+
+  .alert-item .d-flex {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .alert-item i.bi-x-lg {
+    align-self: flex-end;
+  }
+
+  .alert-settings-card {
+    padding: 20px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+<!-- Mobile Toggle -->
+<button class="btn btn-dark d-md-none m-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu">
+  <i class="bi bi-list"></i>
+</button>
+    <!-- Sidebar -->
+    <div class="col-md-2 collapse d-md-block sidebar" id="sidebarMenu">
+      <h5 class="brand mb-3">
+       <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Staff Portal</p>
+
+      <div class="user-box">
+        <small>Welcome,</small>
+      <div class="user-name" id="username">Loading...</div>
+        <small>Staff Portal</small>
+      </div>
+
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="staffdashboard.html">
+            <i class="bi bi-grid"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="manualattendance.html">
+            <i class="bi bi-person-check"></i> Manual Attendance
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="face-capture.html">
+            <i class="bi bi-camera"></i> Face Capture
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="charts.html">
+            <i class="bi bi-bar-chart"></i> Charts & Reports
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="#">
+            <i class="bi bi-download"></i> Export
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="alerts.html">
+            <i class="bi bi-bell"></i> Alerts
+          </a>
+        </li>
+      </ul>
+      <hr class="text-secondary">
+
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-12 col-md-10 p-3 p-md-4">
+
+      <!-- Export Form -->
+      <div class="panel">
+        <h3 class="mb-4">Export Attendance Data</h3>
+
+        <!-- FORM START -->
+        <form id="exportForm">
+
+          <div class="row g-4 align-items-end">
+            <div class="col-md-3">
+              <label class="form-label">Date From</label>
+              <input type="date" name="dateFrom" class="form-control" required>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Date To</label>
+              <input type="date" name="dateTo" class="form-control" required>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Course</label>
+             <select name="course" id="courseSelect" class="manual-input"></select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Format</label>
+              <select name="format" class="manual-input">
+                <option>PDF (.pdf)</option>
+                <option>Excel (.xlsx)</option>
+                <option>CSV (.csv)</option>
+              </select>
+            </div>
+          </div>
+<div class="col-md-3">
+  <label class="form-label">type</label>
+  <select name="section" id="sectionSelect" class="manual-input">
+    <option value="">All (Lectures + Sections)</option>
+    <option value="lecture">Lectures Only</option>
+    <option value="section">Sections Only</option>
+  </select>
+</div>
+          <div class="mt-4">
+            <button type="submit" class="export-btn">
+              <i class="bi bi-download"></i> Export Report
+            </button>
+          </div>
+
+        </form>
+        <!-- FORM END -->
+
+      </div>
+
+      <!-- Quick Export -->
+      <div class="panel">
+        <h4 class="mb-4">Quick Export Templates</h4>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+          <div class="quick-card" onclick="quickExport('weekly')">
+              <strong>Weekly Summary</strong>
+              <small class="d-block mt-1">Last 7 days attendance report</small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+          <div class="quick-card" onclick="quickExport('monthly')">
+              <strong>Monthly Report</strong>
+              <small class="d-block mt-1">Current month detailed report</small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="quick-card" onclick="quickExport('semester')">
+              <strong>Semester Overview</strong>
+              <small class="d-block mt-1">Complete semester statistics</small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+           <div class="quick-card" onclick="quickExport('low')">
+              <strong>Low Attendance Alert List</strong>
+              <small class="d-block mt-1">Students below 75% attendance</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT POST -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script>
+/* ============================
+   EXPORT PAGE (LECTURES + SECTIONS + BOTH)
+   USES YOUR API STRUCTURE
+   ============================ */
+
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+// ================= DOM =================
+const courseSelect = document.getElementById("courseSelect");
+const sectionSelect = document.getElementById("sectionSelect");
+
+// ================= TOKEN =================
+function getToken() {
+  return localStorage.getItem("token");
+}
+
+function authHeaders() {
+  return {
+    "Authorization": `Bearer ${getToken()}`,
+    "Content-Type": "application/json"
+  };
+}
+
+// ================= ALERT =================
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type,
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff"
+  });
+}
+//getallattendance
+
+// ================= LOAD COURSES =================
+async function loadCourses() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/courses`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+    const courses = data.data || [];
+
+    courseSelect.innerHTML = `<option value="">Select Course</option>`;
+
+    courses.forEach(course => {
+      courseSelect.innerHTML += `
+        <option value="${course.courseId}">
+          ${course.name}
+        </option>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+    showAlert("Failed to load courses", "error");
+  }
+}
+
+// ================= LOAD SECTIONS / LECTURES =================
+courseSelect.addEventListener("change", async function () {
+
+  const courseId = this.value;
+
+  sectionSelect.innerHTML = `
+    <option value="">All (Lectures + Sections)</option>
+    <option value="lecture">Lectures Only</option>
+    <option value="section">Sections Only</option>
+  `;
+
+  if (!courseId) return;
+
+  try {
+    // API should return sessions related to course
+    // Example:
+    // GET /courses/{courseId}/sessions
+    const res = await fetch(`${API_BASE_URL}/courses/${courseId}/sessions`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+    const sessions = data.data || [];
+
+    sessions.forEach(session => {
+      sectionSelect.innerHTML += `
+        <option value="${session.sessionId}">
+          ${session.type} - ${session.name}
+        </option>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// ================= CSV =================
+function generateCSV(data) {
+  let csv = "Student ID,Name,Course,Type,Session,Status,Time,Date\n";
+
+  data.forEach(row => {
+    csv += `${row.studentId},${row.name},${row.course},${row.type},${row.session},${row.status},${row.time},${row.date}\n`;
+  });
+
+  return csv;
+}
+
+// ================= PDF =================
+function exportPDF(data, courseName) {
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("landscape");
+
+  doc.setFontSize(16);
+  doc.text(`Attendance Report - ${courseName}`, 14, 15);
+
+  let y = 30;
+
+  // Header
+  const headers = ["ID", "Name", "Course", "Type", "Session", "Status", "Time", "Date"];
+  let xPositions = [10, 35, 75, 120, 150, 210, 240, 270];
+
+  headers.forEach((h, i) => {
+    doc.text(h, xPositions[i], y);
+  });
+
+  y += 5;
+  doc.line(10, y, 285, y);
+  y += 8;
+
+  data.forEach(row => {
+
+    if (y > 190) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.text(String(row.studentId), 10, y);
+    doc.text(String(row.name), 35, y);
+    doc.text(String(row.course), 75, y);
+    doc.text(String(row.type), 120, y);
+    doc.text(String(row.session), 150, y);
+    doc.text(String(row.status), 210, y);
+    doc.text(String(row.time), 240, y);
+    doc.text(String(row.date), 270, y);
+
+    y += 7;
+  });
+
+  doc.save("attendance_report.pdf");
+}
+
+// ================= MAIN EXPORT =================
+async function exportFromApi(dateFrom, dateTo, courseId, selectedSession, format) {
+
+  if (!courseId) {
+    return showAlert("Select course first", "error");
+  }
+
+  try {
+
+    // MAIN ATTENDANCE API
+    const res = await fetch(`${API_BASE_URL}/attendance/course/${courseId}`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+    let records = data.data || [];
+
+    // ================= DATE FILTER =================
+    records = records.filter(record => {
+      const recordDate = record.recordDate.split("T")[0];
+
+      return recordDate >= dateFrom && recordDate <= dateTo;
+    });
+
+    // ================= SESSION FILTER =================
+    if (selectedSession === "lecture") {
+      records = records.filter(r => r.sessionType?.toLowerCase() === "lecture");
+    }
+
+    else if (selectedSession === "section") {
+      records = records.filter(r => r.sessionType?.toLowerCase() === "section");
+    }
+
+    else if (selectedSession && selectedSession !== "") {
+      // specific session id
+      records = records.filter(r => String(r.sessionId) === String(selectedSession));
+    }
+
+    if (!records.length) {
+      return showAlert("No attendance records found", "error");
+    }
+
+    // ================= MAP =================
+    const mapped = records.map(r => ({
+      studentId: r.student?.userAccountId || "-",
+      name: r.student?.username || "-",
+      course: r.course?.name || "-",
+      type: r.sessionType || "-",
+      session: r.sessionName || "-",
+      status:
+        r.attendanceStatusId === 1 ? "Present" :
+        r.attendanceStatusId === 2 ? "Absent" :
+        r.attendanceStatusId === 3 ? "Late" :
+        "Unknown",
+      time: new Date(r.recordDate).toLocaleTimeString(),
+      date: new Date(r.recordDate).toISOString().split("T")[0]
+    }));
+
+    // ================= EXPORT =================
+    if (format === "csv") {
+
+      const csv = generateCSV(mapped);
+      const blob = new Blob([csv], { type: "text/csv" });
+      downloadBlob(blob, "attendance_report.csv");
+
+    } else if (format === "xlsx") {
+
+      // Excel as CSV for compatibility
+      const csv = generateCSV(mapped);
+      const blob = new Blob([csv], { type: "application/vnd.ms-excel" });
+      downloadBlob(blob, "attendance_report.xlsx");
+
+    } else {
+
+      exportPDF(mapped, mapped[0].course);
+
+    }
+
+    showAlert("Export completed successfully");
+
+  } catch (err) {
+    console.error(err);
+    showAlert("Export failed", "error");
+  }
+}
+
+// ================= DOWNLOAD =================
+function downloadBlob(blob, filename) {
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// ================= FORMAT =================
+function normalizeFormat(format) {
+  if (format.includes("PDF")) return "pdf";
+  if (format.includes("Excel")) return "xlsx";
+  return "csv";
+}
+
+// ================= FORM SUBMIT =================
+document.getElementById("exportForm").addEventListener("submit", async function (e) {
+
+  e.preventDefault();
+
+  const dateFrom = this.dateFrom.value;
+  const dateTo = this.dateTo.value;
+  const courseId = this.course.value;
+  const selectedSession = this.section.value;
+  const format = normalizeFormat(this.format.value);
+
+  if (!dateFrom || !dateTo || !courseId) {
+    return showAlert("Please complete all fields", "error");
+  }
+
+  if (dateFrom > dateTo) {
+    return showAlert("Invalid date range", "error");
+  }
+
+  await exportFromApi(
+    dateFrom,
+    dateTo,
+    courseId,
+    selectedSession,
+    format
+  );
+});
+
+// ================= INIT =================
+loadCourses();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

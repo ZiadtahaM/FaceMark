@@ -1,0 +1,1034 @@
+{
+  "info": {
+    "name": "Attendance Master Collection",
+    "description": "Every endpoint required by the frontend, fully documented with headers and bulk support. 10y Dev Refactor.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"new_user\",\n  \"password\": \"password123\",\n  \"role\": \"student\"\n}"
+            },
+            "url": "{{base_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"ziad_taha\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Get Profile (Credits Fix)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/auth/profile"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Admin Only Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/auth/admin-only"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Student Analytics",
+      "item": [
+        {
+          "name": "Get Attendance Diagram",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/student/charts"
+          }
+        },
+        {
+          "name": "Get Student Alerts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/student/alerts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Alerts Management",
+      "item": [
+        {
+          "name": "Get All Alerts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/alerts"
+          }
+        },
+        {
+          "name": "Clear All Alerts",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/alerts"
+          }
+        },
+        {
+          "name": "Delete Specific Alert",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/alerts/1"
+          }
+        },
+        {
+          "name": "Get Alert Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/alerts/settings"
+          }
+        },
+        {
+          "name": "Update Alert Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lowAttendanceWarnings\": true,\n  \"systemUpdates\": true\n}"
+            },
+            "url": "{{base_url}}/alerts/settings"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. User Management",
+      "item": [
+        {
+          "name": "List Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?role=student",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "student"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff_member\",\n  \"role\": \"staff\",\n  \"fullName\": \"Staff Name\"\n}"
+            },
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Updated Name\"\n}"
+            },
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Get user details by ID (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/{id}",
+            "description": "Get user details by ID (Admin only)"
+          }
+        },
+        {
+          "name": "Update user by ID (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/{id}",
+            "description": "Update user by ID (Admin only)"
+          }
+        },
+        {
+          "name": "Delete user by ID (Admin only). Use ?hard=true for permanent delete.",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/{id}",
+            "description": "Delete user by ID (Admin only). Use ?hard=true for permanent delete."
+          }
+        },
+        {
+          "name": "Get user details by Username (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/username/{username}",
+            "description": "Get user details by Username (Admin only)"
+          }
+        },
+        {
+          "name": "Update user by Username (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/username/{username}",
+            "description": "Update user by Username (Admin only)"
+          }
+        },
+        {
+          "name": "Delete user by username (Admin only). Use ?hard=true for permanent delete.",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/username/{username}",
+            "description": "Delete user by username (Admin only). Use ?hard=true for permanent delete."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Course Management",
+      "item": [
+        {
+          "name": "List Courses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/courses"
+          }
+        },
+        {
+          "name": "Create Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Computer Science\",\n  \"code\": \"CS101\",\n  \"sections\": 4,\n  \"credits\": 3,\n  \"schedule\": \"Mon/Wed 10:00-12:00\",\n  \"room\": \"Room 302\",\n  \"instructorId\": 2\n}"
+            },
+            "url": "{{base_url}}/courses"
+          }
+        },
+        {
+          "name": "Get Course Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/courses/1"
+          }
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Advanced CS\"\n}"
+            },
+            "url": "{{base_url}}/courses/1"
+          }
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/courses/1"
+          }
+        },
+        {
+          "name": "Enroll Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 3\n}"
+            },
+            "url": "{{base_url}}/courses/1/students"
+          }
+        },
+        {
+          "name": "List Enrolled Students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/courses/1/students"
+          }
+        },
+        {
+          "name": "Get course details by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/{id}",
+            "description": "Get course details by ID"
+          }
+        },
+        {
+          "name": "Update course details by ID (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/{id}",
+            "description": "Update course details by ID (Admin only)"
+          }
+        },
+        {
+          "name": "Delete course by ID (Admin only). Use ?hard=true for permanent delete.",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/{id}",
+            "description": "Delete course by ID (Admin only). Use ?hard=true for permanent delete."
+          }
+        },
+        {
+          "name": "Get course details by Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/code/{code}",
+            "description": "Get course details by Code"
+          }
+        },
+        {
+          "name": "Update course details by Code (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/code/{code}",
+            "description": "Update course details by Code (Admin only)"
+          }
+        },
+        {
+          "name": "Delete course by Code (Admin only). Use ?hard=true for permanent delete.",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/code/{code}",
+            "description": "Delete course by Code (Admin only). Use ?hard=true for permanent delete."
+          }
+        },
+        {
+          "name": "Enroll student in course (Admin/Staff only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/{id}/students",
+            "description": "Enroll student in course (Admin/Staff only)"
+          }
+        },
+        {
+          "name": "List students in course (Admin/Staff only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/courses/{id}/students",
+            "description": "List students in course (Admin/Staff only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Attendance Tracking",
+      "item": [
+        {
+          "name": "List Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/attendance?courseId=1&section=1&date=2024-01-15&page=1&limit=50",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "attendance"
+              ],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "1",
+                  "description": "Optional"
+                },
+                {
+                  "key": "section",
+                  "value": "1",
+                  "description": "Optional"
+                },
+                {
+                  "key": "date",
+                  "value": "2024-01-15",
+                  "description": "Optional"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Optional"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Optional"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save Bulk Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": 1,\n  \"section\": 1,\n  \"date\": \"2026-04-21\",\n  \"room\": \"Room 101\",\n  \"sessionType\": \"LECTURE\",\n  \"attendance\": [\n    { \"studentId\": 3, \"status\": \"Present\" },\n    { \"studentId\": 4, \"status\": \"Absent\" }\n  ]\n}"
+            },
+            "url": "{{base_url}}/attendance"
+          }
+        },
+        {
+          "name": "Create Single Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 3,\n  \"courseId\": 1,\n  \"staffId\": 2,\n  \"recordDate\": \"2026-04-21T10:00:00Z\",\n  \"attendanceStatusId\": 1,\n  \"room\": \"R3\",\n  \"sessionType\": \"LECTURE\",\n  \"sectionNumber\": 1\n}"
+            },
+            "url": "{{base_url}}/attendance"
+          }
+        },
+        {
+          "name": "Get Attendance Statistics (Credit Fix)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": "{{base_url}}/attendance/statistics"
+          }
+        },
+        {
+          "name": "Get Attendance Report Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/attendance/report-data?courseId=all&fromDate=2026-01-01&toDate=2026-05-14",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "attendance",
+                "report-data"
+              ],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "all"
+                },
+                {
+                  "key": "fromDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "toDate",
+                  "value": "2026-05-14"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get my attendance (Student only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/my",
+            "description": "Get my attendance (Student only)"
+          }
+        },
+        {
+          "name": "Get attendance by course",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/course/{courseId}",
+            "description": "Get attendance by course"
+          }
+        },
+        {
+          "name": "Get attendance for specific student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/student/{studentId}",
+            "description": "Get attendance for specific student"
+          }
+        },
+        {
+          "name": "Get intelligent tracking and risk analysis for a student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/track/{studentId}",
+            "description": "Get intelligent tracking and risk analysis for a student"
+          }
+        },
+        {
+          "name": "Update attendance record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/{recordId}",
+            "description": "Update attendance record"
+          }
+        },
+        {
+          "name": "Delete attendance record (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/attendance/{recordId}",
+            "description": "Delete attendance record (Admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Alerts",
+      "item": [
+        {
+          "name": "Delete specific alert",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/{id}",
+            "description": "Delete specific alert"
+          }
+        },
+        {
+          "name": "Trigger low attendance check for a course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/check-low-attendance/{courseId}",
+            "description": "Trigger low attendance check for a course"
+          }
+        },
+        {
+          "name": "Get low attendance report for a course",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/report/{courseId}",
+            "description": "Get low attendance report for a course"
+          }
+        },
+        {
+          "name": "Send alerts to multiple users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/batch",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userIds\": [1, 2, 3],\n  \"message\": \"Important update for all students\",\n  \"title\": \"System Notification\",\n  \"type\": \"info\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Send alerts to multiple users"
+          }
+        },
+        {
+          "name": "Send a targeted alert to a specific student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/send/{userId}",
+            "description": "Send a targeted alert to a specific student"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "jwt_token",
+      "value": "PASTE_TOKEN_HERE"
+    }
+  ]
+}

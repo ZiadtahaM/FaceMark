@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMark - Login</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../Responsive/responsive.css">
+    
+</head>
+<body class="dark-mode">
+
+    <a href="../home/home-index.html" class="back-home-btn">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="login-container">
+        <div class="header">
+            <div class="logo-icon smile-icon" style="margin-bottom: 8px;"> 
+                <img src="../images/face.jpeg" alt="FaceMark Logo" class="brand-logo" style="width: 60px; height: 60px; border-radius: 15px; object-fit: cover;">
+            </div>
+            <h1>Face<span class="mark-gradient">Mark</span></h1>
+            <p>Face Recognition Technology</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+            </div>
+
+            <div class="role-selection">
+                <label>Select Your Role</label>
+                <div class="role-options">
+                    <input type="radio" id="student" name="role" value="student" checked>
+                    <label for="student">Student</label>
+
+                    <input type="radio" id="staff" name="role" value="staff" >
+                    <label for="staff">Staff</label>
+
+                    <input type="radio" id="admin" name="role" value="admin" >
+                    <label for="admin">Admin</label>
+                </div>
+            </div>
+
+            <a href="reset_password/index.html" class="forgot-password">Forgot Password?</a>
+            <button type="submit" class="sign-in-button">Log In</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

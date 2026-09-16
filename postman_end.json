@@ -1,0 +1,23 @@
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/alerts/send/{userId}",
+            "description": "Send a targeted alert to a specific student"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "jwt_token",
+      "value": "PASTE_TOKEN_HERE"
+    }
+  ]
+}

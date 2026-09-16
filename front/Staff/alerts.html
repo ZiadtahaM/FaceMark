@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alerts | FACEMARK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Existing CSS -->
+  <!-- <link rel="stylesheet" href="css/stylealert.css"> -->
+
+  <!-- Alert Settings ONLY (NEW) -->
+  <style>
+    
+    body {
+       background: linear-gradient(135deg, #020617, #1e1b4b);
+  color: #e5e7eb;
+  min-height: 100vh;
+  font-family: system-ui;
+    }
+
+    /* Sidebar */
+    .sidebar {
+     background: linear-gradient(180deg, #0c0f2d, #11164a);
+  min-height: 100vh;
+  padding: 20px;
+    }
+
+    .brand {
+      font-weight: 600;
+  letter-spacing: 1px;
+    }
+
+    .user-box {
+     background: linear-gradient(135deg, #1f2547, #2a2f5a);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+    }
+
+    .user-box small {
+      color: #aab0ff;
+  font-size: 13px;
+    }
+
+    .user-name {
+      font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 4px 0;
+    }
+
+    .sidebar .nav-link {
+      color: #bfc4ff;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+       background: #2b5cff;
+  color: #fff;
+    }
+    /* Panels */
+    .panel {
+       background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Alert items */
+    .alert-item {
+      border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  position: relative;
+    }
+
+    .alert-item i {
+      margin-right: 8px;
+    }
+
+    .alert-warning {
+     background: rgba(250,204,21,0.12);
+  border-left: 5px solid #facc15;
+    }
+
+    .alert-info {
+      background: rgba(59,130,246,0.12);
+  border-left: 5px solid #3b82f6;
+    }
+
+    .alert-success {
+      background: rgba(34,197,94,0.12);
+  border-left: 5px solid #22c55e;
+    }
+
+    .alert-danger {
+       background: rgba(239,68,68,0.12);
+  border-left: 5px solid #ef4444;
+    }
+
+    .alert-time {
+       font-size: 0.85rem;
+  color: #cbd5f5;
+    }
+
+    /* Settings */
+    .setting-item {
+      background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+    }
+  
+    /* ===== Alert Settings (Exact Match Only) ===== */
+    .alert-settings-card {
+      background: rgba(255,255,255,0.05);
+  border-radius: 22px;
+  padding: 26px 28px;
+  margin-top: 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .alert-settings-card h4 {
+     margin-bottom: 22px;
+  color: #ffffff;
+  font-weight: 600;
+    }
+
+    .alert-setting {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+   background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .alert-setting input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      accent-color: #2b5cff;
+      cursor: pointer;
+    }
+
+    .alert-setting-text strong {
+      display: block;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .alert-setting-text small {
+      display: block;
+    accent-color: #2b5cff;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    /* ===== RESPONSIVE FIXES ===== */
+@media (max-width: 768px) {
+
+  .panel {
+    padding: 18px;
+  }
+
+  .alert-item .d-flex {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .alert-item i.bi-x-lg {
+    align-self: flex-end;
+  }
+
+  .alert-settings-card {
+    padding: 20px;
+  }
+
+}
+  </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+<!-- Mobile Toggle -->
+<button class="btn btn-dark d-md-none m-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu">
+  <i class="bi bi-list"></i>
+</button>
+    <!-- Sidebar (UNCHANGED) -->
+    <div class="col-md-2 collapse d-md-block sidebar" id="sidebarMenu">
+       <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Staff Portal</p>
+
+      <div class="user-box">
+        <small>Welcome,</small>
+         <div class="user-name" id="username">Loading...</div>
+        <small>Staff Portal</small>
+      </div>
+
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="staffdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="manualattendance.html"><i class="bi bi-person-check"></i> Manual Attendance</a></li>
+        <li class="nav-item"><a class="nav-link" href="face-capture.html"><i class="bi bi-camera"></i> Face Capture</a></li>
+        <li class="nav-item"><a class="nav-link" href="charts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="export.html"><i class="bi bi-download"></i> Export</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-bell"></i> Alerts</a></li>
+      </ul>
+      <hr class="text-secondary">
+
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-12 col-md-10 p-3 p-md-4">
+
+      <!-- Alerts (UNCHANGED) -->
+      <div class="panel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="mb-0">Alerts & Notifications</h3>
+  <button id="clearAllBtn" class="btn btn-sm btn-danger">
+    <i class="bi bi-trash"></i> Clear All
+  </button>
+</div>
+<div id="alertsContainer">
+  <p class="text-muted" style="color: white;">Loading alerts...</p>
+</div>
+      <!-- Alert Settings (ONLY SECTION CHANGED) -->
+      <div class="alert-settings-card">
+        <h4>Alert Settings</h4>
+<div class="alert-setting">
+  <input type="checkbox" id="lowAttendanceSetting" checked>
+  <div class="alert-setting-text">
+    <strong>Low Attendance Warnings</strong>
+    <small>Alert when student attendance drops below 75%</small>
+  </div>
+</div>
+
+<div class="alert-setting">
+  <input type="checkbox" id="systemUpdatesSetting" checked>
+  <div class="alert-setting-text">
+    <strong>System Updates</strong>
+    <small>Notifications about system improvements and updates</small>
+  </div>
+</div>
+
+<div class="alert-setting">
+  <input type="checkbox" id="technicalIssuesSetting" checked>
+  <div class="alert-setting-text">
+    <strong>Technical Issues</strong>
+    <small>Alert for camera or system malfunctions</small>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+// ================= TOKEN =================
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
+}
+
+function redirectToLogin() {
+  localStorage.clear();
+  window.location.href = "../Sign in/index.html";
+}
+
+// ================= PROFILE =================
+async function loadProfile() {
+  const token = getToken();
+  if (!token) return redirectToLogin();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: authHeaders()
+    });
+
+    const text = await res.text();
+    console.log("RAW:", text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("Invalid JSON");
+    }
+
+    // 🔥 أهم سطر (حل المشكلة)
+    const user =
+      data.data?.user ||
+      data.data ||
+      data.user ||
+      data;
+
+    console.log("USER:", user);
+
+    const role = user.role || user.userType;
+
+    if (!user || !role) {
+      throw new Error("Invalid user data");
+    }
+
+    document.getElementById("username").textContent =
+      user.username || localStorage.getItem("loggedUser") || "Staff";
+
+    if (role.toLowerCase() !== "staff") {
+      showAlert("Staff only", "error");
+      redirectToLogin();
+    }
+
+  } catch (err) {
+    console.error("Profile error:", err);
+
+    showAlert(err.message || "Session expired", "error");
+
+    redirectToLogin();
+  }
+}
+
+// ================= ALERT UI =================
+function getAlertClass(type) {
+  const t = (type || "").toLowerCase();
+  if (t.includes("low")) return "alert-warning";
+  if (t.includes("update")) return "alert-info";
+  if (t.includes("success")) return "alert-success";
+  if (t.includes("technical") || t.includes("error")) return "alert-danger";
+  return "alert-info";
+}
+
+function getAlertIcon(type) {
+  const t = (type || "").toLowerCase();
+  if (t.includes("low")) return "bi-exclamation-triangle";
+  if (t.includes("update")) return "bi-info-circle";
+  if (t.includes("success")) return "bi-check-circle";
+  if (t.includes("technical")) return "bi-camera-video-off";
+  return "bi-bell";
+}
+// ================= TIME FORMAT =================
+function formatTime(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const diffMs = now - date;
+
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  // أقل من دقيقة
+  if (diffSec < 60) return "Just now";
+
+  // minutes
+  if (diffMin < 60) {
+    return diffMin === 1 ? "1 min ago" : `${diffMin} mins ago`;
+  }
+
+  // hours
+  if (diffHour < 24) {
+    return diffHour === 1 ? "1 hour ago" : `${diffHour} hours ago`;
+  }
+
+  // days
+  if (diffDay < 7) {
+    return diffDay === 1 ? "1 day ago" : `${diffDay} days ago`;
+  }
+
+  // لو أكتر من أسبوع
+  return date.toLocaleDateString();
+}
+
+// ================= RENDER =================
+function renderAlerts(alerts) {
+  const container = document.getElementById("alertsContainer");
+  container.innerHTML = "";
+
+ if (!alerts.length) {
+  container.innerHTML = `
+    <div class="alert-item alert-info">
+      <i class="bi bi-info-circle me-2"></i>
+      <strong>No Alerts</strong>
+      <p class="mb-1">You don't have any notifications right now.</p>
+      <div class="alert-time"></div>
+    </div>
+  `;
+  return;
+}
+
+  alerts.forEach(alert => {
+    const el = document.createElement("div");
+
+    el.className = `alert-item ${getAlertClass(alert.type)}`;
+    el.dataset.id = alert.id; // 🔥 مهم عشان delete
+
+    el.innerHTML = `
+      <div class="d-flex justify-content-between">
+        <div>
+          <strong>
+            <i class="bi ${getAlertIcon(alert.type)}"></i>
+            ${alert.title}
+          </strong>
+          <p class="mb-1">${alert.message}</p>
+          <div class="alert-time">${formatTime(alert.createdAt)}</div>
+        </div>
+        <i class="bi bi-x-lg dismiss-alert" style="cursor:pointer;"></i>
+      </div>
+    `;
+
+    container.appendChild(el);
+  });
+}
+
+// ================= LOAD ALERTS =================
+async function loadAlerts() {
+  const container = document.getElementById("alertsContainer");
+
+  try {
+    container.innerHTML = `<p class="text-muted">Loading alerts...</p>`;
+
+    const res1 = await fetch(`${API_BASE_URL}/alerts`, {
+      headers: authHeaders()
+    });
+
+    const data1 = await res1.json();
+    const allAlerts = data1.data || [];
+
+    const courseId = localStorage.getItem("courseId");
+
+    let reportAlerts = [];
+
+    if (courseId) {
+      const res2 = await fetch(`${API_BASE_URL}/alerts/report/${courseId}`, {
+        headers: authHeaders()
+      });
+
+      const data2 = await res2.json();
+      reportAlerts = data2.data || [];
+    }
+
+    const merged = [...allAlerts, ...reportAlerts];
+    const alerts = merged.map(a => a.alert || a);
+
+    renderAlerts(alerts);
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p style="color:red;">Failed to load alerts</p>`;
+  }
+}
+// ================= CLEAR ALL =================
+async function clearAllAlerts() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/alerts`, {
+      method: "DELETE",
+      headers: authHeaders()
+    });
+
+    if (!res.ok) throw new Error();
+
+    renderAlerts([]);
+
+  } catch (err) {
+    console.error("Clear error:", err);
+    showAlert("Failed to clear alerts", "error");
+  }
+}
+
+// ================= DELETE ONE =================
+async function deleteAlert(id, element) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/alerts/${id}`, {
+      method: "DELETE",
+      headers: authHeaders()
+    });
+
+    if (!res.ok) throw new Error();
+
+    element.remove();
+
+  } catch {
+    element.remove();
+  }
+}
+
+// ================= SETTINGS =================
+async function loadSettings() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/alerts/settings`, {
+      headers: authHeaders()
+    });
+
+    const data = await res.json();
+
+    const s = data?.data;
+
+    if (!s) return;
+
+    document.getElementById("lowAttendanceSetting").checked = !!s.lowAttendanceWarnings;
+    document.getElementById("systemUpdatesSetting").checked = !!s.systemUpdates;
+    document.getElementById("technicalIssuesSetting").checked = !!s.technicalIssues;
+
+  } catch (err) {
+    console.log("Settings load failed:", err);
+  }
+}
+// ================= SETTINGS SAVE  =================
+let saveTimeout;
+
+function saveSettings() {
+  clearTimeout(saveTimeout);
+
+  saveTimeout = setTimeout(async () => {
+    const payload = {
+      lowAttendanceWarnings: document.getElementById("lowAttendanceSetting").checked,
+      systemUpdates: document.getElementById("systemUpdatesSetting").checked,
+      technicalIssues: document.getElementById("technicalIssuesSetting").checked
+    };
+
+    try {
+      await fetch(`${API_BASE_URL}/alerts/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+
+      console.log("Settings saved");
+    } catch (err) {
+      console.log("Save failed:", err);
+    }
+  }, 400); // debounce مهم جداً
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+// ================= EVENTS =================
+// clear all
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.getElementById("clearAllBtn").addEventListener("click", clearAllAlerts);
+
+  document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("dismiss-alert")) {
+      const item = e.target.closest(".alert-item");
+      const id = item.dataset.id;
+      deleteAlert(id, item);
+    }
+  });
+
+  document.addEventListener("change", function(e) {
+    if (
+      e.target.id === "lowAttendanceSetting" ||
+      e.target.id === "systemUpdatesSetting" ||
+      e.target.id === "technicalIssuesSetting"
+    ) {
+      saveSettings();
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+  });
+
+  // INIT
+  loadProfile();
+  loadAlerts();
+  loadSettings();
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

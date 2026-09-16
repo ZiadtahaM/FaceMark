@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Charts & Reports | FACEMARK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+ <style>
+
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  display: flex;
+  background: #0f0c29;
+  color: #ffffff;
+  min-height: 100vh;
+  font-family: system-ui;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  background: #15132b;
+  min-height: 100vh;
+  padding: 20px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.user-box {
+  background: #1a1a3a;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+}
+
+.user-box small { color: #b0b0b0; font-size: 13px; }
+
+.user-name { 
+  font-size: 16px; 
+  font-weight: 600; 
+  color: #ffffff;
+}
+
+.sidebar .nav-link {
+  color: #b0b0b0;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background: #3060ff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(48,96,255,0.2);
+}
+
+/* ===== CONTENT ===== */
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* ===== PANELS ===== */
+.panel {
+  background: #1a1a3a;
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== METRICS ===== */
+.metric {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ===== WEEKLY OVERVIEW ===== */
+.week-item {
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.week-item span {
+  font-size: 14px;
+}
+
+/* ===== STATUS ===== */
+.status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.present {
+  background: rgba(46,204,113,0.15);
+  color: #2ecc71;
+}
+.late {
+  background: rgba(243,156,18,0.15);
+  color: #f39c12;
+}
+  .late {
+  background: rgba(243,156,18,0.15);
+  color: #f39c12;
+  }
+.absent {
+  background: rgba(231,76,60,0.15);
+  color: #e74c3c;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+   <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Student Portal</p>
+
+  <div class="user-box">
+    <small>Welcome,</small>
+    <div class="user-name" id="username">Loading...</div>
+    <small>Student Portal</small>
+  </div>
+
+  <ul class="nav flex-column">
+    <li class="nav-item"><a class="nav-link" href="studentdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="viewcourse.html"><i class="fa-solid fa-book me-2"></i> View Courses</a></li>
+    <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+    <li class="nav-item"><a class="nav-link" href="alertstudent.html"><i class="bi bi-bell"></i> Alerts</a></li>
+    <li class="nav-item"><a class="nav-link" href="studentexport.html"><i class="bi bi-download"></i> Export</a></li>
+    <li class="nav-item"><a class="nav-link" href="reportstudent.html"><i class="bi bi-exclamation-triangle"></i> Report a Problem</a></li>
+  </ul>
+
+  <hr class="text-secondary">
+  <button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- CHART -->
+  <div class="panel">
+    <h3>Charts & Reports</h3>
+    <h6 class="text-muted mb-3 "style="color:white !important">Monthly Attendance Histogram</h6>
+    <canvas id="attendanceChart" height="100"></canvas>
+  </div>
+
+  <!-- COURSE WISE -->
+  <div class="panel">
+  <h5 class="mb-4">Course-wise Attendance</h5>
+  <div id="courseWiseContainer">
+    <div class="metric"><span>Mathematics</span><strong>92%</strong></div>
+    <div class="metric"><span>Physics</span><strong>85%</strong></div>
+    <div class="metric"><span>Chemistry</span><strong>88%</strong></div>
+    <div class="metric"><span>Computer Science</span><strong>90%</strong></div>
+  </div>
+</div>
+
+  <!-- BOTTOM -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel">
+  <h5 class="mb-3">Performance Metrics</h5>
+  <div id="performanceMetricsContainer">
+    <div class="metric"><span>Average Attendance</span><strong>87%</strong></div>
+    <div class="metric"><span>Top Course</span><strong class="text-success">Mathematics</strong></div>
+    <div class="metric"><span>Students at Risk</span><strong class="text-danger">24</strong></div>
+    <div class="metric" style="background:#1e3a8a;"><span>Recognition Accuracy</span><strong>98.5%</strong></div>
+  </div>
+</div>
+    </div>
+
+    <div class="col-md-6">
+     <div class="panel">
+  <h5 class="mb-3">Weekly Attendance</h5>
+  <div id="weeklyAttendanceContainer">
+    <div class="week-item">
+      <span>Monday</span>
+      <span class="status present">Present</span>
+    </div>
+
+    <div class="week-item">
+      <span>Tuesday</span>
+      <span class="status present">Present</span>
+    </div>
+
+    <div class="week-item">
+      <span>Wednesday</span>
+      <span class="status absent">Absent</span>
+    </div>
+
+    <div class="week-item">
+      <span>Thursday</span>
+      <span class="status present">Present</span>
+    </div>
+
+    <div class="week-item">
+      <span>Friday</span>
+      <span class="status present">Present</span>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+</div>
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+let attendanceChartInstance = null;
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
+}
+
+function redirectToLogin() {
+  localStorage.clear();
+  window.location.href = "../Sign in/index.html";
+}
+
+/* ================= PROFILE ================= */
+async function loadProfile() {
+
+  // ✅ تأكد إن فيه توكن
+  if (!getToken()) {
+    return redirectToLogin();
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+      headers: authHeaders()
+    });
+
+    const response = await res.json();
+    console.log("Profile:", response);
+
+    if (!res.ok) throw new Error("Unauthorized");
+
+    // 🧠 استخراج البيانات بمرونة
+    const user =
+      response.data ||
+      response.user ||
+      response;
+
+    const username =
+      user.username ||
+      user.name ||
+      user.fullName ||
+      "Student";
+
+    const role =
+      user.role ||
+      user.userType ||
+      "student";
+
+    // ✅ عرض الاسم
+    document.getElementById("username").textContent = username;
+
+    // 🚨 تأكد إنه Student
+    if (role.toLowerCase() !== "student") {
+      showAlert("Access denied", "error");
+      redirectToLogin();
+    }
+
+  } catch (err) {
+    console.error("Profile error:", err);
+    showAlert("Session expired", "error");
+    redirectToLogin();
+  }
+}
+
+/* ================= CHART ================= */
+function renderChart(labels = [], values = []) {
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+
+  if (attendanceChartInstance) {
+    attendanceChartInstance.destroy();
+  }
+
+  attendanceChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Attendance %',
+        data: values,
+        backgroundColor: '#10b981',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { color: '#ccc' }},
+        x: { ticks: { color: '#ccc' }}
+      },
+      plugins: {
+        legend: { labels: { color: '#fff' }}
+      }
+    }
+  });
+}
+
+/* ================= COURSE WISE ================= */
+function renderCourseWise(courses) {
+  const container = document.getElementById('courseWiseContainer');
+  container.innerHTML = '';
+
+  if (!courses?.length) {
+    container.innerHTML = `<div class="metric">No data</div>`;
+    return;
+  }
+
+  courses.forEach(c => {
+    container.innerHTML += `
+      <div class="metric">
+        <span>${c.name}</span>
+        <strong>${c.percentage}%</strong>
+      </div>
+    `;
+  });
+}
+
+/* ================= METRICS ================= */
+function renderMetrics(m) {
+  const container = document.getElementById('performanceMetricsContainer');
+
+  container.innerHTML = `
+    <div class="metric">
+      <span>Average Attendance</span>
+      <strong>${m.avg}%</strong>
+    </div>
+
+    <div class="metric">
+      <span>Top Course</span>
+      <strong class="text-success">${m.top}</strong>
+    </div>
+
+    <div class="metric">
+      <span>Students at Risk</span>
+      <strong class="text-danger">${m.risk}</strong>
+    </div>
+
+    <div class="metric" style="background:#1e3a8a;">
+      <span>Recognition Accuracy</span>
+      <strong>${m.ai}%</strong>
+    </div>
+  `;
+}
+
+
+/* ================= REPLACE renderWeekly() ================= */
+function renderWeekly(data) {
+  const container = document.getElementById('weeklyAttendanceContainer');
+  container.innerHTML = '';
+
+  if (!data?.length) {
+    container.innerHTML = `
+      <div class="week-item">
+        <span>No weekly data</span>
+      </div>
+    `;
+    return;
+  }
+
+  data.forEach(d => {
+
+    let statusClass = "absent";
+
+    if (d.status === "Present") {
+      statusClass = "present";
+    } else if (d.status === "Late") {
+      statusClass = "late";
+    }
+
+    container.innerHTML += `
+      <div class="week-item">
+        <span>${d.day}</span>
+        <span class="status ${statusClass}">
+          ${d.status}
+        </span>
+      </div>
+    `;
+  });
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+/* ================= LOAD DATA ================= */
+/* ================= REPLACE loadCharts() بالكامل ================= */
+async function loadCharts() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/student/charts`, {
+      headers: authHeaders()
+    });
+
+    const response = await res.json();
+
+    if (!res.ok) throw new Error();
+
+    const data = response.data || {};
+
+    /* ================= MONTHLY CHART =================
+       API الحالي مفيهوش monthly جاهز
+       هنستخدم الكورسات الحالية بدل placeholder
+    */
+    const chartLabels = (data.courses || []).map(c =>
+      c.courseName || "Course"
+    );
+
+    const chartValues = (data.courses || []).map(c =>
+      Number(c.attendanceRate || 0)
+    );
+
+    renderChart(chartLabels, chartValues);
+
+    /* ================= COURSE WISE ================= */
+    const courseWise = (data.courses || []).map(c => ({
+      name: c.courseName || "Course",
+      percentage: Number(c.attendanceRate || 0)
+    }));
+
+    renderCourseWise(courseWise);
+
+    /* ================= METRICS ================= */
+    renderMetrics({
+      avg: parseFloat(data.metrics?.avg || 0),
+      top: data.metrics?.topCourse || "N/A",
+      risk: data.metrics?.riskStudents || 0,
+      ai: data.metrics?.aiAccuracy || "0"
+    });
+
+    /* ================= WEEKLY =================
+       هنجيب آخر 5 attendance records من /attendance/my
+    */
+    let weeklyData = [];
+
+    try {
+
+      /* أول كورس فقط مؤقتًا */
+      const firstCourseId =
+        data.structure?.[0]?.id?.split("-")[1];
+
+      if (firstCourseId) {
+
+        const attendanceRes = await fetch(
+          `${API_BASE_URL}/attendance/my?courseId=${firstCourseId}`,
+          {
+            headers: authHeaders()
+          }
+        );
+
+        const attendanceResponse = await attendanceRes.json();
+
+        if (attendanceRes.ok) {
+
+          let records = attendanceResponse.data || [];
+
+          /* إزالة التكرار */
+          const uniqueMap = new Map();
+
+          records.forEach(r => {
+
+            const key = `
+              ${r.recordDate?.split("T")[0]}
+              _${r.checkInTime || ""}
+            `;
+
+            if (!uniqueMap.has(key)) {
+              uniqueMap.set(key, r);
+            }
+
+          });
+
+          records = Array.from(uniqueMap.values());
+
+          weeklyData = records
+            .sort(
+              (a, b) =>
+                new Date(b.recordDate) -
+                new Date(a.recordDate)
+            )
+            .slice(0, 5)
+            .map(r => {
+
+              const day = new Date(
+                r.recordDate
+              ).toLocaleDateString("en-US", {
+                weekday: "long"
+              });
+
+              let status = "Absent";
+
+              if (r.attendanceStatusId === 1) {
+                status = "Present";
+              } else if (r.attendanceStatusId === 3) {
+                status = "Late";
+              }
+
+              return {
+                day,
+                status
+              };
+
+            });
+
+        }
+
+      }
+
+    } catch (weeklyErr) {
+      console.log("Weekly fallback", weeklyErr);
+    }
+
+    if (!weeklyData.length) {
+      weeklyData = [
+        { day: "Monday", status: "No Data" },
+        { day: "Tuesday", status: "No Data" },
+        { day: "Wednesday", status: "No Data" },
+        { day: "Thursday", status: "No Data" },
+        { day: "Friday", status: "No Data" }
+      ];
+    }
+
+    renderWeekly(weeklyData);
+
+  } catch (err) {
+
+    console.error("Charts error:", err);
+
+    renderChart([], []);
+    renderCourseWise([]);
+
+    renderMetrics({
+      avg: 0,
+      top: "N/A",
+      risk: 0,
+      ai: 0
+    });
+
+    renderWeekly([]);
+
+    showAlert("Failed to load charts", "error");
+  }
+}
+/* ================= LOGOUT ================= */
+document.getElementById('logoutBtn').addEventListener('click', () => {
+ Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+});
+
+/* ================= INIT ================= */
+loadProfile();
+loadCharts();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+/* =========================================================
+   1. GLOBAL SETTINGS & VARIABLES
+   ========================================================= */
+:root {
+    --bg-dark:       #0f0c29; 
+    --sidebar-bg:    #15132b; 
+    --card-bg:       #1a1a3a; 
+    --input-bg:      #252345; 
+    --text-main:     #ffffff;
+    --text-dim:      #b0b0b0;
+    --accent-blue:   #3060ff;
+    --accent-purple: #9b59b6;
+    --border-color:  rgba(255, 255, 255, 0.05);
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+body { 
+    background-color: var(--bg-dark); 
+    color: var(--text-main); 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* =========================================================
+   2. LAYOUT STRUCTURE
+   ========================================================= */
+.dashboard-container { 
+    display: flex; 
+    height: 100vh; 
+    width: 100%;
+}
+
+/* =========================================================
+   3. SIDEBAR STYLES (إصلاح المسافات والريسايز)
+   ========================================================= */
+.sidebar { 
+    width: 275px; 
+    min-width: 200px;
+    max-width: 500px;
+    background-color: var(--sidebar-bg); 
+    padding: 25px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    border-right: 1px solid var(--border-color); 
+    height: 100vh;
+    position: relative;
+    flex: none !important;
+    overflow-x: hidden; 
+}
+
+/* Resizer Handle */
+.resizer {
+    width: 6px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: col-resize;
+    z-index: 1000;
+    transition: 0.2s;
+}
+.resizer:hover { background: var(--accent-blue); }
+
+/* Brand / Logo Section */
+.brand { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 40px; 
+}
+.brand-logo { 
+    width: 50px; 
+    height: 50px; 
+    object-fit: contain; 
+    mix-blend-mode: lighten; 
+    flex-shrink: 0; 
+}
+.brand-text h2 { 
+    font-size: 1.45rem; 
+    font-weight: 700; 
+    margin: 0; 
+    line-height: 1.1; 
+    white-space: normal; 
+    word-break: break-word;
+}
+.brand-text h2 span { color: var(--accent-blue); }
+.brand-text p { 
+    font-size: 0.75rem; 
+    color: var(--text-dim); 
+    margin-top: 4px; 
+    white-space: normal; 
+}
+
+/* User Profile Section */
+.user-profile { 
+    margin-bottom: 30px; 
+    padding-bottom: 20px; 
+    border-bottom: 1px solid var(--border-color); 
+}
+.welcome-text { 
+    font-size: 0.8rem; 
+    color: var(--accent-purple); 
+    font-weight: 500; 
+}
+.user-profile h3 { 
+    margin: 5px 0; 
+    font-size: 1.2rem; 
+    text-transform: capitalize; 
+}
+.user-role { 
+    font-size: 0.85rem; 
+    color: var(--text-dim); 
+}
+
+/* Navigation Menu (إصلاح مشكلة الالتصاق) */
+.sidebar-nav ul { 
+    list-style: none; 
+}
+
+.sidebar-nav li {
+    margin-bottom: 10px; /* المسافة الفاصلة بين الأزرار */
+}
+
+.sidebar-nav a { 
+    text-decoration: none; 
+    color: var(--text-dim); 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    padding: 12px; 
+    border-radius: 12px; 
+    transition: 0.3s; 
+    white-space: normal; 
+}
+.sidebar-nav i { flex-shrink: 0; font-size: 1.1rem; } 
+
+.sidebar-nav li.active a, 
+.sidebar-nav a:hover { 
+    background-color: var(--accent-blue); 
+    color: #fff; 
+}
+
+/* Sidebar Footer */
+.sidebar-footer { 
+    margin-top: auto; 
+    padding-top: 20px; 
+    border-top: 1px solid var(--border-color); 
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-footer a { 
+    text-decoration: none; 
+    color: var(--text-dim); 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    padding: 12px; 
+    border-radius: 10px; 
+    transition: 0.3s; 
+    margin-bottom: 5px;
+}
+.sidebar-footer a:hover { 
+    background: rgba(255, 255, 255, 0.04); 
+    color: var(--text-main); 
+}
+
+/* =========================================================
+   4. MAIN CONTENT AREA (Search & Filters)
+   ========================================================= */
+.main-content { 
+    flex: 1; 
+    padding: 30px; 
+    overflow-y: auto; 
+    min-width: 0;
+}
+
+.search-section-card, 
+.results-section-card { 
+    background-color: var(--card-bg); 
+    padding: 30px; 
+    border-radius: 15px; 
+    margin-bottom: 25px; 
+    border: 1px solid var(--border-color); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+}
+
+.section-title { margin-bottom: 25px; font-size: 1.4rem; }
+
+/* Search Bar Controls */
+.search-bar-container { 
+    display: flex; 
+    gap: 15px; 
+    margin-bottom: 30px; 
+}
+.search-input { 
+    flex: 1; 
+    background: var(--input-bg); 
+    border: 1px solid var(--border-color); 
+    padding: 12px 20px; 
+    border-radius: 10px; 
+    color: white; 
+    outline: none; 
+    transition: 0.3s; 
+}
+.search-input:focus { border-color: var(--accent-blue); }
+
+.btn-search { 
+    background: var(--accent-blue); 
+    color: white; 
+    border: none; 
+    padding: 0 25px; 
+    border-radius: 10px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    box-shadow: 0 4px 15px rgba(48, 96, 255, 0.4); 
+    transition: 0.3s;
+}
+.btn-search:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* Filters Grid */
+.filters-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+}
+.filter-group { display: flex; flex-direction: column; gap: 8px; }
+.filter-group label { color: var(--text-dim); font-size: 0.85rem; }
+
+select { 
+    background: var(--input-bg); 
+    border: 1px solid var(--border-color); 
+    padding: 10px; 
+    border-radius: 8px; 
+    color: white; 
+    outline: none; 
+    cursor: pointer;
+}
+
+/* Empty State Styling */
+.empty-results { 
+    min-height: 250px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: var(--text-dim); 
+    border: 1px dashed rgba(255, 255, 255, 0.1); 
+    border-radius: 15px; 
+    margin-top: 20px; 
+    font-style: italic; 
+}
+/* تنسيق منطقة النتائج والجدول */
+.results-container {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.search-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+    text-align: left;
+}
+
+.search-results-table th {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.search-results-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+/* تنسيق خلية المستخدم */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-icon {
+    font-size: 1.8rem;
+    color: #4e73df;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* الأوسمة (Tags) */
+.id-tag {
+    background: rgba(78, 115, 223, 0.1);
+    color: #4e73df;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.role-label {
+    background: rgba(28, 200, 138, 0.1);
+    color: #1cc88a;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+/* أزرار التحكم */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-action.view:hover { background: #4e73df; }
+.btn-action.delete:hover { background: #e74a3b; }
+
+.results-count {
+    font-size: 0.85rem;
+    color: #1cc88a;
+    margin-left: 10px;
+}

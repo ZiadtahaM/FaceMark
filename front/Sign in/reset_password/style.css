@@ -1,0 +1,190 @@
+/* 1. Base Styles and Variables */
+:root {
+    --light-blue: #70aeff;
+    --main-text-color: #e0e0e0;
+    --label-color: #b0b0b0;
+    --card-bg-color: rgba(30, 27, 45, 0.9);
+    --input-bg-color: #2b2545; 
+    --border-color: rgba(255, 255, 255, 0.1);
+    
+    --dashboard-background: #0f0c1f; 
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--dashboard-background);
+    color: var(--main-text-color);
+    direction: ltr; 
+}
+
+/* 2. Login Container Card */
+.login-container {
+    width: 100%;
+    max-width: 520px; 
+    padding: 50px 50px; 
+    border-radius: 20px;
+    background: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+
+.header {
+    text-align: center;
+    margin-bottom: 35px; 
+}
+
+.logo-icon {
+    width: 110px; 
+    height: 110px; 
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1px; 
+}
+
+.brand-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.header h1 {
+    font-size: 36px; 
+    margin: 5px 0;
+    color: var(--main-text-color);
+}
+
+.header h1 .mark-gradient {
+    background: linear-gradient(90deg, #4e54c8, #7a6cc9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.header p {
+    font-size: 17px; 
+    color: var(--label-color);
+}
+
+/* 4. Input Fields */
+.input-group {
+    margin-bottom: 25px; 
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 10px; 
+    font-size: 17px; 
+    color: var(--label-color);
+}
+
+.input-field {
+    display: flex;
+    align-items: center;
+    background-color: var(--input-bg-color); 
+    padding: 18px 20px; 
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: border-color 0.3s ease;
+}
+
+.input-field i {
+    font-size: 19px; 
+    margin-right: 12px; 
+    color: var(--label-color);
+}
+
+.input-field input {
+    flex-grow: 1;
+    background: none; 
+    border: none;
+    outline: none;
+    color: var(--main-text-color);
+    font-size: 19px; 
+    padding: 0;
+}
+
+/* 7. Sign In Button */
+.sign-in-button {
+    width: 100%;
+    padding: 15px; 
+    border-radius: 12px; 
+    font-size: 20px; 
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4e54c8, #6d74ff); 
+    box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.sign-in-button:hover {
+    background: linear-gradient(90deg, #3a40b1, #5e66d2); 
+    box-shadow: 0 7px 20px rgba(78, 84, 200, 0.6);
+}
+
+/* 8. Reset Password Page Specific Styles */
+.reset-section {
+    text-align: center;
+}
+
+.reset-section .form-title {
+    font-size: 32px; 
+    margin-bottom: 20px; 
+}
+
+.reset-section .instruction-text {
+    font-size: 18px; 
+    color: var(--label-color);
+    margin-bottom: 20px; 
+}
+
+.back-to-login {
+    display: block;
+    text-align: center;
+    color: var(--light-blue);
+    text-decoration: none;
+    font-size: 18px; 
+    margin-top: 40px; 
+    transition: color 0.2s;
+}
+
+.back-to-login:hover {
+    color: #a0c9ff;
+}
+
+.role-selection {
+    margin-top: 5px;
+    margin-bottom: 30px; 
+}
+
+.forgot-password {
+    display: block;
+    text-align: right; 
+    color: var(--light-blue);
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 30px; 
+    transition: color 0.2s;
+}
+
+
+.shield-icon {
+    display: none !important;
+}

@@ -1,0 +1,72 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build artifacts
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment variables
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Database & Documentation (Temporary/Backups)
+*.mwb
+*.sql
+*.docx
+*.pptx
+*.mp4
+*.zip
+*.rar
+*.7z
+src.zip
+BACKEND_HANDOVER.md
+session_audit_summary.txt
+*.bak
+
+# Coverage / Testing outputs
+coverage/
+.nyc_output/
+
+# Media / Assets (Keep folders, ignore files if large)
+*.mp4
+*.mov
+*.avi
+# Keeping images untracked to save repo space if they are test data
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+
+# Project Specific (Kept based on your request)
+# ai-service/ is NOT ignored so your friends can see it
+# front/ is NOT ignored so your friends can see it
+# test/ is NOT ignored so your friends can see it
+
+# Legacy/Archive (Ignored to keep repo clean)
+betaproj/
+backend2donttakeanycodejustreview/
+/w/

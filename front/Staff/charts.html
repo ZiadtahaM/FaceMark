@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Charts & Reports | FACEMARK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+       background: linear-gradient(135deg, #020617, #1e1b4b);
+  color: #e5e7eb;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+    }
+
+    /* Sidebar */
+    .sidebar {
+       background: linear-gradient(135deg, #020617, #1e1b4b);
+  color: #e5e7eb;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+    }
+
+    .brand {
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .user-box {
+     background: linear-gradient(135deg, #1f2547, #2a2f5a);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0 24px;
+    }
+
+    .user-box small {
+     color: #aab0ff;
+  font-size: 13px;
+    }
+
+    .user-name {
+      font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 4px 0;
+    }
+
+    .sidebar .nav-link {
+      color: #bfc4ff;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px 14px;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background: #2b5cff;
+  color: #fff;
+    }
+    /* Panels */
+    .panel {
+      background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+    /* Progress bars */
+    .progress {
+     height: 26px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+    }
+
+    .progress-bar {
+     border-radius: 20px;
+  font-weight: 500;
+    }
+
+    /* Metric rows */
+    .metric {
+    background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-2 sidebar">
+     <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
+      <p class="small text-muted " style="color:white !important">Staff Portal</p>
+<!-- Welcome Box -->
+      <div class="user-box">
+        <small>Welcome,</small>
+        <div class="user-name" id="username">Loading...</div>
+        <small>Staff Portal</small>
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="staffdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="manualattendance.html"><i class="bi bi-person-check"></i> Manual Attendance</a></li>
+        <li class="nav-item"><a class="nav-link" href="face-capture.html"><i class="bi bi-camera"></i> Face Capture</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="export.html"><i class="bi bi-download"></i> Export</a></li>
+        <li class="nav-item"><a class="nav-link" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a></li>
+      </ul>
+      <hr class="text-secondary">
+
+<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
+    <i class="bi bi-box-arrow-right"></i> Sign Out
+</button>
+    </div>
+
+    <!-- Main -->
+    <div class="col-md-10 p-4">
+
+      <!-- Histogram -->
+      <div class="panel">
+        <h3>Charts & Reports</h3>
+        <h6 class="text-muted mb-3" style="color:white !important" >Monthly Attendance Histogram</h6>
+        <canvas id="attendanceChart" height="100"></canvas>
+      </div>
+
+      <!-- Course-wise -->
+      <div class="panel">
+        <h5 class="mb-4">Course-wise Attendance Histogram</h5>
+
+        <p>Mathematics (185/201)</p>
+        <div class="progress mb-3">
+          <div class="progress-bar bg-primary" style="width:92%">92%</div>
+        </div>
+
+        <p>Physics (162/190)</p>
+        <div class="progress mb-3">
+          <div class="progress-bar bg-success" style="width:85%">85%</div>
+        </div>
+
+        <p>Chemistry (176/200)</p>
+        <div class="progress mb-3">
+          <div class="progress-bar bg-purple" style="width:88%; background:#a855f7;">88%</div>
+        </div>
+
+        <p>Computer Science (171/190)</p>
+        <div class="progress">
+          <div class="progress-bar bg-warning" style="width:90%">90%</div>
+        </div>
+      </div>
+
+      <!-- Bottom section -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel">
+            <h5 class="mb-3">Performance Metrics</h5>
+
+            <div class="metric"><span>Average Attendance</span><strong>87%</strong></div>
+            <div class="metric"><span>Top Performing Course</span><strong class="text-success">Mathematics</strong></div>
+            <div class="metric"><span>Students at Risk</span><strong class="text-danger">24</strong></div>
+            <div class="metric" style="background:#1e3a8a;"><span>Recognition Accuracy</span><strong>98.5%</strong></div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="panel">
+            <h5 class="mb-3">Weekly Overview</h5>
+
+            <p>Monday</p>
+            <div class="progress mb-2"><div class="progress-bar bg-primary" style="width:92%">92%</div></div>
+
+            <p>Tuesday</p>
+            <div class="progress mb-2"><div class="progress-bar bg-primary" style="width:85%">85%</div></div>
+
+            <p>Wednesday</p>
+            <div class="progress mb-2"><div class="progress-bar bg-primary" style="width:88%">88%</div></div>
+
+            <p>Thursday</p>
+            <div class="progress mb-2"><div class="progress-bar bg-primary" style="width:90%">90%</div></div>
+
+            <p>Friday</p>
+            <div class="progress"><div class="progress-bar bg-primary" style="width:87%">87%</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE_URL = 'http://localhost:3000/api/v1';
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getToken()}`
+  };
+}
+
+function redirectToLogin() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+  window.location.href = "../Sign in/index.html";
+}
+
+async function loadProfile() {
+  const token = getToken();
+
+  if (!token) {
+    showAlert("You are not logged in", "error");
+    redirectToLogin();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+      method: 'GET',
+      headers: authHeaders()
+    });
+
+    const data = await response.json();
+    console.log("Profile response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unauthorized");
+    }
+
+    const username =
+      data.username ||
+      data.user?.username ||
+      data.data?.username ||
+      localStorage.getItem('loggedUser') ||
+      "Staff User";
+
+    const role =
+      data.role ||
+      data.user?.role ||
+      data.userType ||
+      data.user?.userType ||
+      data.data?.role ||
+      data.data?.userType ||
+      localStorage.getItem('userRole') ||
+      "staff";
+
+    document.getElementById("username").textContent = username;
+
+    if (String(role).toLowerCase() !== 'staff') {
+      showAlert("This page is for staff only", "error");
+      redirectToLogin();
+    }
+  } catch (error) {
+    console.error("Profile error:", error);
+    showAlert("Session expired or unauthorized. Please login again.", "error");
+    redirectToLogin();
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+  localStorage.removeItem('token');
+  localStorage.removeItem('loggedUser');
+  localStorage.removeItem('userRole');
+ Swal.fire({
+        text: "Logged out successfully",
+        icon: "success",
+        background: "#1a1a3a",
+        color: "#fff",
+        confirmButtonColor: "#3060ff",
+        confirmButtonText: "OK"
+    }).then(() => {
+        window.location.href = "../Sign in/index.html";
+    });
+});
+
+let attendanceChartInstance = null;
+
+function renderAttendanceChart(monthlyData) {
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+
+  if (attendanceChartInstance) {
+    attendanceChartInstance.destroy();
+  }
+
+  attendanceChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: monthlyData.labels,
+      datasets: [{
+        label: 'Average Attendance Rate (%)',
+        data: monthlyData.values,
+        backgroundColor: '#10b981',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { color: '#ccc' },
+          grid: { color: 'rgba(255,255,255,0.1)' }
+        },
+        x: {
+          ticks: { color: '#ccc' },
+          grid: { display: false }
+        }
+      },
+      plugins: {
+        legend: { labels: { color: '#fff' } }
+      }
+    }
+  });
+}
+
+function renderCourseWise(courseStats) {
+  const progressBars = document.querySelectorAll('.panel .progress-bar');
+  const courseParagraphs = document.querySelectorAll('.panel p');
+
+  if (!courseStats || courseStats.length < 4) return;
+
+  const courseStartIndex = 1;
+  for (let i = 0; i < 4; i++) {
+    const p = courseParagraphs[courseStartIndex + i];
+    const bar = progressBars[i];
+
+    if (!p || !bar) continue;
+
+    p.textContent = `${courseStats[i].name} (${courseStats[i].present}/${courseStats[i].total})`;
+    bar.style.width = `${courseStats[i].percentage}%`;
+    bar.textContent = `${courseStats[i].percentage}%`;
+  }
+}
+
+function renderMetrics(metrics) {
+  const metricValues = document.querySelectorAll('.metric strong');
+  if (metricValues.length < 4) return;
+
+  metricValues[0].textContent = `${metrics.averageAttendance}%`;
+  metricValues[1].textContent = metrics.topCourse;
+  metricValues[2].textContent = metrics.studentsAtRisk;
+  metricValues[3].textContent = `${metrics.recognitionAccuracy}%`;
+}
+
+function renderWeeklyOverview(weeklyStats) {
+  const weeklyBars = document.querySelectorAll('.col-md-6 .panel .progress-bar.bg-primary');
+  if (weeklyBars.length < 5) return;
+
+  weeklyStats.forEach((item, index) => {
+    if (!weeklyBars[index]) return;
+    weeklyBars[index].style.width = `${item.value}%`;
+    weeklyBars[index].textContent = `${item.value}%`;
+  });
+}
+//alert
+function showAlert(message, type = "success") {
+  Swal.fire({
+    text: message,
+    icon: type, // success | error | warning | info
+    background: "#1a1a3a",
+    color: "#fff",
+    confirmButtonColor: "#3060ff",
+    confirmButtonText: "OK",
+    showClass: {
+      popup: "animate__animated animate__zoomIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__fadeOut"
+    }
+  });
+}
+async function loadReportsData() {
+  const token = getToken();
+
+  if (!token) {
+    redirectToLogin();
+    return;
+  }
+
+  try {
+    // غيّر endpoint ده لو اسم route مختلف عندك
+    const response = await fetch(`${API_BASE_URL}/reports/attendance-summary`, {
+      method: 'GET',
+      headers: authHeaders()
+    });
+
+    const data = await response.json();
+    console.log("Reports response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to load reports");
+    }
+
+    const monthlyData = data.monthlyAttendance || data.monthly || {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      values: [82, 85, 88, 86, 90, 92, 91, 89, 87, 88, 90, 93]
+    };
+
+    const courseStats = data.courseWise || [
+      { name: 'Mathematics', present: 185, total: 201, percentage: 92 },
+      { name: 'Physics', present: 162, total: 190, percentage: 85 },
+      { name: 'Chemistry', present: 176, total: 200, percentage: 88 },
+      { name: 'Computer Science', present: 171, total: 190, percentage: 90 }
+    ];
+
+    const metrics = data.metrics || {
+      averageAttendance: 87,
+      topCourse: 'Mathematics',
+      studentsAtRisk: 24,
+      recognitionAccuracy: 98.5
+    };
+
+    const weeklyStats = data.weeklyOverview || [
+      { day: 'Monday', value: 92 },
+      { day: 'Tuesday', value: 85 },
+      { day: 'Wednesday', value: 88 },
+      { day: 'Thursday', value: 90 },
+      { day: 'Friday', value: 87 }
+    ];
+
+    renderAttendanceChart(monthlyData);
+    renderCourseWise(courseStats);
+    renderMetrics(metrics);
+    renderWeeklyOverview(weeklyStats);
+
+  } catch (error) {
+    console.error("Reports error:", error);
+
+    const fallbackMonthly = {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      values: [82, 85, 88, 86, 90, 92, 91, 89, 87, 88, 90, 93]
+    };
+
+    renderAttendanceChart(fallbackMonthly);
+  }
+}
+
+loadProfile();
+loadReportsData();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

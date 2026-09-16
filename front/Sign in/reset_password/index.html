@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceMark - Reset Password</title>
+    
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-container reset-password-container">
+        
+        <div class="header">
+            <div class="logo-icon smile-icon">
+                <img src="../../images/face.jpeg" alt="FaceMark Logo" class="brand-logo">
+            </div>
+            
+            <h1>Face<span class="mark-gradient">Mark</span></h1>
+            <p>Face Recognition Technology</p>
+        </div>
+
+        <div class="reset-section">
+            <h2 class="form-title">Reset Password</h2>
+            <p class="instruction-text">Enter your email to receive reset instructions</p>
+
+            <form id="resetForm">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i> 
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="sign-in-button reset-button">Send Reset Link</button>
+            </form>
+            
+            <a href="../index.html" class="back-to-login">Back to Login</a>
+        </div>
+    </div>
+</body>
+</html>
