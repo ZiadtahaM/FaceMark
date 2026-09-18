@@ -1,8 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 import { UserAccount } from '../../users/entities/user.entity';
 import { Course } from './course.entity';
 
 @Entity('enrollments')
+@Index(['courseId', 'studentId'], { unique: true })
+@Index(['studentId'])
 export class CourseEnrollment {
   @PrimaryGeneratedColumn()
   enrollmentId: number;

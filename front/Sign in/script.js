@@ -13,8 +13,10 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     }
 
     try {
+        const baseUrl = window.FACEMARK_CONFIG?.API_BASE_URL || 'http://localhost:3001/api/v1';
+
         // 2. طلب تسجيل الدخول (Login)
-        const res = await fetch('http://localhost:3000/api/v1/auth/login', {
+        const res = await fetch(`${baseUrl}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: usernameInput, password: passwordInput })
@@ -32,7 +34,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         let actualRoleFromDB = selectedRole; // افتراضياً هنمشي باللي اختاره اليوزر لو البروفايل علق
 
         try {
-            const profileRes = await fetch('http://localhost:3000/api/v1/auth/profile', {
+            const profileRes = await fetch(`${baseUrl}/auth/profile`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             

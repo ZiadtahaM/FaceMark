@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, DataSource } from 'typeorm';
 import { CourseRepository } from '../repositories/course.repository';
 import { UserRepository } from '../../users/repositories/user.repository';
 import { CreateCourseDto } from '../dto/create-course.dto';
@@ -17,6 +17,7 @@ export class CoursesService {
     private readonly userRepository: UserRepository,
     @InjectRepository(CourseEnrollment)
     private readonly enrollmentRepository: Repository<CourseEnrollment>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createCourseDto: CreateCourseDto, adminUser?: UserAccount): Promise<Course> {
@@ -85,31 +86,34 @@ export class CoursesService {
     }
 
     private async syncEnrollments(courseId: number, studentIds: number[]): Promise<void> {
-    // 1. Get current enrollments
-    const currentEnrollments = await this.enrollmentRepository.find({ where: { courseId } });
-    const currentStudentIds = currentEnrollments.map(e => e.studentId);
+      await this.dataSource.transaction(async (manager) => {
+        const enrollmentRepo = manager.getRepository(CourseEnrollment);
+        // 1. Get current enrollments
+        const currentEnrollments = await enrollmentRepo.find({ where: { courseId } });
+        const currentStudentIds = currentEnrollments.map(e => e.studentId);
 
-    // 2. Identify students to add and remove
-    const studentsToAdd = studentIds.filter(id => !currentStudentIds.includes(id));
-    const studentsToRemove = currentStudentIds.filter(id => !studentIds.includes(id));
+        // 2. Identify students to add and remove
+        const studentsToAdd = studentIds.filter(id => !currentStudentIds.includes(id));
+        const studentsToRemove = currentStudentIds.filter(id => !studentIds.includes(id));
 
-    // 3. Remove students
-    if (studentsToRemove.length > 0) {
-      await this.enrollmentRepository.delete({ courseId, studentId: In(studentsToRemove) });
-    }
+        // 3. Remove students atomically
+        if (studentsToRemove.length > 0) {
+          await enrollmentRepo.delete({ courseId, studentId: In(studentsToRemove) });
+        }
 
-    // 4. Add students
-    if (studentsToAdd.length > 0) {
-      const enrollments = studentsToAdd.map(studentId => 
-        this.enrollmentRepository.create({
-          courseId,
-          studentId,
-          section: '1', // Default to section 1 for bulk enrollment
-          lecture: '1'  // Default to lecture 1 for bulk enrollment
-        })
-      );
-      await this.enrollmentRepository.save(enrollments);
-    }
+        // 4. Add students atomically
+        if (studentsToAdd.length > 0) {
+          const enrollments = studentsToAdd.map(studentId => 
+            enrollmentRepo.create({
+              courseId,
+              studentId,
+              section: '1',
+              lecture: '1'
+            })
+          );
+          await enrollmentRepo.save(enrollments);
+        }
+      });
     }
 
     async findAll(user: UserAccount): Promise<any[]> {

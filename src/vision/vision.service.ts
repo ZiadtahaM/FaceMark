@@ -9,11 +9,13 @@ import { ProcessFrameDto } from './dto/process-frame.dto';
 import { AiRecognitionResultDto, MatchStatus, Model1ResponseDto, BatchUploadResultDto } from './dto/ai-recognition-result.dto';
 import { AttendanceService } from '../attendance/services/attendance.service';
 import { UserRepository } from '../users/repositories/user.repository';
+import { CircuitBreaker } from '../common/resilience/circuit-breaker';
 
 @Injectable()
 export class VisionService {
   private readonly aiServiceUrl: string;
   private readonly logger = new Logger(VisionService.name);
+  private readonly circuitBreaker: CircuitBreaker;
 
   constructor(
     private readonly httpService: HttpService,
@@ -22,6 +24,11 @@ export class VisionService {
     private readonly userRepo: UserRepository,
   ) {
     this.aiServiceUrl = this.configService.get<string>('AI_SERVICE_URL', 'http://localhost:8000');
+    this.circuitBreaker = new CircuitBreaker('AiVision', {
+      failureThreshold: 3,
+      resetTimeoutMs: 15000,
+      timeoutMs: 30000,
+    });
   }
 
   /**
@@ -52,14 +59,16 @@ export class VisionService {
         throw new BadGatewayException('AI service is not running. Please start the FastAPI server on port 8000');
       }
 
-      // Send to AI service for batch processing
-      const response = await firstValueFrom(
-        this.httpService.post(`${this.aiServiceUrl}/upload/batch`, {
-          images_base64: dto.imagesBase64,
-          student_id: dto.studentId,
-          name: dto.name,
-          confidence_threshold: dto.confidenceThreshold || 0.6,
-        })
+      // Send to AI service for batch processing protected by Circuit Breaker
+      const response = await this.circuitBreaker.execute(() =>
+        firstValueFrom(
+          this.httpService.post(`${this.aiServiceUrl}/upload/batch`, {
+            images_base64: dto.imagesBase64,
+            student_id: dto.studentId,
+            name: dto.name,
+            confidence_threshold: dto.confidenceThreshold || 0.6,
+          }, { timeout: 25000 })
+        )
       );
 
       const aiResponse: Model1ResponseDto = response.data;
@@ -88,7 +97,7 @@ export class VisionService {
       let student = await this.userRepo.findById(studentIdNum);
       
       // Fallback: search by username if ID search fails (handles ID mismatch)
-      if (!student) {
+      if (!student && typeof this.userRepo.findByUsername === 'function') {
         student = await this.userRepo.findByUsername(dto.name);
       }
 
@@ -178,11 +187,17 @@ export class VisionService {
         throw new BadGatewayException('AI service is not running. Please start the FastAPI server on port 8000');
       }
 
-      const response = await firstValueFrom(
-        this.httpService.post(`${this.aiServiceUrl}/recognize`, {
-          image_base64: dto.imageBase64,
-          confidence_threshold: dto.confidenceThreshold || 0.7,
-        }, { timeout: 60000 })
+      const response = await this.circuitBreaker.execute(() =>
+        firstValueFrom(
+          this.httpService.post(
+            `${this.aiServiceUrl}/recognize`,
+            {
+              image_base64: dto.imageBase64,
+              confidence_threshold: dto.confidenceThreshold || 0.7,
+            },
+            { timeout: 25000 }
+          )
+        )
       );
       aiResponse = response.data;
     } catch (error) {

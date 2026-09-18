@@ -1,0 +1,63 @@
+name: FaceMark Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, backend]
+  pull_request:
+    branches: [main, backend]
+
+jobs:
+  backend-ci:
+    name: Backend Build & Contract Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Backend Dependencies
+        run: npm ci
+
+      - name: Compile NestJS Application
+        run: npm run build
+
+      - name: Execute Contract & Smoke Tests
+        run: npm test -- --passWithNoTests
+
+  ai-service-ci:
+    name: AI Vision Microservice Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: ai-service/requirements.txt
+
+      - name: Validate Python Syntax
+        run: |
+          python -m py_compile ai-service/app.py
+
+  deploy-manifest-audit:
+    name: Production Manifests & Zero-Trust Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify No Leaked Secrets
+        run: |
+          if [ -f .env ]; then
+            echo "ERROR: .env file committed to git!"
+            exit 1
+          fi
+          echo "Secret scrubbing verification passed."
