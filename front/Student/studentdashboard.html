@@ -66,6 +66,10 @@
         .record-card {
             background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle);
             border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+            transition: transform 0.2s, background 0.2s; cursor: pointer;
+        }
+        .record-card:hover {
+            transform: translateY(-2px); background: rgba(255, 255, 255, 0.05); border-color: rgba(6, 182, 212, 0.4);
         }
         .record-info h6 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
         .record-info small { color: var(--text-secondary); font-size: 0.85rem; }
