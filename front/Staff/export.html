@@ -363,13 +363,14 @@ select.manual-input option:hover {
 
 <!-- JAVASCRIPT POST -->
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script src="../js/api.js"></script>
  <script>
 /* ============================
    EXPORT PAGE (LECTURES + SECTIONS + BOTH)
    USES YOUR API STRUCTURE
    ============================ */
 
-const API_BASE_URL = 'http://localhost:3000/api/v1';
+const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3001/api/v1';
 
 // ================= DOM =================
 const courseSelect = document.getElementById("courseSelect");

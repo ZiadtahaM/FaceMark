@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable, Index, VersionColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../../common/enums/role.enum';
 import { Course } from '../../courses/entities/course.entity';
@@ -10,6 +10,8 @@ import { CourseEnrollment } from '../../courses/entities/course-enrollment.entit
  * Maps to the 'users' table in MySQL.
  */
 @Entity('users')
+@Index(['username', 'isDeleted'])
+@Index(['userType', 'isDeleted'])
 export class UserAccount {
   // Unique primary identifier for each user.
   @ApiProperty({ example: 1, description: 'The unique identifier of the user' })
@@ -101,6 +103,10 @@ export class UserAccount {
   attendanceRecords: Attendance[];
 
   // ==================== Timestamps ====================
+
+  @ApiProperty({ example: 1, description: 'Optimistic locking version / monotonic fencing token' })
+  @VersionColumn({ default: 1 })
+  version: number;
 
   // Automatically recorded timestamp of account creation.
   @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })

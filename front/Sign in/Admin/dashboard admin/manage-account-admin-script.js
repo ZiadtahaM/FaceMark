@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    const API_BASE_URL = 'http://localhost:3000/api/v1'; 
+    const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3001/api/v1'; 
     let token = localStorage.getItem('token'); 
     if (token) token = token.replace(/['"]+/g, '').trim(); 
 

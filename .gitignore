@@ -10,11 +10,16 @@ out/
 *.tsbuildinfo
 
 # Environment variables
-
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.err
 
 # Logs
 *.log

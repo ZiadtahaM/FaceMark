@@ -6,6 +6,7 @@ import { CourseEnrollment } from '../entities/course-enrollment.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConflictException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Role } from '../../common/enums/role.enum';
+import { DataSource } from 'typeorm';
 
 describe('CoursesService', () => {
   let service: CoursesService;
@@ -14,12 +15,12 @@ describe('CoursesService', () => {
 
   beforeEach(async () => {
     courseRepository = {
-      findByCodeAll: jest.fn(),
-      findByCode: jest.fn(),
-      findById: jest.fn(),
-      findOne: jest.fn(),
       create: jest.fn(),
       save: jest.fn(),
+      findById: jest.fn(),
+      findByCode: jest.fn(),
+      findByCodeAll: jest.fn(),
+      findOne: jest.fn(),
       delete: jest.fn(),
     };
     userRepository = {
@@ -31,7 +32,8 @@ describe('CoursesService', () => {
         CoursesService,
         { provide: CourseRepository, useValue: courseRepository },
         { provide: UserRepository, useValue: userRepository },
-        { provide: getRepositoryToken(CourseEnrollment), useValue: { findOne: jest.fn(), create: jest.fn(), save: jest.fn() } },
+        { provide: getRepositoryToken(CourseEnrollment), useValue: { findOne: jest.fn(), create: jest.fn(), save: jest.fn(), find: jest.fn().mockResolvedValue([]), delete: jest.fn() } },
+        { provide: DataSource, useValue: { transaction: jest.fn((cb) => cb({ getRepository: jest.fn().mockReturnValue({ find: jest.fn().mockResolvedValue([]), delete: jest.fn(), create: jest.fn(), save: jest.fn() }) })) } },
       ],
     }).compile();
 

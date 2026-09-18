@@ -12,6 +12,7 @@ import { Course } from './courses/entities/course.entity';
 import { CourseEnrollment } from './courses/entities/course-enrollment.entity';
 import { Attendance } from './attendance/entities/attendance.entity';
 import { validate } from './common/config/env.validation';
+import { HealthModule } from './common/health/health.module';
 
 
 @Module({
@@ -49,6 +50,7 @@ import { validate } from './common/config/env.validation';
     CoursesModule,
     AttendanceModule,
     VisionModule,
+    HealthModule,
   ],
 })
 export class AppModule {}

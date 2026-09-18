@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, Index, VersionColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserAccount } from '../../users/entities/user.entity';
 import { Attendance } from '../../attendance/entities/attendance.entity';
@@ -8,6 +8,8 @@ import { CourseEnrollment } from './course-enrollment.entity';
  * Database entity representing a course in the system.
  */
 @Entity('courses')
+@Index(['code', 'isDeleted'])
+@Index(['instructor', 'isDeleted'])
 export class Course {
   @ApiProperty({ example: 1 })
   @PrimaryGeneratedColumn()
@@ -64,6 +66,10 @@ export class Course {
   @ApiProperty({ example: false })
   @Column({ default: false })
   isDeleted: boolean;
+
+  @ApiProperty({ example: 1, description: 'Optimistic locking version / monotonic fencing token' })
+  @VersionColumn({ default: 1 })
+  version: number;
 
   @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
   @CreateDateColumn()

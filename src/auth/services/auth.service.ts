@@ -59,11 +59,11 @@ export class AuthService {
       // Securely hash the password before storage.
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create new user entity.
+      // Create new user entity - Poka-Yoke: Public registration strictly creates STUDENT role
       const newUser = transactionalRepo.create({
         username,
         password: hashedPassword,
-        userType: role || Role.STUDENT,
+        userType: Role.STUDENT,
       });
 
       // Persist user to database.

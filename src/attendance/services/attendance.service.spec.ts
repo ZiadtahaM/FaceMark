@@ -6,6 +6,7 @@ import { UserRepository } from '../../users/repositories/user.repository';
 import { CourseRepository } from '../../courses/repositories/course.repository';
 import { AlertService } from '../../users/services/alert.service';
 import { Role } from '../../common/enums/role.enum';
+import { DataSource } from 'typeorm';
 
 describe('AttendanceService', () => {
   let service: AttendanceService;
@@ -53,6 +54,7 @@ describe('AttendanceService', () => {
         { provide: UserRepository, useValue: userRepo },
         { provide: CourseRepository, useValue: courseRepo },
         { provide: AlertService, useValue: { checkStudentLowAttendance: jest.fn().mockResolvedValue(null), triggerAbsenceAlert: jest.fn() } },
+        { provide: DataSource, useValue: { transaction: jest.fn((cb) => cb({ getRepository: jest.fn() })) } },
       ],
     }).compile();
 

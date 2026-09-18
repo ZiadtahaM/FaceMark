@@ -8,7 +8,7 @@ import { CourseRepository } from '../../courses/repositories/course.repository';
 import { AlertService } from '../../users/services/alert.service';
 import { Role } from '../../common/enums/role.enum';
 import { UserAccount } from '../../users/entities/user.entity';
-import { In } from 'typeorm';
+import { In, DataSource } from 'typeorm';
 
 @Injectable()
 export class AttendanceService {
@@ -17,6 +17,7 @@ export class AttendanceService {
     private readonly userRepo: UserRepository,
     private readonly courseRepo: CourseRepository,
     private readonly alertService: AlertService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(dto: CreateAttendanceDto, user: UserAccount) {
@@ -498,27 +499,36 @@ export class AttendanceService {
       return { status: 'ALREADY_RECORDED', record: duplicate };
     }
 
-    const record = await this.attendanceRepo.create({
-      student: student,
-      course: course,
-      recordDate: today as any,
-      attendanceStatusId: 1, 
-      staffId: course.instructor?.userAccountId || 0, 
-      confidenceScore: data.confidenceScore,
-      faceConfidence: data.confidenceScore,
-      matchStatus: data.matchStatus,
-      sessionId: data.sessionId,
-      sessionType: data.sessionType,
-      sessionNumber: data.sessionNumber,
-      room: data.room || 'AI Vision',
-      detected: true,
-      accuracy: data.confidenceScore,
-      checkInTime: new Date().toTimeString().split(' ')[0],
-    });
+    try {
+      const record = await this.attendanceRepo.create({
+        student: student,
+        course: course,
+        recordDate: today as any,
+        attendanceStatusId: 1, 
+        staffId: course.instructor?.userAccountId || 0, 
+        confidenceScore: data.confidenceScore,
+        faceConfidence: data.confidenceScore,
+        matchStatus: data.matchStatus,
+        sessionId: data.sessionId,
+        sessionType: data.sessionType,
+        sessionNumber: data.sessionNumber,
+        room: data.room || 'AI Vision',
+        detected: true,
+        accuracy: data.confidenceScore,
+        checkInTime: new Date().toTimeString().split(' ')[0],
+      });
 
-    this.alertService.checkStudentLowAttendance(student.userAccountId, course.courseId).catch(() => {});
+      this.alertService.checkStudentLowAttendance(student.userAccountId, course.courseId).catch(() => {});
 
-    return { status: 'RECORDED', record };
+      return { status: 'RECORDED', record };
+    } catch (err) {
+      // Catch unique constraint violation across concurrent requests
+      if (err.code === 'ER_DUP_ENTRY' || err.message?.includes('Duplicate entry') || err.code === '23505') {
+        const existing = await this.attendanceRepo.findDuplicate(data.studentId, data.courseId, today);
+        return { status: 'ALREADY_RECORDED', record: existing };
+      }
+      throw err;
+    }
   }
 
   async findBySession(sessionId: string) {

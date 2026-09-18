@@ -5,7 +5,10 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  Index,
+  Unique,
+  VersionColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -13,6 +16,11 @@ import { UserAccount } from '../../users/entities/user.entity';
 import { Course } from '../../courses/entities/course.entity';
 
 @Entity('attendance_records')
+@Index(['courseId', 'recordDate'])
+@Index(['studentId', 'courseId'])
+@Index(['studentId', 'courseId', 'recordDate'])
+@Index(['staffId'])
+@Unique('UQ_student_course_date_session', ['studentId', 'courseId', 'recordDate', 'sessionNumber'])
 export class Attendance {
 
   @ApiProperty({ example: 1 })
@@ -103,6 +111,10 @@ export class Attendance {
   @ApiProperty({ example: '09:30:00', required: false })
   @Column({ type: 'time', nullable: true })
   checkInTime: string;
+
+  @ApiProperty({ example: 1, description: 'Optimistic locking version / monotonic fencing token' })
+  @VersionColumn({ default: 1 })
+  version: number;
 
   @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
   @CreateDateColumn()
