@@ -1,28 +1,45 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 import cv2
 import numpy as np
 import base64
-import pickle
 import os
+import time
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 from deepface import DeepFace
 from scipy.spatial.distance import cosine
+from wal_engine import BitcaskWalEngine
+
+# Initialize Bitcask WAL Storage Engine (DDIA Chapter 3)
+WAL_PATH = os.getenv("WAL_STORAGE_PATH", "./embeddings/embeddings.wal")
+LEGACY_PICKLE = os.getenv("LEGACY_EMBEDDINGS_PATH", "./embeddings/embs_facenet512.pkl")
+
+storage_engine: Optional[BitcaskWalEngine] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Pre-load model on startup
+    global storage_engine
+    print("[INFO] Initializing Bitcask WAL Storage Engine...")
+    storage_engine = BitcaskWalEngine(WAL_PATH, LEGACY_PICKLE)
+    
+    # Pre-load Facenet512 model on startup
     print("[INFO] Pre-loading Facenet512 model...")
     dummy = np.zeros((160, 160, 3), dtype=np.uint8)
     DeepFace.represent(dummy, model_name="Facenet512", enforce_detection=False, detector_backend="skip")
-    print("[INFO] Model loaded successfully!")
+    print("[INFO] Model and storage loaded successfully!")
     yield
+    if storage_engine:
+        storage_engine.close()
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="FaceMark AI Vision Microservice",
+    description="DDIA-hardened facial recognition service with Bitcask WAL storage",
+    version="2.0.0",
+    lifespan=lifespan
+)
 
-EMBEDDINGS_FILE = "./embeddings/embs_facenet512.pkl"
 os.makedirs("./embeddings", exist_ok=True)
 os.makedirs("./faces", exist_ok=True)
 
@@ -42,16 +59,6 @@ def get_embedding(image):
     rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
     result = DeepFace.represent(rgb, model_name="Facenet512", enforce_detection=False, detector_backend="skip")
     return result[0]["embedding"]
-
-def load_embeddings():
-    if os.path.exists(EMBEDDINGS_FILE):
-        with open(EMBEDDINGS_FILE, "rb") as f:
-            return pickle.load(f)
-    return {}
-
-def save_embeddings(db):
-    with open(EMBEDDINGS_FILE, "wb") as f:
-        pickle.dump(db, f)
 
 def clamp(value: float) -> float:
     return float(max(0.0, min(1.0, value)))
@@ -73,10 +80,47 @@ class RecognizeRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "service": "facemark-ai-vision",
+        "version": "2.0.0",
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+
+@app.get("/storage/stats")
+def storage_stats():
+    if not storage_engine:
+        raise HTTPException(status_code=503, detail="Storage engine uninitialized")
+    
+    wal_size = os.path.getsize(storage_engine.wal_path) if os.path.exists(storage_engine.wal_path) else 0
+    all_keys = list(storage_engine.all_embeddings().keys())
+    return {
+        "engine": "BitcaskWalEngine",
+        "walPath": storage_engine.wal_path,
+        "walSizeBytes": wal_size,
+        "activeEmbeddingsCount": len(all_keys),
+        "studentIds": all_keys
+    }
+
+@app.post("/storage/compact")
+def trigger_compaction():
+    if not storage_engine:
+        raise HTTPException(status_code=503, detail="Storage engine uninitialized")
+    size_before = os.path.getsize(storage_engine.wal_path) if os.path.exists(storage_engine.wal_path) else 0
+    storage_engine.compact()
+    size_after = os.path.getsize(storage_engine.wal_path) if os.path.exists(storage_engine.wal_path) else 0
+    return {
+        "message": "Compaction completed successfully",
+        "sizeBeforeBytes": size_before,
+        "sizeAfterBytes": size_after,
+        "bytesReclaimed": max(0, size_before - size_after)
+    }
 
 @app.post("/upload/batch")
 def upload_batch(req: UploadRequest):
+    if not storage_engine:
+        raise HTTPException(status_code=503, detail="Storage engine uninitialized")
+        
     student_id = req.studentId or req.student_id
     images = req.imagesBase64 or req.images_base64 or req.images
 
@@ -99,9 +143,8 @@ def upload_batch(req: UploadRequest):
 
     avg_embedding = np.mean(embeddings, axis=0).tolist()
 
-    db = load_embeddings()
-    db[student_id] = avg_embedding
-    save_embeddings(db)
+    # Append to DDIA Bitcask WAL
+    storage_engine.put(student_id, avg_embedding)
 
     return {
         "studentId": student_id,
@@ -112,13 +155,18 @@ def upload_batch(req: UploadRequest):
         "facesDetected": len(embeddings),
         "dateCreated": datetime.now(timezone.utc).isoformat(),
         "versionOfModel": "Facenet512",
+        "storageEngine": "BitcaskWAL",
         "status": "success",
-        "message": f"Successfully registered {len(embeddings)} faces",
+        "message": f"Successfully registered {len(embeddings)} faces in WAL",
         "success": True
     }
 
 @app.post("/recognize")
 def recognize(req: RecognizeRequest):
+    if not storage_engine:
+        raise HTTPException(status_code=503, detail="Storage engine uninitialized")
+
+    t_start = time.time()
     image = req.imageBase64 or req.image_base64 or req.image
 
     if not image:
@@ -136,7 +184,7 @@ def recognize(req: RecognizeRequest):
             "matchStatus": "NO_FACE_DETECTED",
             "status": "NO_FACE_DETECTED",
             "matched": False,
-            "processingTimeMs": 0
+            "processingTimeMs": int((time.time() - t_start) * 1000)
         }
 
     if img is None:
@@ -149,7 +197,7 @@ def recognize(req: RecognizeRequest):
             "matchStatus": "NO_FACE_DETECTED",
             "status": "NO_FACE_DETECTED",
             "matched": False,
-            "processingTimeMs": 0
+            "processingTimeMs": int((time.time() - t_start) * 1000)
         }
 
     try:
@@ -164,18 +212,29 @@ def recognize(req: RecognizeRequest):
             "matchStatus": "NO_FACE_DETECTED",
             "status": "NO_FACE_DETECTED",
             "matched": False,
-            "processingTimeMs": 0
+            "processingTimeMs": int((time.time() - t_start) * 1000)
         }
 
-    db = load_embeddings()
+    # O(1) in-memory vector dictionary retrieval from Bitcask Keydir
+    db = storage_engine.all_embeddings()
     if not db:
-        raise HTTPException(status_code=404, detail="No embeddings in database yet")
+        return {
+            "studentId": None,
+            "name": None,
+            "match": 0.0,
+            "confidenceScore": 0.0,
+            "versionOfModel": "Facenet512",
+            "matchStatus": "NO_ENROLLED_STUDENTS",
+            "status": "NO_MATCH",
+            "matched": False,
+            "processingTimeMs": int((time.time() - t_start) * 1000)
+        }
 
     best_match = None
     best_similarity = 0.0
 
     for student_id, db_emb in db.items():
-        raw_sim = 1 - cosine(target_emb, db_emb)
+        raw_sim = 1.0 - cosine(target_emb, db_emb)
         if np.isnan(raw_sim) or np.isinf(raw_sim):
             raw_sim = 0.0
         sim = clamp(raw_sim)
@@ -186,6 +245,7 @@ def recognize(req: RecognizeRequest):
     threshold = req.confidence_threshold or 0.65
     matched = bool(best_similarity >= threshold)
     similarity = clamp(round(best_similarity, 4))
+    t_end = time.time()
 
     return {
         "studentId": best_match if matched else None,
@@ -196,5 +256,5 @@ def recognize(req: RecognizeRequest):
         "matchStatus": "MATCH" if matched else "NO_MATCH",
         "status": "MATCH" if matched else "NO_MATCH",
         "matched": matched,
-        "processingTimeMs": 0
+        "processingTimeMs": int((t_end - t_start) * 1000)
     }

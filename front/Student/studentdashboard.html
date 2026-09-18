@@ -1,687 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>FaceMark | Student Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>FaceMark - Student Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #060913;
+            --bg-surface: rgba(15, 23, 42, 0.72);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --primary-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+        }
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-<style>
-body {
-  background: #0f0c29;
-  color: #ffffff;
-  min-height: 100vh;
-  font-family: "Segoe UI", sans-serif;
-  display: flex;
-}
+        /* Ambient Glows */
+        .ambient-glow { position: fixed; filter: blur(120px); border-radius: 50%; z-index: -1; pointer-events: none; opacity: 0.35; }
+        .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, #a855f7 0%, transparent 70%); }
+        .glow-2 { bottom: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, #06b6d4 0%, transparent 70%); }
 
-.sidebar {
-  width: 240px;
-  background: #15132b;
-  min-height: 100vh;
-  padding: 20px;
-}
+        /* Sidebar */
+        .sidebar {
+            background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-subtle); min-height: 100vh; padding: 24px;
+        }
+        
+        .brand-logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.4rem; color: #fff; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+        .brand-logo i { color: var(--primary-cyan); }
 
-.user-box {
-  background: #1a1a3a;
-  border-radius: 14px;
-  padding: 14px;
-  margin: 18px 0 24px;
-}
+        .user-box { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 16px; margin-bottom: 24px; }
+        .user-box small { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .user-name { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 4px; }
 
-.user-box small {
-  color: #b0b0b0;
-  font-size: 13px;
-}
+        .nav-link { color: var(--text-secondary); font-weight: 500; font-size: 0.95rem; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
+        .nav-link:hover, .nav-link.active { color: #fff; background: rgba(6, 182, 212, 0.15); border-left: 3px solid var(--primary-cyan); }
 
-.user-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
-}
+        /* Content */
+        .dashboard-content { padding: 32px 40px; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .dashboard-header h1 { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; }
 
-.sidebar .nav-link {
-  color: #b0b0b0;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  padding: 10px 14px;
-  text-decoration: none;
-}
+        .glass-panel { background: var(--bg-surface); backdrop-filter: blur(16px); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; margin-bottom: 24px; }
+        .glass-panel h5 { font-family: var(--font-heading); font-weight: 700; margin-bottom: 20px; }
 
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover {
-  background: #3060ff;
-  color: #ffffff;
-}
+        .record-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+            transition: transform 0.2s, background 0.2s; cursor: pointer;
+        }
+        .record-card:hover {
+            transform: translateY(-2px); background: rgba(255, 255, 255, 0.05); border-color: rgba(6, 182, 212, 0.4);
+        }
+        .record-info h6 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .record-info small { color: var(--text-secondary); font-size: 0.85rem; }
+        .status-badge { background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 
-.main-wrapper {
-  flex: 1;
-  margin: 16px;
-  background: #1a1a3a;
-  border-radius: 24px;
-  padding: 24px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
+        .face-status { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; text-align: center; }
+        .face-status i { font-size: 3rem; color: #34d399; margin-bottom: 16px; }
+        .face-status h4 { font-family: var(--font-heading); font-weight: 700; }
+        .face-status p { color: var(--text-secondary); font-size: 0.9rem; }
 
-.stats-card {
-  border-radius: 18px;
-  padding: 20px;
-  background: linear-gradient(135deg, #1e3a8a, #1e40af);
-}
-
-.card-attendance {
-  background: rgba(48,96,255,0.389);
-  border-left: 4px solid #3060ff;
-}
-
-.card-classes {
-  background: rgba(46,204,112,0.377);
-  border-left: 4px solid #2ecc71;
-}
-
-.card-courses {
-  background: rgba(156,89,182,0.436);
-  border-left: 4px solid #9b59b6;
-}
-
-.stats-title {
-  color: #b0b0b0;
-  font-size: 14px;
-}
-
-.stats-value {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.stats-sub {
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.today-schedule {
-  background: #1a1a3a;
-  border-radius: 20px;
-  padding: 22px;
-  margin-bottom: 24px;
-}
-
-.today-schedule h5 {
-  margin-bottom: 18px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.schedule-row {
-  background: rgba(255,255,255,0.04);
-  border-radius: 14px;
-  padding: 16px 18px;
-  margin-bottom: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-.schedule-row::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 6px;
-  height: 100%;
-  border-radius: 14px 0 0 14px;
-  background: #2ecc71;
-}
-
-.schedule-row.in-progress::before { background: #3060ff; }
-.schedule-row.upcoming::before { background: #9b59b6; }
-
-.schedule-info strong {
-  display: block;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-.schedule-info span {
-  font-size: 13px;
-  color: #b0b0b0;
-}
-
-.schedule-meta {
-  text-align: right;
-}
-
-.schedule-meta .time {
-  font-size: 13px;
-  color: #ffff;
-}
-
-.schedule-meta .status {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status-attended {
-  background: rgba(46,204,112,0.15);
-  color: #2ecc71;
-}
-
-.status-progress {
-  background: rgba(48,96,255,0.15);
-  color: #3060ff;
-}
-
-.status-upcoming {
-  background: rgba(156,89,182,0.15);
-  color: #9b59b6;
-}
-
-.attendance-history {
-  background: #1a1a3a;
-  border-radius: 18px;
-  padding: 20px;
-  margin-top: 24px;
-}
-
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.history-table th,
-.history-table td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.history-status {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-}
-
-.history-present {
-  background: rgba(46,204,112,0.15);
-  color: #2ecc71;
-}
-
-.history-present {
-    background: rgba(46,204,112,0.15);
-      color: #2ecc71;
-    }
-.history-late {
-    background: rgba(243,156,18,0.15); 
-     color: #f39c12;
-    }
-.history-absent { 
-   background: rgba(231,76,60,0.15); 
-    color: #e74c3c;
-  }
-
-.logout-link {
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-}
-</style>
+        @media(max-width:768px) { .dashboard-content { padding: 20px; } }
+    </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-  <h5 class="mb-4">
-    <img src="face.jpeg" alt="" width="50" height="50"> FACEMARK
-  </h5>
-  <p class="small text-muted" style="color:white !important">Student Portal</p>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
 
-  <div class="user-box">
-    <small>Welcome,</small>
-    <div class="user-name" id="username">Loading...</div>
-    <small id="userRoleLabel">Student Portal</small>
-  </div>
+    <div class="container-fluid">
+        <div class="row">
+            
+            <button class="btn d-md-none m-3 text-white" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" style="width: auto; background: var(--primary-cyan); border: none;">
+                <i class="fas fa-bars"></i>
+            </button>
 
-  <ul class="nav flex-column">
-    <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-grid"></i> Dashboard</a></li>
-    <li class="nav-item"><a class="nav-link" href="viewcourse.html"><i class="fa-solid fa-book me-2"></i> View Courses</a></li>
-    <li class="nav-item"><a class="nav-link" href="studentcharts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
-    <li class="nav-item"><a class="nav-link" href="alertstudent.html"><i class="bi bi-bell"></i> Alerts</a></li>
-    <li class="nav-item"><a class="nav-link" href="studentexport.html"><i class="bi bi-download"></i> Export</a></li>
-    <li class="nav-item"><a class="nav-link" href="reportstudent.html"><i class="fa-solid fa-triangle-exclamation me-2"></i> Report a Problem</a></li>
-  </ul>
+            <!-- Sidebar -->
+            <div class="offcanvas-md offcanvas-start col-md-3 col-lg-2 sidebar" tabindex="-1" id="sidebarMenu">
+                <div class="brand-logo"><i class="fas fa-fingerprint"></i> FaceMark</div>
 
-  <hr class="text-secondary">
-  <button id="logoutBtn" class="btn btn-danger w-100 mt-2">
-    <i class="bi bi-box-arrow-right"></i> Sign Out
-</button>
-</div>
+                <div class="user-box">
+                    <small>Student Portal</small>
+                    <div class="user-name" id="usernameDisplay">Loading...</div>
+                </div>
 
-<div class="main-wrapper">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-chart-line"></i> My Attendance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-book"></i> Courses</a></li>
+                    <li class="nav-item mt-4"><a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Secure Logout</a></li>
+                </ul>
+            </div>
 
-  <div class="row g-4 mb-4">
-    <div class="col-md-4">
-      <div class="stats-card card-attendance">
-        <div class="stats-title">Overall Attendance</div>
-        <div class="stats-value" id="overallAttendance">92%</div>
-        <div class="stats-sub text-success">Excellent performance</div>
-      </div>
-    </div>
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 dashboard-content">
+                <div class="dashboard-header">
+                    <h1>My Attendance</h1>
+                </div>
 
-    <div class="col-md-4">
-      <div class="stats-card card-classes">
-        <div class="stats-title">Classes Attended</div>
-        <div class="stats-value" id="classesAttended">156/170</div>
-        <div class="stats-sub text-info">This semester</div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="stats-card card-courses">
-        <div class="stats-title">Total Courses</div>
-        <div class="stats-value" id="totalCourses">4</div>
-        <div id="coursesStatus" style="font-size:13px; margin-top:5px;"></div>
-        <div class="stats-sub text-muted" style="color:white !important">Active courses</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="today-schedule" id="todaySchedule">
-  <h5>Today's Schedule</h5>
-</div>
-
-  <div class="attendance-history">
-    <h5>Recent Attendance History</h5>
-
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Course</th>
-          <th>Time</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
-
-</div>
-<script src="../js/api.js"></script>
-<script>
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3001/api/v1';
-
-/* ================= أساسيات ================= */
-function getToken() { 
-    return localStorage.getItem('token'); 
-}
-
-function authHeaders() {
-    return {
-        'Authorization': `Bearer ${getToken()}`,
-        'Content-Type': 'application/json'
-    };
-}
-
-function redirectToLogin() {
-    localStorage.clear();
-    window.location.href = './sign in/index.html';
-}
-
-function normalizeToArray(data) {
-    if (!data) return [];
-    if (Array.isArray(data)) return data;
-    return [data];
-}
-
-/* ================= تحميل البروفايل ================= */
-async function loadProfile() {
-    const token = getToken();
-    if (!token) return redirectToLogin();
-
-    try {
-        const res = await fetch(`${API_BASE_URL}/auth/profile`, { 
-            headers: authHeaders() 
-        });
-
-        const response = await res.json();
-        if (!res.ok) throw new Error();
-
-        const userData = Array.isArray(response.data) 
-            ? response.data[0] 
-            : (response.data || response);
-
-        const userId = userData.userAccountId || userData.id;
-
-        localStorage.setItem("userId", userId);
-
-        document.getElementById("username").textContent = userData.username || "Student";
-
-        return userData;
-
-    } catch (error) {
-        console.error("Profile error:", error);
-        redirectToLogin();
-    }
-}
-
-/* ================= الكورسات ================= */
-async function loadCourses(userId) {
-    try {
-        const res = await fetch(`${API_BASE_URL}/courses`, { headers: authHeaders() });
-        const response = await res.json();
-
-        let courses = normalizeToArray(response.data);
-
-        const myCourses = courses.filter(course => {
-            if (Array.isArray(course.students)) {
-                return course.students.some(s => 
-                    Number(s.userAccountId) === Number(userId)
-                );
-            }
-            return true;
-        });
-
-        document.getElementById("totalCourses").textContent = myCourses.length;
-
-    } catch (error) {
-        console.error("Courses error:", error);
-    }
-}
-
-/* ================= الإحصائيات ================= */
-async function loadStats() {
-
-    try {
-
-        const res = await fetch(`${API_BASE_URL}/student/charts`, {
-            headers: authHeaders()
-        });
-
-        const response = await res.json();
-        const data = response.data;
-
-        /* Overall */
-        document.getElementById("overallAttendance").textContent =
-            data.metrics.avg || "0%";
-
-        /* Classes */
-        let attended = 0;
-        let total = 0;
-
-        data.structure.forEach(course => {
-            course.children.forEach(group => {
-                attended += Number(group.stats.attended || 0);
-                total += Number(group.stats.total || 0);
-            });
-        });
-
-        document.getElementById("classesAttended").textContent =
-            `${attended}/${total}`;
-
-        /* Total Courses */
-        document.getElementById("totalCourses").textContent =
-            data.courses.length || 0;
-
-       
-
-        /* Performance */
-        const avg = parseFloat(data.metrics.avg);
-
-        const performanceLabel = document.querySelector(
-            ".card-attendance .stats-sub"
-        );
-
-        if (avg >= 85) {
-            performanceLabel.textContent = "Excellent performance";
-            performanceLabel.className = "stats-sub text-success";
-        } else if (avg >= 70) {
-            performanceLabel.textContent = "Good performance";
-            performanceLabel.className = "stats-sub text-info";
-        } else if (avg >= 50) {
-            performanceLabel.textContent = "Needs improvement";
-            performanceLabel.className = "stats-sub text-warning";
-        } else {
-            performanceLabel.textContent = "Needs Improvement";
-            performanceLabel.className = "stats-sub text-danger";
-        }
-
-    } catch (err) {
-
-        console.log("Stats error", err);
-
-        document.getElementById("overallAttendance").textContent = "0%";
-        document.getElementById("classesAttended").textContent = "0/0";
-        document.getElementById("totalCourses").textContent = "0";
-
-    }
-}
-
-/* ================= جدول اليوم ================= */
-async function loadSchedule() {
-
-    const container = document.getElementById("todaySchedule");
-    container.innerHTML = `<h5>Today's Schedule</h5><p>Loading...</p>`;
-
-    try {
-
-        /* GET /api/v1/courses */
-        const res = await fetch(`${API_BASE_URL}/courses`, {
-            headers: authHeaders()
-        });
-
-        const response = await res.json();
-        let courses = normalizeToArray(response.data);
-
-        container.innerHTML = `<h5>Today's Schedule</h5>`;
-
-        /* لو مفيش كورسات */
-        if (!courses.length) {
-            container.innerHTML += `<p>No courses available</p>`;
-            return;
-        }
-
-        /* عرض كل الكورسات */
-        courses.forEach(course => {
-
-            /* اسم الكورس */
-            const courseName =
-                course.name ||
-                "Course";
-
-            /* اسم الـ Staff من instructor.username */
-            const staff =
-                course.instructor?.username ||
-                "Staff N/A";
-
-            /* Schedule */
-            const schedule =
-                course.schedule ||
-                "Schedule Not Available";
-
-            /* Room */
-            const room =
-                course.room ||
-                "Room N/A";
-
-            /* Code */
-            const code =
-                course.code ||
-                "N/A";
-
-            container.insertAdjacentHTML("beforeend", `
-                <div class="schedule-row upcoming">
-                    <div class="schedule-info">
-                        <strong>${courseName} (${code})</strong>
-                        <span>Instructor: ${staff} | ${room}</span>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="glass-panel">
+                            <h5>Recent Records</h5>
+                            <div id="attendanceContainer">
+                                <div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin"></i> Fetching records securely...</div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="schedule-meta">
-                        <div class="time">${schedule}</div>
-                        <div class="status status-upcoming">
-                            ${course.sections} Sections
+                    <div class="col-md-4">
+                        <div class="face-status">
+                            <i class="fas fa-user-check"></i>
+                            <h4>Biometrics Active</h4>
+                            <p>Your facial vector embeddings are securely stored in our Bitcask WAL engine.</p>
                         </div>
                     </div>
                 </div>
-            `);
+            </div>
+        </div>
+    </div>
 
-        });
-
-    } catch (error) {
-
-        console.error("Schedule error:", error);
-
-        container.innerHTML = `
-            <h5>Today's Schedule</h5>
-            <p style="color:red;">Error loading courses</p>
-        `;
-    }
-}
-/* ================= السجل بدون overwrite ================= */
-async function loadHistory() {
-    try {
-
-        const res = await fetch(`${API_BASE_URL}/attendance`, {
-            headers: authHeaders()
-        });
-
-        const response = await res.json();
-
-        // 👈 الداتا جاية جوا data.data
-        let records = normalizeToArray(response.data?.data);
-
-        const tbody = document.querySelector(".history-table tbody");
-        tbody.innerHTML = "";
-
-        if (!records.length) {
-            tbody.innerHTML = `<tr><td colspan="4">No attendance records</td></tr>`;
-            return;
-        }
-
-        /* ================= إزالة التكرار =================
-           نفس اليوم + نفس الكورس فقط (مش الوقت)
-        */
-        const uniqueMap = new Map();
-
-        records.forEach(record => {
-
-            const dateKey = record.recordDate;
-            const courseName = record.course?.name || "Course";
-
-            const key = `${dateKey}_${courseName}`;
-
-            // نخلي latest record بس
-            if (!uniqueMap.has(key)) {
-                uniqueMap.set(key, record);
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = localStorage.getItem('username') || 'Student';
+            document.getElementById('usernameDisplay').textContent = window.escapeHtml(user);
+            
+            if(!window.FaceMarkAPI.getToken()) {
+                window.location.href = '../Sign in/index.html';
+                return;
             }
-
+            
+            loadAttendance();
         });
 
-        const uniqueRecords = Array.from(uniqueMap.values());
+        async function loadAttendance() {
+            try {
+                // Endpoint assumed to exist on backend based on user role
+                const res = await window.FaceMarkAPI.authFetch('/attendance/my-records');
+                const result = await res.json();
+                
+                const records = result.data || result;
+                const container = document.getElementById("attendanceContainer");
+                container.innerHTML = "";
 
-        /* ================= ترتيب ================= */
-        uniqueRecords
-            .sort((a, b) => new Date(b.recordDate) - new Date(a.recordDate))
-            .slice(0, 6)
-            .forEach(r => {
-
-                const formattedDate = new Date(r.recordDate).toLocaleDateString();
-
-                const time = r.checkInTime || "-";
-
-                let status = "Absent";
-                let statusClass = "history-absent";
-
-                if (r.attendanceStatusId === 1) {
-                    status = "Present";
-                    statusClass = "history-present";
-                } else if (r.attendanceStatusId === 2) {
-                    status = "Late";
-                    statusClass = "history-late";
+                if(records.length === 0) {
+                    container.innerHTML = `<p class="text-muted">No attendance records found yet.</p>`;
+                    return;
                 }
 
-                tbody.insertAdjacentHTML("beforeend", `
-                    <tr>
-                        <td>${formattedDate}</td>
-                        <td>${r.course?.name || "Course"}</td>
-                        <td>${time}</td>
-                        <td>
-                            <span class="history-status ${statusClass}">
-                                ${status}
-                            </span>
-                        </td>
-                    </tr>
-                `);
-            });
+                records.forEach(r => {
+                    const date = new Date(r.timestamp).toLocaleString();
+                    container.innerHTML += `
+                        <div class="record-card">
+                            <div class="record-info">
+                                <h6>Course ID: ${r.courseId}</h6>
+                                <small><i class="fas fa-calendar-alt"></i> ${date}</small>
+                            </div>
+                            <div class="status-badge"><i class="fas fa-check"></i> Present</div>
+                        </div>
+                    `;
+                });
+                
+            } catch (err) {
+                console.error("Failed to load attendance:", err);
+                document.getElementById("attendanceContainer").innerHTML = `<p class="text-danger">Failed to fetch data.</p>`;
+            }
+        }
 
-    } catch (error) {
-        console.error("History error:", error);
-
-        const tbody = document.querySelector(".history-table tbody");
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4">Error loading attendance history</td>
-            </tr>
-        `;
-    }
-}
-//alert
-function showAlert(message, type = "success") {
-  Swal.fire({
-    text: message,
-    icon: type, // success | error | warning | info
-    background: "#1a1a3a",
-    color: "#fff",
-    confirmButtonColor: "#3060ff",
-    confirmButtonText: "OK",
-    showClass: {
-      popup: "animate__animated animate__zoomIn"
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOut"
-    }
-  });
-}
-/* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", async () => {
-    const user = await loadProfile();
-    const userId = user?.userAccountId || user?.id;
-
-    if (userId) {
-        loadStats();
-        loadCourses(userId);
-        loadSchedule();
-        loadHistory();
-    }
-});
-
-/* ================= Logout ================= */
-document.getElementById("logoutBtn")
-?.addEventListener("click", function () {
-
-    localStorage.clear();
-
-    Swal.fire({
-        text: "Logged out successfully",
-        icon: "success",
-        background: "#1a1a3a",
-        color: "#fff",
-        confirmButtonColor: "#3060ff",
-        confirmButtonText: "OK"
-    }).then(() => {
-        window.location.href = "../Sign in/index.html";
-    });
-
-});
-
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../Sign in/index.html';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

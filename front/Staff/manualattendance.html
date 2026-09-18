@@ -1,878 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Manual Attendance | FACEMARK</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-  
-  <style>
-    /* ===== COLORS ONLY – NOTHING REMOVED ===== */
-
-    body{
-      background:linear-gradient(135deg,#0f1224,#15193a);
-      color:#fff;
-      min-height:100vh;
-      font-family:system-ui,-apple-system;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      background: linear-gradient(180deg, #0c0f2d, #11164a);
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .brand {
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    .user-box {
-      background: linear-gradient(135deg, #1f2547, #2a2f5a);
-      border-radius: 14px;
-      padding: 14px;
-      margin: 18px 0 24px;
-    }
-
-    .user-box small {
-      color: #aab0ff;
-      font-size: 13px;
-    }
-
-    .user-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-      margin: 4px 0;
-    }
-
-    .sidebar .nav-link {
-      color: #bfc4ff;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      padding: 10px 14px;
-    }
-
-    .sidebar .nav-link.active,
-    .sidebar .nav-link:hover {
-      background: #2b5cff;
-      color: #fff;
-    }
-
-    /* Panel */
-    .panel{
-      background:linear-gradient(135deg,#1e2345,#2c2f6a);
-      border-radius:24px;
-      padding:26px;
-      margin-bottom:26px;
-    }
-
-    /* Inputs */
-    .form-control,
-    .form-select{
-      background:rgba(255,255,255,0.12);
-      border:1px solid rgba(255,255,255,0.18);
-      color:#fff;
-      border-radius:12px;
-    }
-
-    .form-control::placeholder{
-      color:#c7c9ff;
-    }
-
-    .form-control:focus,
-    .form-select:focus{
-      outline:none;
-      box-shadow:none;
-      border-color:#4f46e5;
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-    }
-
-    /* Header */
-    .attendance-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:18px;
-    }
-
-    .search-input{
-      background:rgba(255,255,255,0.12);
-      border:1px solid rgba(255,255,255,0.18);
-      border-radius:12px;
-      padding:8px 14px;
-      color:#fff;
-      width:220px;
-    }
-/* ===== Dark Date Input (Manual Attendance) ===== */
-.dark-input {
-  background: rgba(0, 0, 0, 0.6);
-  color: #e5e7eb;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  height: 44px;
-  padding: 10px 12px;
-}
-
-.dark-input:focus {
-  outline: none;
-  box-shadow: none;
-  border-color: #4f46e5;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-/* أيقونة التاريخ */
-.dark-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-    /* Table */
-    .attendance-table{
-      width:100%;
-      border-collapse:collapse;
-      color:#e5e7eb;
-    }
-
-    .attendance-table thead th{
-      padding:14px 10px;
-      font-size:14px;
-      font-weight:600;
-      color:#dbe0ff;
-      border-bottom:1px solid rgba(255,255,255,0.12);
-    }
-
-    .attendance-table tbody td{
-      padding:14px 10px;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-    }
-
-    .attendance-table tbody tr:hover{
-      background:rgba(255,255,255,0.03);
-    }
-
-    /* Status */
-    .status{
-      padding:6px 16px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:500;
-      display:inline-block;
-    }
-
-    .present{ background:#14532d; color:#4ade80; }
-    .absent{ background:#581c1c; color:#f87171; }
-    .late{ background:#713f12; color:#facc15; }
-
-    .action-cell{ text-align:right; }
-
-    .action-select{
-      background:rgba(255,255,255,0.12);
-      border:1px solid rgba(255,255,255,0.18);
-      border-radius:10px;
-      color:#fff;
-      padding:6px 12px;
-    }
-
-    /* Buttons */
-    .load-btn{
-      background:linear-gradient(135deg,#2563eb,#4f46e5);
-      border:none;
-      color:#fff;
-      border-radius:14px;
-      padding:10px 30px;
-      width:180px;
-    }
-
-    .save-btn{
-      margin-top:22px;
-      background:linear-gradient(135deg,#2563eb,#4f46e5);
-      border:none;
-      color:#fff;
-      border-radius:14px;
-      padding:10px 30px;
-    }
-
-    body {
-      background: #0f0c29;
-  color: #ffffff;
-       min-height: 100vh;
-  font-family: "Segoe UI", sans-serif;
-    }
-
-    /* ===== Manual Card ===== */
-    .manual-card {
-    background: #1a1a3a;
-  border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 22px;
-      padding: 26px 28px;
-      margin-bottom: 30px;
-    
-    }
-
-    .manual-card h4 {
-      margin-bottom: 22px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-
-    .manual-card .form-label {
-      color: #b0b0b0;
-      font-size: 13px;
-      margin-bottom: 6px;
-      display: block;
-    }
-.attendance-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table-wrapper {
-  max-height: 350px;
-  overflow-y: auto;
-}
-    .manual-input {
-      width: 100%;
-      height: 46px;
-      padding: 10px 14px;
-      border-radius: 14px;
-     
-       background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #ffffff;
-      font-size: 14px;
-      appearance: none;
-    }
-
-    .manual-input:focus {
-      outline: none;
-     border-color: #3060ff;
-  background: rgba(255,255,255,0.06);
-    }
-
-    /* Select arrow */
-    select.manual-input {
-      background-image:
-        linear-gradient(45deg, transparent 50%, #cbd5e1 50%),
-        linear-gradient(135deg, #cbd5e1 50%, transparent 50%);
-      background-position:
-        calc(100% - 18px) 19px,
-        calc(100% - 13px) 19px;
-      background-size: 5px 5px, 5px 5px;
-      background-repeat: no-repeat;
-    }
-.table-wrapper {
-  overflow-x: auto;
-}
-.attendance-table {
-  min-width: 700px;
-}
-@media (max-width: 768px) {
-
-  .attendance-header {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .manual-card {
-    padding: 20px;
-  }
-
-  .panel {
-    padding: 18px;
-  }
-
-}
-    select.manual-input option {
-      background-color: #1e293b;
-      color: #ffffff;
-    }
-
-    select.manual-input option:hover {
-      background-color: #312e81;
-    }
-
-    .manual-input::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      opacity: 0.7;
-      cursor: pointer;
-    }
-
-    /* ===== Buttons ===== */
-    .load-btn,
-    .save-btn {
-      background: #3060ff;
-  color: #fff;
-      border: none;
-      padding: 10px 22px;
-      border-radius: 14px;
-      font-weight: 500;
-    }
-
-    .load-btn:hover,
-    .save-btn:hover {
-       background: #244ce0;
-    }
-
-    /* ===== Panel & Table (UNCHANGED STRUCTURE) ===== */
-    .panel {
-      background: #1a1a3a;
-  border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 22px;
-    }
-
-    .attendance-header h5 {
-      color: #ffffff;
-    }
-
-    .search-input {
-       background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #fff;
-      border-radius: 12px;
-      padding: 8px 14px;
-    }
-
-    .attendance-table th {
-      color: #b0b0b0;
-    }
-
-    .attendance-table td {
-      color: #ffffff;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>FaceMark - Manual Roster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #060913; --bg-surface: rgba(15, 23, 42, 0.72); --border-subtle: rgba(255, 255, 255, 0.08);
+            --primary-cyan: #06b6d4; --text-primary: #f8fafc; --text-secondary: #94a3b8;
+            --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif; --font-body: 'Inter', system-ui, sans-serif;
+        }
+        body { background-color: var(--bg-base); color: var(--text-primary); font-family: var(--font-body); }
+        .ambient-glow { position: fixed; filter: blur(120px); border-radius: 50%; z-index: -1; pointer-events: none; opacity: 0.35; }
+        .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, #4f46e5 0%, transparent 70%); }
+        .sidebar { background: rgba(6, 9, 19, 0.85); backdrop-filter: blur(20px); border-right: 1px solid var(--border-subtle); min-height: 100vh; padding: 24px; }
+        .brand-logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.4rem; color: #fff; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+        .brand-logo i { color: #06b6d4; }
+        .nav-link { color: var(--text-secondary); font-weight: 500; font-size: 0.95rem; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-link:hover, .nav-link.active { color: #fff; background: rgba(99, 102, 241, 0.15); border-left: 3px solid #6366f1; }
+        .dashboard-content { padding: 32px 40px; }
+        .glass-panel { background: var(--bg-surface); backdrop-filter: blur(16px); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; }
+        .table { color: var(--text-primary); margin-top: 16px; }
+        .table th { border-bottom: 1px solid var(--border-subtle); background: transparent; font-family: var(--font-heading); font-weight: 600; color: var(--text-secondary); }
+        .table td { border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent; vertical-align: middle; }
+        .btn-custom { background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); color: #818cf8; border-radius: 8px; padding: 6px 12px; font-weight: 600; transition: all 0.2s; }
+        .btn-custom:hover { background: #6366f1; color: #fff; }
+        .form-select { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border-subtle); color: #fff; border-radius: 12px; padding: 10px 16px; }
+    </style>
 </head>
-
 <body>
-
-<div class="container-fluid">
-  <div class="row">
-<!-- Mobile Toggle -->
-<button class="btn btn-dark d-md-none m-3" type="button" 
-        data-bs-toggle="collapse" 
-        data-bs-target="#sidebarMenu">
-  <i class="bi bi-list"></i>
-</button>
-    <!-- Sidebar -->
-   <div class="col-md-2 collapse d-md-block sidebar" id="sidebarMenu">
-      <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
-      <p class="small text-muted " style="color:white !important">Staff Portal</p>
-
-      <div class="user-box">
-        <small>Welcome,</small>
-         <div class="user-name">guest1</div>
-        <small>Staff Portal</small>
-      </div>
-
-      <ul class="nav flex-column">
-        <li class="nav-item"><a class="nav-link" href="staffdashboard.html"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-person-check"></i> Manual Attendance</a></li>
-        <li class="nav-item"><a class="nav-link" href="face-capture.html"><i class="bi bi-camera"></i> Face Capture</a></li>
-        <li class="nav-item"><a class="nav-link" href="charts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a></li>
-        <li class="nav-item"><a class="nav-link" href="export.html"><i class="bi bi-download"></i> Export</a></li>
-        <li class="nav-item"><a class="nav-link" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a></li>
-      </ul>
-      <hr class="text-secondary">
-
-<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
-    <i class="bi bi-box-arrow-right"></i> Sign Out
-</button>
-    </div>
-
-    <!-- Main -->
-    <div class="col-12 col-md-10 p-3 p-md-4">
-
-      <!-- Manual Attendance -->
-      <div class="manual-card">
-        <h4>Manual Attendance</h4>
-
-       <div class="row g-4 align-items-end">
-  <div class="col-md-6">
-    <label class="form-label">Course</label>
-    <select class="manual-input" id="courseSelect"></select>
-  </div>
-  <div class="col-md-6">
-    <label class="form-label">Type</label>
-    <select class="manual-input" id="typeSelect">
-      <option value="">Select Type</option>
-      <option value="section">Section</option>
-      <option value="Lecture">Lecture</option>
-    </select>
-  </div>
-  <div class="col-md-6">
-    <label class="form-label">Section</label>
-    <select class="manual-input" name="section"></select>
-  </div>
-  <div class="col-md-6">
-    <label class="form-label">Date</label>
-    <input type="date" class="manual-input">
-  </div>
-  <div class="col-md-12">
-    <button class="load-btn">Load Attendance</button>
-  </div>
-</div>
-      </div>
-
-     
-
-    </div>
-  </div>
-</div>
-<!-- Attendance Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content" style="background:#1a1a3a; color:#fff; border-radius:20px;">
-
-      <div class="modal-header border-0">
-        <h5 class="modal-title">Manage Attendance</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <div class="table-wrapper">
-          <table class="attendance-table">
-            <thead>
-              <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Time</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="modalTbody"></tbody>
-          </table>
+    <div class="ambient-glow glow-1"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+                <div class="brand-logo"><i class="fas fa-fingerprint"></i> FaceMark</div>
+                <ul class="nav flex-column mt-4">
+                    <li class="nav-item"><a class="nav-link" href="staffdashboard.html"><i class="fas fa-border-all"></i> Command Center</a></li>
+                    <li class="nav-item"><a class="nav-link" href="face-capture.html"><i class="fas fa-camera"></i> Live Scanner</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-clipboard-list"></i> Manual Roster</a></li>
+                    <li class="nav-item mt-4"><a class="nav-link text-danger" href="../Sign in/index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+            <div class="col-md-9 col-lg-10 dashboard-content">
+                <h1 style="font-family: var(--font-heading); font-weight: 800; margin-bottom: 32px;">Manual Roster Control</h1>
+                <div class="glass-panel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <select class="form-select w-25" id="courseSelect">
+                            <option value="">Select Target Course...</option>
+                        </select>
+                        <button class="btn btn-custom" onclick="loadRoster()"><i class="fas fa-sync"></i> Refresh</button>
+                    </div>
+                    <table class="table table-hover">
+                        <thead><tr><th>Student ID</th><th>Name</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="rosterBody">
+                            <tr><td colspan="4" class="text-center text-muted py-4">Select a course to view roster.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-      </div>
-
-      <div class="modal-footer border-0">
-    <button class="btn btn-success" id="saveBtn">Save Attendance</button>
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-
     </div>
-  </div>
-</div>
-<script src="../js/api.js"></script>
-<script>
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3001/api/v1';
-
-document.addEventListener("DOMContentLoaded", function () {
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loadBtn = document.querySelector(".load-btn");
-  const saveBtn = document.getElementById("saveBtn"); 
-
-  const usernameEl = document.querySelector(".user-name");
-  const courseSelect = document.getElementById("courseSelect");
-  const sectionSelect = document.querySelector("select[name='section']");
-  const dateInput = document.querySelector("input[type='date']");
-
-  
-  saveBtn.addEventListener("click", saveAttendance);
-
-  let loadedAttendance = [];
-
-  // ================= USERNAME FROM LOGIN =================
-  const savedUsername = localStorage.getItem("loggedUser");
-  if (savedUsername) {
-    usernameEl.textContent = savedUsername;
-  }
-
-  // ================= TOKEN =================
-  function getToken() {
-    return localStorage.getItem('token');
-  }
-
-  function authHeaders() {
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    };
-  }
-
-  function redirectToLogin() {
-    localStorage.clear();
-    window.location.href = "../Sign in/index.html";
-  }
-
-  // ================= PROFILE (Fallback + Auth Check) =================
- async function loadProfile() {
-
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    showAlert("Login first", "error");
-    window.location.href = "../Sign in/index.html";
-    return;
-  }
-
-  try {
-
-    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const text = await res.text();
-    console.log("RAW:", text);
-
-    let result;
-    try {
-      result = JSON.parse(text);
-    } catch {
-      throw new Error("Invalid JSON");
-    }
-
-    console.log("RESULT:", result);
-
-    // 🔥 مرن جدًا
-    const user =
-      result.data?.user ||
-      result.data ||
-      result.user ||
-      result;
-
-    console.log("USER:", user);
-
-    const role = user.role || user.userType;
-
-    if (!user || !role) {
-      throw new Error("User or role missing");
-    }
-
-    document.querySelector(".user-name").textContent =
-      user.username || "Staff";
-
-    if (role.toLowerCase() !== "staff") {
-      showAlert("Staff only", "error");
-      localStorage.clear();
-      window.location.href = "../Sign in/index.html";
-    }
-
-  } catch (err) {
-
-    console.error("ERROR:", err);
-    showAlert(err.message, "error");
-
-    localStorage.clear();
-    window.location.href = "../Sign in/index.html";
-  }
-}
-
-  // ================= LOAD COURSES =================
-  async function loadCourses() {
-    try {
-      const res = await fetch(`${API_BASE_URL}/courses`, {
-        headers: authHeaders()
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error();
-
-      const courses = data.data || data;
-
-      courseSelect.innerHTML = `<option value="">Select Course</option>`;
-
-     courses.forEach(c => {
-  courseSelect.innerHTML += `
-   <option value="${c.courseId || c.id}">
-      ${c.name || c.title}
-    </option>
-  `;
-});
-
-    } catch (err) {
-      console.error("Courses error:", err);
-    }
-  }
-
-  // ================= LOAD SECTIONS =================
-async function loadSections(courseId) {
-  try {
-    const res = await fetch(`${API_BASE_URL}/courses/${courseId}`, {
-      headers: authHeaders()
-    });
-
-    const data = await res.json();
-    const course = data.data || data;
-
-    const totalSections = course.sections || 0;
-
-    sectionSelect.innerHTML = `<option value="">Select Section</option>`;
-
-    for (let i = 1; i <= totalSections; i++) {
-      sectionSelect.innerHTML += `
-        <option value="${i}">Section ${i}</option>
-      `;
-    }
-
-  } catch (err) {
-    console.error("Sections error:", err);
-  }
-}
-  // ================= LOAD STUDENTS =================
-  async function loadStudents(courseId) {
-    try {
-      const res = await fetch(`${API_BASE_URL}/courses/${courseId}/students`, {
-        headers: authHeaders()
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error();
-
-      return data.data || [];
-
-    } catch (err) {
-      console.error("Students error:", err);
-      return [];
-    }
-  }
-
-  // ================= RENDER =================
-  function renderAttendanceRows(students) {
-  tbody.innerHTML = "";
-
-  if (!students.length) {
-    tbody.innerHTML = `<tr><td colspan="5">No data</td></tr>`;
-    return;
-  }
-
-  students.forEach(s => {
-    const row = document.createElement("tr");
-
-    row.setAttribute("data-record-id", s.recordId || ""); // 🔥 مهم
-
-    row.innerHTML = `
-      <td>${s.studentId}</td>
-      <td>${s.name}</td>
-      <td><span class="status">${s.status}</span></td>
-      <td>${s.time}</td>
-      <td>
-        <select class="manual-input status-select">
-          <option ${s.status === "Present" ? "selected" : ""}>Present</option>
-          <option ${s.status === "Absent" ? "selected" : ""}>Absent</option>
-          <option ${s.status === "Late" ? "selected" : ""}>Late</option>
-        </select>
-      </td>
-    `;
-
-    tbody.appendChild(row);
-  });
-}
-//rendalmodel
-function renderModal() {
-
-  modalTbody.innerHTML = "";
-
-  if (!loadedAttendance.length) {
-    modalTbody.innerHTML = `
-      <tr>
-        <td colspan="5" style="text-align:center">No data</td>
-      </tr>
-    `;
-    return;
-  }
-
-  loadedAttendance.forEach(s => {
-
-    const row = document.createElement("tr");
-
-    row.setAttribute("data-record-id", s.recordId);
-
-    row.innerHTML = `
-      <td>${s.studentId}</td>
-      <td>${s.name}</td>
-      <td>${s.status}</td>
-      <td>${s.time}</td>
-      <td>
-        <select class="manual-input">
-          <option ${s.status === "Present" ? "selected" : ""}>Present</option>
-          <option ${s.status === "Absent" ? "selected" : ""}>Absent</option>
-          <option ${s.status === "Late" ? "selected" : ""}>Late</option>
-        </select>
-      </td>
-    `;
-
-    modalTbody.appendChild(row);
-  });
-}
-  // ================= LOAD ATTENDANCE =================
-const modal = new bootstrap.Modal(document.getElementById('attendanceModal'));
-const modalTbody = document.getElementById("modalTbody");
-const tbody = modalTbody; 
-//alert
-function showAlert(message, type = "success") {
-  Swal.fire({
-    text: message,
-    icon: type, // success | error | warning | info
-    background: "#1a1a3a",
-    color: "#fff",
-    confirmButtonColor: "#3060ff",
-    confirmButtonText: "OK",
-    showClass: {
-      popup: "animate__animated animate__zoomIn"
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOut"
-    }
-  });
-}
-
-async function loadAttendance() {
-
-if (!courseSelect.value || !sectionSelect.value || !dateInput.value) {
-  showNoData("Please select all fields");
-  return;
-}
-
-try {
-
-const url =
-`${API_BASE_URL}/attendance?page=1&limit=100` +
-`&courseId=${courseSelect.value}` +
-`&section=${sectionSelect.value}` +
-`&date=${dateInput.value}`;
-
-const res = await fetch(url,{ headers: authHeaders() });
-
-if (!res.ok) throw new Error("Server error");
-
-const data = await res.json();
-const attendance = data?.data?.data || [];
-
-if(attendance.length === 0){
-  showNoData("No attendance records found");
-  return;
-}
-
-loadedAttendance = attendance.map(a => ({
-recordId: a.recordId,
-studentId: a.student?.userAccountId || a.studentId,
-name: a.student?.username || "Student",
-status: a.attendanceStatusId == 1 ? "Present"
-      : a.attendanceStatusId == 2 ? "Absent"
-      : a.attendanceStatusId == 3 ? "Late"
-      : "Unknown",
-time: a.checkInTime
-? new Date(a.checkInTime).toLocaleTimeString([],{
-hour:"2-digit",
-minute:"2-digit"
-})
-: "--"
-}));
-
-renderModal();
-modal.show();
-
-}
-catch(err){
-console.error(err);
-
-/* 🔥 أي error يفتح popup ويعرض No Data */
-showNoData("Failed to load data");
-}
-}
-//=================show No Data in Modal=================
-function showNoData(message){
-
-modalTbody.innerHTML = `
-<tr>
-  <td colspan="5" style="text-align:center; padding:30px; color:#aaa;">
-    <i class="bi bi-exclamation-circle" style="font-size:22px;"></i><br>
-    ${message}
-  </td>
-</tr>
-`;
-
-modal.show();
-}
-  // ================= SAVE =================
- async function saveAttendance() {
-
-  const rows = tbody.querySelectorAll("tr");
-
-  saveBtn.disabled = true;
-
-  try {
-
-    for (let row of rows) {
-
-      const recordId = row.getAttribute("data-record-id");
-
-      if (!recordId) continue; // 🔥 مفيش record → سيبه
-
-      const statusText = row.querySelector("select").value;
-
-let attendanceStatusId =
-  statusText === "Present" ? 1 :
-  statusText === "Absent" ? 2 :
-  statusText === "Late" ? 3 : 1;
-
-await fetch(`${API_BASE_URL}/attendance/${recordId}`, {
-  method: "PUT",
-  headers: authHeaders(),
-  body: JSON.stringify({
-    attendanceStatusId
-  })
-});
-    }
-
-    showAlert("Updated successfully", "success");
-
-  } catch (err) {
-    console.error("Save error:", err);
-    showAlert("Update failed", "error");
-  } finally {
-    saveBtn.disabled = false;
-  }
-}
-  // ================= EVENTS =================
-  courseSelect.addEventListener("change", () => {
-    if (courseSelect.value) {
-      loadSections(courseSelect.value);
-    }
-  });
-
-  loadBtn.addEventListener("click", loadAttendance);
-
-
- 
-
- 
-
-  logoutBtn.addEventListener("click", () => {
-  Swal.fire({
-        text: "Logged out successfully",
-        icon: "success",
-        background: "#1a1a3a",
-        color: "#fff",
-        confirmButtonColor: "#3060ff",
-        confirmButtonText: "OK"
-    }).then(() => {
-        window.location.href = "../Sign in/index.html";
-    });
-  });
-
-  // ================= INIT =================
-  loadProfile();
-  loadCourses();
-
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if(!window.FaceMarkAPI.getToken()) return window.location.href = '../Sign in/index.html';
+            const res = await window.FaceMarkAPI.authFetch('/courses');
+            const courses = await res.json();
+            const sel = document.getElementById('courseSelect');
+            (courses.data || courses).forEach(c => sel.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+        });
+
+        async function loadRoster() {
+            const courseId = document.getElementById('courseSelect').value;
+            const body = document.getElementById('rosterBody');
+            if(!courseId) return;
+            
+            body.innerHTML = '<tr><td colspan="4" class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>';
+            try {
+                // Simulated fetch since Nest API depends on relations
+                const res = await window.FaceMarkAPI.authFetch(`/courses`);
+                const data = await res.json();
+                const target = (data.data || data).find(c => c.id == courseId);
+                
+                body.innerHTML = '';
+                if(!target || !target.students || target.students.length === 0) {
+                    body.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No students enrolled.</td></tr>';
+                    return;
+                }
+                
+                target.students.forEach(s => {
+                    body.innerHTML += `
+                        <tr>
+                            <td>${s.id}</td>
+                            <td>${s.firstName} ${s.lastName}</td>
+                            <td><span class="badge bg-secondary">Unmarked</span></td>
+                            <td><button class="btn-custom" onclick="markPresent(${s.id}, ${courseId})">Mark Present</button></td>
+                        </tr>
+                    `;
+                });
+            } catch(e) { body.innerHTML = '<tr><td colspan="4" class="text-danger text-center">Failed to load roster.</td></tr>'; }
+        }
+
+        async function markPresent(stdId, crsId) {
+            try {
+                await window.FaceMarkAPI.authFetch('/attendance/manual', {
+                    method: 'POST', body: JSON.stringify({ studentId: stdId, courseId: crsId, status: 'Present' })
+                });
+                if(window.FaceMarkToast) window.FaceMarkToast.success("Attendance marked manually.");
+                loadRoster();
+            } catch(e) {
+                if(window.FaceMarkToast) window.FaceMarkToast.error("Failed to mark attendance.");
+            }
+        }
+    </script>
 </body>
 </html>

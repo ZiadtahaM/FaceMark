@@ -3,63 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaceMark - Login</title>
-    <link rel="stylesheet" href="style.css"> 
+    <title>FaceMark — Enterprise Biometric Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../../Responsive/responsive.css">
-    
+    <!-- Modern Style Sheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-mode">
+<body>
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
-    <a href="../home/home-index.html" class="back-home-btn">
-        <i class="fas fa-arrow-left"></i> Back to Home
+    <!-- Navigation Back Link -->
+    <a href="../Home/home-index.html" class="nav-back-pill" title="Return to FaceMark Home">
+        <i class="fas fa-arrow-left"></i>
+        <span>Home Portal</span>
     </a>
 
-    <div class="login-container">
-        <div class="header">
-            <div class="logo-icon smile-icon" style="margin-bottom: 8px;"> 
-                <img src="../images/face.jpeg" alt="FaceMark Logo" class="brand-logo" style="width: 60px; height: 60px; border-radius: 15px; object-fit: cover;">
+    <!-- Main Auth Card Container -->
+    <main class="auth-wrapper">
+        <div class="glass-card">
+            <!-- Header & Brand -->
+            <header class="card-header">
+                <div class="brand-badge-container">
+                    <div class="brand-badge">
+                        <i class="fas fa-fingerprint brand-icon"></i>
+                        <div class="pulse-ring"></div>
+                    </div>
+                </div>
+                <h1 class="brand-title">Face<span class="brand-gradient">Mark</span></h1>
+                <p class="brand-subtitle">Intelligent Biometric Attendance Platform</p>
+                <div class="system-status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">DDIA-Hardened WAL Engine Active</span>
+                </div>
+            </header>
+
+            <!-- Role Segmented Selector -->
+            <div class="role-selector-container">
+                <label class="section-label">Sign In As</label>
+                <div class="segmented-control" role="tablist" aria-label="Select User Role">
+                    <div class="segment-indicator" id="segmentIndicator"></div>
+                    <button type="button" class="segment-btn active" data-role="student" role="tab" aria-selected="true">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Student</span>
+                    </button>
+                    <button type="button" class="segment-btn" data-role="staff" role="tab" aria-selected="false">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Staff</span>
+                    </button>
+                    <button type="button" class="segment-btn" data-role="admin" role="tab" aria-selected="false">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin</span>
+                    </button>
+                </div>
+                <input type="hidden" id="selectedRole" name="role" value="student">
             </div>
-            <h1>Face<span class="mark-gradient">Mark</span></h1>
-            <p>Face Recognition Technology</p>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form" novalidate>
+                <!-- Username Field -->
+                <div class="input-group">
+                    <label for="username">Username or Academic ID</label>
+                    <div class="input-box">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            placeholder="e.g., student1 or staff_john" 
+                            autocomplete="username" 
+                            required 
+                            spellcheck="false"
+                        />
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="password">Password</label>
+                        <a href="reset_password/index.html" class="forgot-link">Forgot?</a>
+                    </div>
+                    <div class="input-box">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="Enter your security password" 
+                            autocomplete="current-password" 
+                            required
+                        />
+                        <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Test Credentials Autofill -->
+                <div class="quick-demo-box">
+                    <span class="demo-label"><i class="fas fa-bolt"></i> Quick Demo:</span>
+                    <div class="demo-chips">
+                        <button type="button" class="demo-chip" onclick="fillDemo('student1', 'password123', 'student')">Student</button>
+                        <button type="button" class="demo-chip" onclick="fillDemo('staff1', 'password123', 'staff')">Staff</button>
+                        <button type="button" class="demo-chip" onclick="fillDemo('admin', 'admin123', 'admin')">Admin</button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">Authenticate & Enter</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                    <div class="btn-spinner" id="btnSpinner"></div>
+                </button>
+            </form>
+
+            <!-- Card Footer -->
+            <footer class="card-footer">
+                <div class="security-guarantee">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Zero-Trust Architecture &middot; Monotonic Fencing V2</span>
+                </div>
+            </footer>
         </div>
+    </main>
 
-        <form id="loginForm">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="username" placeholder="Enter your username" required>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label for="password">Password</label>
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
-            </div>
-
-            <div class="role-selection">
-                <label>Select Your Role</label>
-                <div class="role-options">
-                    <input type="radio" id="student" name="role" value="student" checked>
-                    <label for="student">Student</label>
-
-                    <input type="radio" id="staff" name="role" value="staff" >
-                    <label for="staff">Staff</label>
-
-                    <input type="radio" id="admin" name="role" value="admin" >
-                    <label for="admin">Admin</label>
-                </div>
-            </div>
-
-            <a href="reset_password/index.html" class="forgot-password">Forgot Password?</a>
-            <button type="submit" class="sign-in-button">Log In</button>
-        </form>
-    </div>
-
+    <!-- Core Scripts -->
     <script src="../js/api.js"></script>
     <script src="script.js"></script>
 </body>

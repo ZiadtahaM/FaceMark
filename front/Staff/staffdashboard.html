@@ -1,597 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>FACEMARK Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>FaceMark - Staff Command Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #060913;
+            --bg-surface: rgba(15, 23, 42, 0.72);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --primary-indigo: #6366f1;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+        }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-<style>
+        /* Ambient Glows */
+        .ambient-glow {
+            position: fixed; filter: blur(120px); border-radius: 50%; z-index: -1; pointer-events: none; opacity: 0.35;
+        }
+        .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, #4f46e5 0%, transparent 70%); }
+        .glow-2 { bottom: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, #06b6d4 0%, transparent 70%); }
 
-/* ===== GLOBAL ===== */
-body{
-background:#0f0c29;
-color:#ffffff;
-min-height:100vh;
-font-family:"Segoe UI",sans-serif;
-overflow-x:hidden;
-}
+        /* Sidebar */
+        .sidebar {
+            background: rgba(6, 9, 19, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-subtle);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        
+        .brand-logo {
+            font-family: var(--font-heading);
+            font-weight: 800; font-size: 1.4rem; color: #fff;
+            margin-bottom: 32px; display: flex; align-items: center; gap: 10px;
+        }
+        .brand-logo i { color: #06b6d4; }
 
-/* ===== SIDEBAR ===== */
+        .user-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px; padding: 16px; margin-bottom: 24px;
+        }
+        .user-box small { color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .user-name { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 4px; }
 
-.sidebar{
-background:#15132b;
-min-height:100vh;
-padding:20px;
-}
+        .nav-link {
+            color: var(--text-secondary); font-weight: 500; font-size: 0.95rem;
+            padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
+        .nav-link:hover, .nav-link.active {
+            color: #fff; background: rgba(99, 102, 241, 0.15); border-left: 3px solid var(--primary-indigo);
+        }
 
-.user-box{
-background:#1a1a3a;
-border-radius:14px;
-padding:14px;
-margin:18px 0 24px;
-}
+        /* Stat Cards */
+        .dashboard-content { padding: 32px 40px; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .dashboard-header h1 { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; }
+        
+        .stat-card {
+            background: var(--bg-surface); backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle); border-radius: 20px;
+            padding: 24px; display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .stat-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .stat-blue { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .stat-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .stat-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        
+        .stat-card h6 { color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-top: 12px; margin-bottom: 4px; }
+        .stat-card h2 { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; margin: 0; }
 
-.user-box small{
-color:#b0b0b0;
-font-size:13px;
-}
+        /* Modern Table & Cards */
+        .glass-panel {
+            background: var(--bg-surface); backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; margin-top: 24px;
+        }
+        .glass-panel h5 { font-family: var(--font-heading); font-weight: 700; margin-bottom: 20px; }
 
-.user-name{
-font-size:16px;
-font-weight:600;
-color:#ffffff;
-}
+        .course-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+            transition: transform 0.2s, background 0.2s; cursor: pointer;
+        }
+        .course-card:hover {
+            transform: translateY(-2px); background: rgba(255, 255, 255, 0.05); border-color: rgba(99, 102, 241, 0.4);
+        }
+        .course-info h6 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .course-info small { color: var(--text-secondary); font-size: 0.85rem; }
+        .course-badge { background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
 
-.sidebar .nav-link{
-color:#b0b0b0;
-margin-bottom:10px;
-border-radius:10px;
-padding:10px 14px;
-transition:0.2s;
-}
+        .btn-launch { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s; }
+        .btn-launch:hover { transform: translateY(-2px); color: #fff; }
 
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover{
-background:#3060ff;
-color:#ffffff;
-}
-
-/* ===== STAT CARDS ===== */
-
-.stat-card{
-border-radius:18px;
-padding:20px;
-background:rgba(48,96,255,0.15);
-border-left:4px solid #3060ff;
-}
-
-.stat-green{
-background:rgba(46,204,113,0.15);
-border-left:4px solid #2ecc71;
-}
-
-.stat-purple{
-background:rgba(155,89,182,0.15);
-border-left:4px solid #9b59b6;
-}
-
-.stat-orange{
-background:rgba(230,126,34,0.15);
-border-left:4px solid #e67e22;
-}
-
-.stat-card h6{color:#b0b0b0;}
-.stat-card h2{color:#ffffff;}
-
-/* ===== TODAY CLASSES ===== */
-
-.today-card{
-background:#1a1a3a;
-border-radius:18px;
-padding:20px 22px;
-margin-bottom:16px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-position:relative;
-}
-
-.today-card::before{
-content:"";
-position:absolute;
-left:0;
-top:0;
-width:6px;
-height:100%;
-border-radius:18px 0 0 18px;
-background:#2ecc71;
-}
-
-.today-inprogress::before{background:#3060ff;}
-.today-upcoming::before{background:#9b59b6;}
-
-.today-info h6{
-margin:0;
-font-size:15px;
-font-weight:600;
-}
-
-.today-info small{
-color:#b0b0b0;
-font-size:13px;
-}
-
-.today-status .status{
-display:inline-block;
-padding:6px 14px;
-border-radius:20px;
-font-size:13px;
-font-weight:500;
-}
-
-.status-completed{color:#2ecc71;}
-.status-progress{color:#3060ff;}
-.status-upcoming{color:#9b59b6;}
-
-/* ===== ACTIVITY ===== */
-
-.activity-card{
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:14px 16px;
-margin-bottom:14px;
-display:flex;
-gap:14px;
-align-items:center;
-}
-
-.activity-dot{
-width:10px;
-height:10px;
-border-radius:50%;
-}
-
-.dot-green{background:#2ecc71;}
-.dot-blue{background:#3060ff;}
-.dot-yellow{background:#e67e22;}
-
-/* ===== BURGER BUTTON ===== */
-
-.burger-btn{
-position:fixed;
-top:14px;
-left:14px;
-z-index:1100;
-width:40px;
-height:40px;
-border-radius:10px;
-border:none;
-background:#3060ff;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-}
-
-/* ===== MOBILE ===== */
-
-@media(max-width:768px){
-
-.sidebar{
-width:260px;
-padding-top:40px;
-}
-
-.stat-card{
-padding:16px;
-}
-
-.today-card{
-flex-direction:column;
-align-items:flex-start;
-gap:8px;
-}
-
-.today-status{
-width:100%;
-display:flex;
-justify-content:space-between;
-}
-
-}
-
-</style>
+        @media(max-width:768px) {
+            .dashboard-content { padding: 20px; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container-fluid">
-<div class="row">
-
-<!-- Toggle Button -->
-
-<button class="burger-btn d-md-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-<i class="bi bi-list"></i>
-</button>
-
-<!-- Sidebar -->
-
-<div class="offcanvas-md offcanvas-start col-md-2 sidebar" tabindex="-1" id="sidebarMenu">
-
- <h5 class="mb-4"><img src="face.jpeg"  alt="" width="50px" height="50px"> FACEMARK</h5>
-      <p class="small text-muted " style="color:white !important">Staff Portal</p>
-
-<div class="user-box">
-<small>Welcome,</small>
- <div class="user-name" id="username">Guest1</div>
-<small>Staff Portal</small>
-</div>
-
-<ul class="nav flex-column">
-
-<li class="nav-item">
-<a class="nav-link active" href="#"><i class="bi bi-grid"></i> Dashboard</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="manualattendance.html"><i class="bi bi-person-check"></i> Manual Attendance</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="face-capture.html"><i class="bi bi-camera"></i> Face Capture</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="charts.html"><i class="bi bi-bar-chart"></i> Charts & Reports</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="export.html"><i class="bi bi-download"></i> Export</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a>
-</li>
-
-</ul>
-<hr class="text-secondary">
-
-<button id="logoutBtn" class="btn btn-danger w-100 mt-2">
-    <i class="bi bi-box-arrow-right"></i> Sign Out
-</button>
-</div>
-
-<!-- MAIN -->
-
-<div class="col-12 col-md-10 p-3 p-md-4">
-
-<div class="row g-4 mb-4">
-
-<div class="col-12 col-sm-6 col-lg-3">
-<div class="stat-card">
-<h6>Total Students</h6>
-<h2 id="totalStudents">0</h2>
-<small>Across all courses</small>
-</div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3">
-<div class="stat-card stat-green">
-<h6>Average Attendance</h6>
-<h2 id="attendanceAvg">0%</h2>
-<small>This semester</small>
-</div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3">
-<div class="stat-card stat-purple">
-<h6>Classes Today</h6>
-<h2 id="totalCourses">0</h2>
-<small>4 completed</small>
-</div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3">
-<div class="stat-card stat-orange">
-<h6>Pending Reviews</h6>
-<h2 id="pendingReviews">0</h2>
-<small>Needs attention</small>
-</div>
-</div>
-
-</div>
-
-<h4 class="mb-3">Today's Classes</h4>
-
-<div id="coursesContainer"></div>
-
-<div id="todayClassesContainer"></div>
-
-<a href="./sign in/index.html"></a>
-</div>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/api.js"></script>
-
-<script>
-    const API_BASE_URL = window.API_BASE_URL || "http://localhost:3001/api/v1";
-
-function getToken() {
-  return localStorage.getItem("token");
-}
-
-function authHeaders() {
-  return {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${getToken()}`
-  };
-}
-
-function redirectToLogin() {
-  localStorage.clear();
-  window.location.href = "../Sign in/index.html";
-}
-// ✅ Logout
-document.getElementById('logoutBtn').addEventListener('click', function () {
-
-    localStorage.removeItem('token');
-    localStorage.removeItem('loggedUser');
-    localStorage.removeItem('userRole');
-
-    Swal.fire({
-        text: "Logged out successfully",
-        icon: "success",
-        background: "#1a1a3a",
-        color: "#fff",
-        confirmButtonColor: "#3060ff",
-        confirmButtonText: "OK"
-    }).then(() => {
-        window.location.href = "../Sign in/index.html";
-    });
-
-});
-
-// ✅ Load Profile + حماية الصفحة
-async function loadProfile() {
-
-  const usernameEl = document.getElementById("username");
-  const token = getToken();
-
-  if (!token) {
-    showAlert("Please log in first", "warning");
-    return redirectToLogin();
-  }
-
-  try {
-
-    const res = await fetch(`${API_BASE_URL}/auth/profile`, {
-      headers: authHeaders()
-    });
-
-    const text = await res.text();
-    console.log("RAW RESPONSE:", text);
-
-    let result;
-
-    try {
-      result = JSON.parse(text);
-    } catch {
-      throw new Error("Invalid JSON response");
-    }
-
-    console.log("PARSED:", result);
-
-    // 🔥 flexible extraction
-    const user =
-      result.data?.user ||
-      result.data ||
-      result.user ||
-      result;
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // ✅ عرض الاسم
-    usernameEl.textContent =
-      user.username ||
-      user.name ||
-      user.email ||
-      "Staff";
-
-    // ✅ normalize role
-    const role = (user.role || user.userType || "").toLowerCase();
-
-    console.log("ROLE:", role);
-
-    // 🔒 حماية الصفحة
-    if (role !== "staff") {
-      showAlert("Access denied (Staff only)", "error");
-      return redirectToLogin();
-    }
-
-  } catch (err) {
-
-    console.error("PROFILE ERROR:", err);
-
-    showAlert("Session expired, login again", "error");
-    redirectToLogin();
-  }
-}
-//✅ Load Courses + Students Count
-async function loadCourses() {
-
-    const token = localStorage.getItem('token');
-
-    try {
-
-        const response = await fetch(`${API_BASE_URL}/courses`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error("Failed to load courses");
-        }
-
-        const courses = result.data;
-
-        const container = document.getElementById("coursesContainer");
-        container.innerHTML = "";
-
-        let totalStudents = 0;
-
-        for (const course of courses) {
-
-            let studentsCount = 0;
-
-            const courseId = course.courseId || course.id || course._id;
-
-            if (!courseId) {
-                console.error("Course ID missing:", course);
-                continue;
-            }
-
-            try {
-                const res = await fetch(`${API_BASE_URL}/courses/${courseId}/students`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                const data = await res.json();
-
-                studentsCount = data.data?.length || 0;
-
-            } catch (err) {
-                console.error("Error loading students:", err);
-            }
-
-            totalStudents += studentsCount;
-
-            const courseName = window.escapeHtml ? window.escapeHtml(course.title || course.name || "Course") : (course.title || course.name || "Course");
-            const courseSchedule = window.escapeHtml ? window.escapeHtml(course.schedule || "No schedule") : (course.schedule || "No schedule");
-            const courseRoom = window.escapeHtml ? window.escapeHtml(course.room || "Room N/A") : (course.room || "Room N/A");
-
-            const courseHTML = `
-                <div class="today-card">
-                    <div class="today-info">
-                        <h6>${courseName}</h6>
-                        <small>
-                            ${courseSchedule} 
-                            | ${courseRoom}
-                        </small>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- Mobile Toggle -->
+            <button class="btn btn-dark d-md-none m-3" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" style="width: auto; background: var(--primary-indigo); border: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Sidebar -->
+            <div class="offcanvas-md offcanvas-start col-md-3 col-lg-2 sidebar" tabindex="-1" id="sidebarMenu">
+                <div class="brand-logo">
+                    <i class="fas fa-fingerprint"></i> FaceMark
+                </div>
+
+                <div class="user-box">
+                    <small>Staff Portal</small>
+                    <div class="user-name" id="usernameDisplay">Loading...</div>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-border-all"></i> Command Center</a></li>
+                    <li class="nav-item"><a class="nav-link" href="face-capture.html"><i class="fas fa-camera"></i> Live Scanner</a></li>
+                    <li class="nav-item"><a class="nav-link" href="manualattendance.html"><i class="fas fa-clipboard-list"></i> Manual Roster</a></li>
+                    <li class="nav-item"><a class="nav-link" href="charts.html"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                    <li class="nav-item mt-4"><a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Secure Logout</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 dashboard-content">
+                <div class="dashboard-header">
+                    <h1>Command Center</h1>
+                    <a href="face-capture.html" class="btn-launch"><i class="fas fa-satellite-dish"></i> Launch Biometric Scanner</a>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-icon stat-blue"><i class="fas fa-book"></i></div>
+                                <h6>Active Courses</h6>
+                                <h2 id="totalCourses">0</h2>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="today-status">
-                        <span class="status status-upcoming">Active</span>
-                        <small>${studentsCount} Student${studentsCount !== 1 ? 's' : ''}</small>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-icon stat-green"><i class="fas fa-users"></i></div>
+                                <h6>Total Students Enrolled</h6>
+                                <h2 id="totalStudents">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div>
+                                <div class="stat-icon stat-purple"><i class="fas fa-shield-alt"></i></div>
+                                <h6>Storage Engine Health</h6>
+                                <h2>100%</h2>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            `;
 
-            container.innerHTML += courseHTML;
-        }
-
-        // 🔥 Statistics
-        document.getElementById("totalStudents").textContent = totalStudents;
-        document.getElementById("totalCourses").textContent = courses.length;
-
-        document.getElementById("attendanceAvg").textContent = "85%";
-        document.getElementById("pendingReviews").textContent = courses.length;
-
-    } catch (error) {
-        console.error("Courses error:", error);
-        document.getElementById("coursesContainer").innerHTML =
-            `<p style="color:red">Failed to load courses</p>`;
-    }
-}
-async function loadTodayClasses() {
-
-    const token = localStorage.getItem('token');
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/courses`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error("Failed to load courses");
-        }
-
-        const courses = result.data || result;
-
-        const container = document.getElementById("todayClassesContainer");
-        container.innerHTML = "";
-
-        const today = new Date().toISOString().split('T')[0];
-
-        courses.forEach(course => {
-
-            // 🧠 حسب API بتاعك (عدل حسب البيانات)
-            if (!course.scheduleDate) return;
-
-            if (course.scheduleDate.startsWith(today)) {
-
-                const courseHTML = `
-                    <div class="today-card">
-                        <div class="today-info">
-                            <h6>${course.name}</h6>
-                            <small>
-                                ${course.schedule || "Time N/A"} 
-                                | ${course.room || "Room N/A"}
-                            </small>
-                        </div>
-
-                        <div class="today-status">
-                            <span class="status status-upcoming">Today</span>
-                            <small>${course.students?.length || 0} Students</small>
+                <!-- Active Classes Roster -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="glass-panel">
+                            <h5>Your Assigned Courses</h5>
+                            <div id="coursesContainer">
+                                <div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin"></i> Loading secured data...</div>
+                            </div>
                         </div>
                     </div>
-                `;
+                </div>
+            </div>
+        </div>
+    </div>
 
-                container.innerHTML += courseHTML;
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = localStorage.getItem('username') || 'Staff Member';
+            document.getElementById('usernameDisplay').textContent = window.escapeHtml(user);
+            
+            // Check session
+            if(!window.FaceMarkAPI.getToken()) {
+                window.location.href = '../Sign in/index.html';
+                return;
             }
+            
+            loadCourses();
         });
 
-    } catch (error) {
-        console.error("Today Classes error:", error);
-    }
-}
-//alert//////
-function showAlert(message, type = "success") {
-  Swal.fire({
-    text: message,
-    icon: type, // success | error | warning | info
-    background: "#1a1a3a",
-    color: "#fff",
-    confirmButtonColor: "#3060ff",
-    confirmButtonText: "OK",
-    showClass: {
-      popup: "animate__animated animate__zoomIn"
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOut"
-    }
-  });
-}
-loadProfile();
-loadCourses();
-loadTodayClasses();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        async function loadCourses() {
+            try {
+                const res = await window.FaceMarkAPI.authFetch('/courses');
+                const result = await res.json();
+                
+                const courses = result.data || result;
+                const container = document.getElementById("coursesContainer");
+                container.innerHTML = "";
+
+                if(courses.length === 0) {
+                    container.innerHTML = `<p class="text-muted">No courses assigned to you.</p>`;
+                    return;
+                }
+
+                let totalStds = 0;
+                courses.forEach(c => {
+                    const count = c.students ? c.students.length : 0;
+                    totalStds += count;
+                    container.innerHTML += `
+                        <div class="course-card">
+                            <div class="course-info">
+                                <h6>${window.escapeHtml(c.name)}</h6>
+                                <small><i class="fas fa-clock"></i> ${window.escapeHtml(c.schedule || "TBD")} &middot; <i class="fas fa-door-open"></i> ${window.escapeHtml(c.room || "TBD")}</small>
+                            </div>
+                            <div class="course-badge">${count} Students</div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('totalCourses').textContent = courses.length;
+                document.getElementById('totalStudents').textContent = totalStds;
+                
+            } catch (err) {
+                console.error("Failed to load courses:", err);
+                document.getElementById("coursesContainer").innerHTML = `<p class="text-danger"><i class="fas fa-exclamation-triangle"></i> Failed to securely load courses.</p>`;
+                if(window.FaceMarkToast) window.FaceMarkToast.error("Failed to fetch assigned courses.");
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../Sign in/index.html';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
