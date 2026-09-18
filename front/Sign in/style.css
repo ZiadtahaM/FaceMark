@@ -1,335 +1,595 @@
-/* =========================================================
-   1. BASE STYLES & VARIABLES
-   ========================================================= */
+/* ==========================================================================
+   FaceMark Modern 2026 Design System — Auth & Portal Theme
+   Obsidian Glassmorphism | Segmented Slider | Zero-Trust Typography
+   ========================================================================== */
+
 :root {
-    --light-blue: #70aeff;
-    --main-text-color: #e0e0e0;
-    --label-color: #b0b0b0;
-    --card-bg-color: rgba(30, 27, 45, 0.9);
-    --input-bg-color: #2b2545;
-    --border-color: rgba(255, 255, 255, 0.1);
-    --dashboard-background: #0f0c1f;
+    --bg-base: #060913;
+    --bg-surface: rgba(15, 23, 42, 0.72);
+    --bg-surface-elevated: rgba(30, 41, 59, 0.65);
+    --bg-input: rgba(15, 23, 42, 0.85);
+    
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(99, 102, 241, 0.4);
+    --border-focus: #6366f1;
+    
+    --primary-indigo: #6366f1;
+    --primary-cyan: #06b6d4;
+    --primary-purple: #a855f7;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --shadow-card: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 35px 0 rgba(99, 102, 241, 0.12);
+    --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --radius-card: 28px;
+    --radius-element: 14px;
 }
 
-* {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    background: var(--dashboard-background);
-    color: var(--main-text-color);
-    direction: ltr;
-    position: relative;
-}
-
-/* =========================================================
-   2. BACK TO HOME BUTTON
-   ========================================================= */
-.back-home-btn {
-    position: absolute;
-    top: 35px;
-    left: 35px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.15rem;
-    font-weight: 600;
-    padding: 14px 28px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1000;
-}
-
-.back-home-btn i {
-    font-size: 1.4rem;
-}
-
-.back-home-btn:hover {
-    background: var(--light-blue);
-    color: #0f0c1f;
-    transform: scale(1.1);
-}
-
-/* =========================================================
-   3. LOGIN CONTAINER CARD
-   ========================================================= */
-.login-container {
-    width: 100%;
-    max-width: 550px;
-    padding: 40px;
-    border-radius: 20px;
-    background: var(--card-bg-color);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-/* =========================================================
-   4. HEADER & LOGO (FINAL POSITIONING)
-   ========================================================= */
-.header {
-    text-align: center;
-    margin-bottom: 35px;
-    padding-top: 20px; /* دفع اللوجو للأسفل قليلاً */
-}
-
-.logo-icon {
-    width: 100%;
-    height: 110px;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-body);
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible;
+    position: relative;
+    overflow-x: hidden;
+    padding: 24px;
 }
 
-.brand-logo {
-    width: 140px;
-    height: auto;
-    transform: scale(1.9); /* حجم متوسط متوازن */
-    object-fit: contain;
-    filter: none;
-    mix-blend-mode: normal;
-    animation: none !important;
+/* ==========================================================================
+   Ambient Glow Backdrops
+   ========================================================================== */
+.ambient-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.45;
 }
 
-.header h1 {
-    font-size: 36px;
-    margin: 25px 0 5px 0;
-    color: var(--main-text-color);
+.glow-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #4f46e5 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+    animation: floatGlow 14s ease-in-out infinite alternate;
 }
 
-.header h1 .mark-gradient {
-    background: linear-gradient(90deg, #70aeff, #7a6cc9);
+.glow-2 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+    bottom: -150px;
+    right: -100px;
+    animation: floatGlow 18s ease-in-out infinite alternate-reverse;
+}
+
+.glow-3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    top: 40%;
+    left: 60%;
+    opacity: 0.25;
+}
+
+@keyframes floatGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 40px) scale(1.15); }
+}
+
+/* ==========================================================================
+   Top Navigation Back Link
+   ========================================================================== */
+.nav-back-pill {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+}
+
+.nav-back-pill:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(30, 41, 59, 0.8);
+    transform: translateX(-3px);
+}
+
+.nav-back-pill i {
+    font-size: 0.85rem;
+    transition: transform 0.2s;
+}
+
+.nav-back-pill:hover i {
+    transform: translateX(-3px);
+}
+
+/* ==========================================================================
+   Auth Card & Glassmorphism
+   ========================================================================== */
+.auth-wrapper {
+    width: 100%;
+    max-width: 480px;
+    z-index: 1;
+    margin: 40px auto;
+}
+
+.glass-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    padding: 38px 36px 32px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-card);
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 60%, rgba(99, 102, 241, 0.25));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Header & Brand Elements
+   ========================================================================== */
+.card-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.brand-badge-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.brand-badge {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.25));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-icon {
+    font-size: 1.8rem;
+    color: var(--primary-cyan);
+    filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.6));
+}
+
+.pulse-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 22px;
+    border: 1px solid rgba(6, 182, 212, 0.35);
+    animation: pulseRing 2.5s infinite;
+}
+
+@keyframes pulseRing {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.08); opacity: 0.2; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.brand-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.brand-gradient {
+    background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.header p {
-    font-size: 15px;
-    color: var(--label-color);
+.brand-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
 }
 
-/* =========================================================
-   5. INPUT FIELDS
-   ========================================================= */
-.input-group {
-    margin-bottom: 22px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 9px;
-    font-size: 16px;
-    color: var(--label-color);
-}
-
-.input-field {
-    display: flex;
+.system-status-indicator {
+    display: inline-flex;
     align-items: center;
-    background-color: var(--input-bg-color);
-    border-radius: 10px;
-    padding: 13px 17px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    transition: border-color 0.3s ease;
+    gap: 7px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 3px 10px;
+    border-radius: 20px;
 }
 
-.input-field:focus-within {
-    border-color: var(--light-blue);
-    box-shadow: 0 0 5px rgba(112, 174, 255, 0.5);
-}
-
-.input-field i {
-    color: var(--label-color);
-    font-size: 17px;
-    margin-right: 14px;
-}
-
-.input-field input {
-    flex-grow: 1;
-    background: none;
-    border: none;
-    outline: none;
-    color: var(--main-text-color);
-    font-size: 17px;
-}
-
-/* =========================================================
-   6. ROLE SELECTION (RADIO BUTTONS)
-   ========================================================= */
-.role-selection {
-    margin-top: 5px;
-    margin-bottom: 28px;
-}
-
-.role-selection > label {
-    display: block;
-    margin-bottom: 12px;
-    font-size: 16px;
-    color: var(--label-color);
-}
-
-.role-options {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.role-options input[type="radio"] {
-    display: none;
-}
-
-.role-options label {
-    cursor: pointer;
-    width: calc(33.33% - 7px);
-    padding: 12px 10px 12px 35px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.08);
-    color: var(--main-text-color);
-    transition: all 0.2s ease;
-    font-size: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.role-options label::before {
-    content: '';
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 2px solid var(--label-color);
-    transition: all 0.2s ease;
-}
-
-.role-options label::after {
-    content: '';
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+.status-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: white;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    background-color: #10b981;
+    box-shadow: 0 0 6px #10b981;
 }
 
-.role-options input[type="radio"]:checked + label {
-    background: #4e54c8;
-    border-color: #4e54c8;
-    box-shadow: 0 0 10px rgba(78, 84, 200, 0.6);
+.status-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #34d399;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
-.role-options input[type="radio"]:checked + label::before {
-    border-color: #fff;
+/* ==========================================================================
+   Segmented Role Selector
+   ========================================================================== */
+.role-selector-container {
+    margin-bottom: 24px;
 }
 
-.role-options input[type="radio"]:checked + label::after {
-    opacity: 1;
-}
-
-/* =========================================================
-   7. BUTTONS & LINKS
-   ========================================================= */
-.forgot-password {
+.section-label {
     display: block;
-    text-align: right;
-    color: var(--light-blue);
-    text-decoration: none;
-    font-size: 15px;
-    margin-bottom: 28px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.sign-in-button {
-    width: 100%;
-    padding: 16px;
-    border: none;
+.segmented-control {
+    position: relative;
+    display: flex;
+    background: rgba(15, 23, 42, 0.8);
+    padding: 5px;
+    border-radius: var(--radius-element);
+    border: 1px solid var(--border-subtle);
+}
+
+.segment-indicator {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: calc((100% - 10px) / 3);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(124, 58, 237, 0.85));
     border-radius: 10px;
-    font-size: 18px;
-    color: white;
-    font-weight: bold;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+}
+
+.segment-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 10px 0;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 10px;
     cursor: pointer;
-    background: linear-gradient(90deg, #4e54c8, #6d74ff);
-    box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
-    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    transition: color 0.2s;
 }
 
-.sign-in-button:hover {
+.segment-btn:hover {
+    color: #ffffff;
+}
+
+.segment-btn.active {
+    color: #ffffff;
+}
+
+.segment-btn i {
+    font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   Form Fields
+   ========================================================================== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.input-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-link {
+    font-size: 0.75rem;
+    color: var(--primary-indigo);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.forgot-link:hover {
+    color: #a5b4fc;
+    text-decoration: underline;
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-element);
+    padding: 0 16px;
+    transition: all 0.2s ease;
+}
+
+.input-box:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.input-icon {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-right: 12px;
+    transition: color 0.2s;
+}
+
+.input-box:focus-within .input-icon {
+    color: var(--primary-indigo);
+}
+
+.input-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    padding: 13px 0;
+}
+
+.input-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.toggle-password {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.toggle-password:hover {
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Quick Demo Autofill Chips
+   ========================================================================== */
+.quick-demo-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.demo-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.demo-chips {
+    display: flex;
+    gap: 6px;
+}
+
+.demo-chip {
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #c7d2fe;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.demo-chip:hover {
+    background: rgba(99, 102, 241, 0.35);
+    color: #ffffff;
+    border-color: #818cf8;
+}
+
+/* ==========================================================================
+   Submit Button
+   ========================================================================== */
+.submit-btn {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border: none;
+    border-radius: var(--radius-element);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.5);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(78, 84, 200, 0.6);
+    box-shadow: 0 12px 26px -4px rgba(99, 102, 241, 0.65);
+    background: linear-gradient(135deg, #5b54fa, #8b4cf5);
 }
 
- /* حركة الأيقونة */
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .smile-icon img {
-            display: inline-block;
-            animation: floatIcon 3s ease-in-out infinite;
-        }
+.submit-btn:active {
+    transform: translateY(0);
+}
 
-        /* تنسيق زر Back to Home */
-        .back-home-btn {
-            position: absolute;
-            top: 25px;
-            left: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ffffff; /* لون هادئ */
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 10px 18px;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #4e54c8, #6d74ff);
-            border: 1px solid rgba(80, 24, 194, 0.505);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
 
-        .back-home-btn i {
-            font-size: 0.8rem;
-        }
+.btn-icon {
+    font-size: 0.85rem;
+    transition: transform 0.2s;
+}
 
-        .back-home-btn:hover {
-            color: #fff;
-            background: #3060ff; /* اللون الأزرق الأساسي في مشروعك */
-            border-color: #3060ff;
-            transform: translateX(-5px);
-            box-shadow: 0 5px 15px rgba(48, 96, 255, 0.3);
-        }
+.submit-btn:hover .btn-icon {
+    transform: translateX(3px);
+}
 
-        @media (max-width: 480px) {
-            .back-home-btn {
-                top: 15px;
-                left: 15px;
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
+.btn-spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
 
-        }
-        
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.submit-btn.loading .btn-text,
+.submit-btn.loading .btn-icon {
+    display: none;
+}
+
+.submit-btn.loading .btn-spinner {
+    display: block;
+}
+
+/* ==========================================================================
+   Card Footer
+   ========================================================================== */
+.card-footer {
+    margin-top: 24px;
+    text-align: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+}
+
+.security-guarantee {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.security-guarantee i {
+    color: #10b981;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 520px) {
+    body {
+        padding: 16px;
+    }
+    
+    .nav-back-pill {
+        top: 16px;
+        left: 16px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .glass-card {
+        padding: 28px 20px 24px;
+        border-radius: 20px;
+    }
+    
+    .brand-title {
+        font-size: 1.7rem;
+    }
+}
