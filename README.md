@@ -1,79 +1,120 @@
-# FaceMark: Student Attendance System with AI Facial Recognition
+# FaceMark
 
-FaceMark is a comprehensive solution for managing student attendance using automated AI facial recognition, role-based access control, and intuitive dashboards for Admins, Staff, and Students.
+AI-powered student attendance system using facial recognition. A NestJS REST API connects to a Python FastAPI microservice running DeepFace/TensorFlow for face embedding generation and recognition.
 
-## 🚀 Updates & Security Patches (Latest)
+## Architecture
 
-Recent enhancements have hardened the application logic, resolving critical data isolation and role-based access control (RBAC) vulnerabilities:
+```
+┌─────────────────────────────────────────────────────────┐
+│                     CLIENT (Front)                      │
+└────────────────────────┬────────────────────────────────┘
+                         │ HTTP REST
+┌────────────────────────▼────────────────────────────────┐
+│              NestJS API  (Port 3000)                    │
+│                                                         │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌──────────┐  │
+│  │   Auth   │ │  Users   │ │  Courses  │ │Attendance│  │
+│  └──────────┘ └──────────┘ └───────────┘ └──────────┘  │
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │          Vision Module + Circuit Breaker         │   │
+│  └────────────────────────┬────────────────────────┘   │
+└───────────────────────────┼─────────────────────────────┘
+                            │ HTTP (guarded by circuit breaker)
+┌───────────────────────────▼─────────────────────────────┐
+│           FastAPI AI Service  (Port 8000)               │
+│                                                         │
+│   DeepFace + TensorFlow face recognition pipeline       │
+│   WAL Engine — append-only embedding store              │
+│   /upload/batch  /recognize  /health  /embeddings       │
+└─────────────────────────────────────────────────────────┘
+                            │
+                     ┌──────▼──────┐
+                     │    MySQL    │
+                     └─────────────┘
+```
 
-- **Strict Data Isolation**: Students can now only view courses they are actively enrolled in, and only their own attendance records. Staff view scopes are isolated to their assigned courses.
-- **Secure Registration**: The public `/api/v1/auth/register` endpoint strictly registers `STUDENT` accounts. Staff and Admin roles are provisioned exclusively through the protected `/api/v1/users` admin endpoint.
-- **Data Pruning**: Password hashes are stripped from all API user data responses.
-- **Operation Guards**: Attendance recording and student course enrollment are strictly checked against instructor assignments, preventing cross-course unauthorized modifications by staff.
+## Stack
 
----
+| Layer | Technology |
+|-------|------------|
+| API | NestJS 10, TypeScript |
+| ORM | TypeORM (MySQL) |
+| Auth | JWT, Passport, bcrypt |
+| AI Service | FastAPI, DeepFace, TensorFlow 2.16, OpenCV |
+| Embedding Store | Custom WAL engine (append-only, compaction-safe) |
+| Docs | Swagger / OpenAPI (auto-generated) |
+| Security | Helmet, express-rate-limit (IP-based, auth endpoints) |
+| Resilience | Hand-written circuit breaker — CLOSED/OPEN/HALF_OPEN states with exponential backoff and jitter |
+| Deployment | Docker, Render (render.yaml), Cloudflare Workers |
 
-## 🏗 Project Architecture
+## Modules
 
-### Backend (NestJS)
-- **Modular MVC**: Decoupled modules for Auth, Users, Courses, and Attendance.
-- **Security**: JWT Authentication, Bcrypt hashing, RBAC, and Rate Limiting.
-- **Database**: MySQL managed via TypeORM for reliability and transactional integrity.
+```
+src/
+├── auth/          JWT auth — register, login, refresh token rotation
+├── users/         Student and instructor accounts, face embedding storage
+├── courses/       Course creation, enrollment management
+├── attendance/    Attendance records, session tracking
+├── vision/        Face registration (batch), real-time recognition
+└── common/
+    ├── resilience/  CircuitBreaker — prevents cascade failure to AI service
+    ├── interceptors/ LoggingInterceptor, TransformInterceptor
+    ├── filters/      HttpExceptionFilter
+    └── health/       /health readiness probe
 
-### Frontend (React/Angular)
-- **State Management**: Unidirectional flow via Redux/Context API.
-- **Navigation**: Structured routing with role-protected access.
-- **API Integration**: Centralized service layer for backend communication.
+ai-service/
+├── app.py          FastAPI server — /upload/batch, /recognize, /health
+├── wal_engine.py   Write-Ahead Log for face embedding persistence
+└── test_wal_engine.py
+```
 
----
+## Circuit Breaker
 
-## 🚀 Getting Started
+The `VisionService` wraps every AI service call in a circuit breaker:
 
-### Backend Setup
-1.  **Clone the Repo**: `git clone <repo-url>`
-2.  **Dependencies**: `npm install`
-3.  **Environment**: Configure `.env` (DB_HOST, DB_NAME, DB_PASSWORD, JWT_SECRET).
-4.  **Run**: `npm run start:dev`
+- 3 consecutive failures trip the circuit to **OPEN**
+- OPEN state rejects calls immediately with `503` �" no thread pool exhaustion
+- After 15s, transitions to **HALF_OPEN** to probe one canary request
+- On success, resets to **CLOSED**
+- Exponential backoff: `t = random(0, min(8000ms, 500ms × 2^attempt))`
 
-### Frontend Setup
-1.  **Setup**: Install dependencies (`npm install`). Ensure you have Node.js and npm/yarn installed.
-2.  **API Config**: Configure API base URL in `src/config/api.js`.
-3.  **Auth**: Implement token-based auth via `src/services/auth.js`.
-4.  **State Mgmt**: Utilize Redux/Context API for global state.
-5.  **Routing**: Employ React Router for navigation.
-6.  **Components**: Develop reusable UI components in `src/components/`.
+## API Endpoints
 
----
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | /api/v1/auth/register | Register student or instructor |
+| POST | /api/v1/auth/login | Login, returns JWT |
+| POST | /api/v1/vision/register | Upload face images for embedding |
+| POST | /api/v1/vision/recognize | Identify student from a frame |
+| POST | /api/v1/attendance/mark | Record attendance session |
+| GET | /api/v1/attendance/:courseId | Attendance report for a course |
+| GET | /health | Liveness probe |
+| GET | /api/docs | Swagger UI |
 
-## 📑 API Documentation
+## Local Setup
 
-- **Swagger/OpenAPI**: Available at `http://localhost:3000/api/docs` when the server is running.
-- **Postman**: Import `POSTMAN_COLLECTION.json` for a pre-configured testing environment.
+```bash
+# 1. Clone and install NestJS dependencies
+npm install
 
----
+# 2. Configure environment
+cp .env.example .env
+# Fill: DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, JWT_SECRET, AI_SERVICE_URL
 
-## 🛠 Courses Endpoints Implementation
+# 3. Start the AI service
+cd ai-service
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 8000
 
-1.  **API Service**: Create `src/services/courses.js` for API calls.
-    *   `getCourses()`: Fetch all courses.
-    *   `getCourseById(id)`: Fetch single course.
-    *   `createCourse(data)`: Add new course.
-    *   `updateCourse(id, data)`: Modify existing course.
-    *   `deleteCourse(id)`: Remove course.
-2.  **Redux/State**: Define course-related actions and reducers.
-3.  **Components**: Build `CourseList`, `CourseDetail`, `CourseForm` components.
-4.  **Integration**: Connect components to Redux store and API service.
+# 4. Start the NestJS API
+npm run start:dev
 
----
+# Swagger docs at http://localhost:3000/api/docs
+```
 
-## 🤝 Contribution Guidelines
+## Docker
 
-- **Style**: Adhere to the established coding standards and naming conventions.
-- **Verification**: Always run linting and tests before submitting changes.
-- **Documentation**: Ensure all new API routes are reflected in the OpenAPI spec.
-- **Non-AI Comments**: Use direct, technical comments to explain complex logic flows.
-
----
-
-**Documentation Version**: 1.2.0 (April 2026)
-**Contact**: Senior Development Team
+```bash
+docker compose up -d
+```
