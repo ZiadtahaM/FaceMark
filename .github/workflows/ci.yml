@@ -40,12 +40,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: ai-service/requirements.txt
 
-      - name: Validate Python Syntax
+      - name: Validate Python Syntax & WAL Engine
         run: |
-          python -m py_compile ai-service/app.py
+          python -m py_compile ai-service/app.py ai-service/wal_engine.py
+          cd ai-service && python -m unittest test_wal_engine.py
 
   deploy-manifest-audit:
     name: Production Manifests & Zero-Trust Audit
