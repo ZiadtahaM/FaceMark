@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET', 'facemark_super_secret_2026'),
+      secretOrKey: requireJwtSecret(configService),
     });
   }
 
@@ -34,4 +34,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       role: payload.role 
     };
   }
+}
+
+
+function requireJwtSecret(config: ConfigService): string {
+  const secret = config.get<string>('JWT_SECRET');
+  if (typeof secret !== 'string' || secret.trim().length < 32) {
+    throw new Error('JWT_SECRET must be configured with at least 32 characters');
+  }
+  return secret;
 }
