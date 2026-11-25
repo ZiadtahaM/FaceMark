@@ -42,6 +42,9 @@ import { HealthModule } from './common/health/health.module';
           synchronize: isSync,
           logging: ['error', 'warn'],
           connectorPackage: 'mysql2',
+          ssl: configService.get<string>('DB_SSL') === 'true'
+            ? { rejectUnauthorized: true }
+            : undefined,
         };
       },
     }),
