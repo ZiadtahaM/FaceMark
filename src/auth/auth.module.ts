@@ -15,7 +15,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET', 'facemark_super_secret_2026'),
+        secret: requireJwtSecret(configService),
         signOptions: { 
           expiresIn: (configService.get<string>('JWT_EXPIRES_IN') || '1d') as any,
         },
@@ -27,3 +27,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   exports: [AuthService],
 })
 export class AuthModule {}
+
+
+function requireJwtSecret(config: ConfigService): string {
+  const secret = config.get<string>('JWT_SECRET');
+  if (typeof secret !== 'string' || secret.trim().length < 32) {
+    throw new Error('JWT_SECRET must be configured with at least 32 characters');
+  }
+  return secret;
+}
