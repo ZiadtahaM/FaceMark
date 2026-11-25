@@ -2,6 +2,19 @@
 
 AI-powered student attendance system using facial recognition. A NestJS REST API connects to a Python FastAPI microservice running DeepFace/TensorFlow for face embedding generation and recognition.
 
+## Why I built it
+
+Attendance is a workflow I know from education projects. I built FaceMark to practice splitting a backend so it stays up when the AI side fails: a typed NestJS API guarded by a hand-written circuit breaker, with a separate Python recognition service that can be swapped or scaled on its own.
+
+## Verified status
+
+![Local test run: 9 suites, 45 tests passed](docs/images/tests.png)
+
+- `npm ci` and `npm run build` pass (TypeScript strict).
+- 9 Jest suites / 45 tests pass locally (auth, users, courses, attendance, vision).
+- Not verified yet: live hosting, a real MySQL instance in production, and end-to-end recognition on real images. Hardening and deployment notes are in [PR #8](https://github.com/ZiadtahaM/FaceMark/pull/8).
+
+
 ## Architecture
 
 ```
@@ -74,7 +87,7 @@ ai-service/
 The `VisionService` wraps every AI service call in a circuit breaker:
 
 - 3 consecutive failures trip the circuit to **OPEN**
-- OPEN state rejects calls immediately with `503` â€" no thread pool exhaustion
+- OPEN state rejects calls immediately with `503` -" no thread pool exhaustion
 - After 15s, transitions to **HALF_OPEN** to probe one canary request
 - On success, resets to **CLOSED**
 - Exponential backoff: `t = random(0, min(8000ms, 500ms Ã— 2^attempt))`
@@ -118,3 +131,7 @@ npm run start:dev
 ```bash
 docker compose up -d
 ```
+
+## License
+
+MIT - see [LICENSE](LICENSE).
