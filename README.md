@@ -54,26 +54,26 @@ Attendance is a workflow I know from education projects. I built FaceMark to pra
 | Embedding Store | Custom WAL engine (append-only, compaction-safe) |
 | Docs | Swagger / OpenAPI (auto-generated) |
 | Security | Helmet, express-rate-limit (IP-based, auth endpoints) |
-| Resilience | Hand-written circuit breaker — CLOSED/OPEN/HALF_OPEN states with exponential backoff and jitter |
+| Resilience | Hand-written circuit breaker - CLOSED/OPEN/HALF_OPEN states with exponential backoff and jitter |
 | Deployment | Docker, Render (render.yaml), Cloudflare Workers |
 
 ## Modules
 
 ```
 src/
-├── auth/          JWT auth — register, login, refresh token rotation
+├── auth/          JWT auth - register, login, refresh token rotation
 ├── users/         Student and instructor accounts, face embedding storage
 ├── courses/       Course creation, enrollment management
 ├── attendance/    Attendance records, session tracking
 ├── vision/        Face registration (batch), real-time recognition
 └── common/
-    ├── resilience/  CircuitBreaker — prevents cascade failure to AI service
+    ├── resilience/  CircuitBreaker - prevents cascade failure to AI service
     ├── interceptors/ LoggingInterceptor, TransformInterceptor
     ├── filters/      HttpExceptionFilter
     └── health/       /health readiness probe
 
 ai-service/
-├── app.py          FastAPI server — /upload/batch, /recognize, /health
+├── app.py          FastAPI server - /upload/batch, /recognize, /health
 ├── wal_engine.py   Write-Ahead Log for face embedding persistence
 └── test_wal_engine.py
 ```
@@ -131,3 +131,4 @@ docker compose up -d
 ## License
 
 MIT - see [LICENSE](LICENSE).
+
