@@ -18,33 +18,29 @@ Attendance is a workflow I know from education projects. I built FaceMark to pra
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     CLIENT (Front)                      │
-└────────────────────────┬────────────────────────────────┘
-                         │ HTTP REST
-┌────────────────────────▼────────────────────────────────┐
-│              NestJS API  (Port 3000)                    │
-│                                                         │
-│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌──────────┐  │
-│  │   Auth   │ │  Users   │ │  Courses  │ │Attendance│  │
-│  └──────────┘ └──────────┘ └───────────┘ └──────────┘  │
-│                                                         │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │          Vision Module + Circuit Breaker         │   │
-│  └────────────────────────┬────────────────────────┘   │
-└───────────────────────────┼─────────────────────────────┘
-                            │ HTTP (guarded by circuit breaker)
-┌───────────────────────────▼─────────────────────────────┐
-│           FastAPI AI Service  (Port 8000)               │
-│                                                         │
-│   DeepFace + TensorFlow face recognition pipeline       │
-│   WAL Engine — append-only embedding store              │
-│   /upload/batch  /recognize  /health  /embeddings       │
-└─────────────────────────────────────────────────────────┘
-                            │
-                     ┌──────▼──────┐
-                     │    MySQL    │
-                     └─────────────┘
++---------------------------------------------------------+
+|                    CLIENT (Front)                       |
++------------------------+--------------------------------+
+                         | HTTP REST
++------------------------v--------------------------------+
+|             NestJS API  (Port 3000)                     |
+|                                                         |
+|  [ Auth ]  [ Users ]  [ Courses ]  [ Attendance ]       |
+|                                                         |
+|  [ Vision Module + Circuit Breaker ]                    |
++---------------------------+-----------------------------+
+                            | HTTP (guarded by circuit breaker)
++---------------------------v-----------------------------+
+|          FastAPI AI Service  (Port 8000)                |
+|                                                         |
+|  DeepFace + TensorFlow face recognition pipeline        |
+|  WAL Engine: append-only embedding store                |
+|  /upload/batch  /recognize  /health  /embeddings        |
++---------------------------------------------------------+
+                            |
+                     +------v------+
+                     |    MySQL    |
+                     +-------------+
 ```
 
 ## Stack
